@@ -2,11 +2,11 @@
 
 #group members
 
->> Kaleab Taye --UGR/0490/12 --sec2
->> Estifanos Neway --UGR/4776/12 --sec2
->> Beka Dessalegn --UGR/4605/12 --sec 2
->> Nebiyu Yohannes --UGR/8159/12 --sec 3
->> Lidiya Melaku --UGR/3565/12  --sec2
+>> -Kaleab Taye --UGR/0490/12 --sec2
+>> -Estifanos Neway --UGR/4776/12 --sec2
+>> -Beka Dessalegn --UGR/4605/12 --sec 2
+>> -Nebiyu Yohannes --UGR/8159/12 --sec 3
+>> -Lidiya Melaku --UGR/3565/12  --sec2
 
 #summary
 >>this app will enable cinema customer and the cinema staff to automate their work by enabling the staff to post their schedules and enabling the customers to pick place and buy tickets by themselves without being bothered by the hustle of doing it physically
