@@ -22,4 +22,4 @@
 ||2.Enabling customers choose a movie and buy tickets (buying tickets, seeing their ticket info, changing the ticket info and removing their purchase)
 
 
-\\brief description
+#brief description
