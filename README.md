@@ -28,4 +28,9 @@
 
 
 #brief description
->>
+
+>>the cinema systems we usually see are designed for the cinema staff and not for the customers, the thing we want to add to the already existing one is to fully automate the process by adding a customer app in which they will be able to fully enjoy their experience without interacting physically except for the time they spend to enter the cinema room to watch 
+
+>>our app mediate the interaction between a cinema and its customers, it will be having two roles (customers and cinema staff)
+>> the cinema staff will be able to create a display for their movies, add descripton to it , edit the display and have an overview of all their displays they will also be able to see how many people have bought seats and how many more spots are available in there, they also have the priviledg to manipulate anything the customers have put in and full control over it.
+>>the customers will be able to see the movies the cinema is hosting, see the full description of them, see the available seat positions in the cinema, choose from that and book the place, they will get a verification code for the booking in which they will show it in the cinema and will be able to enter.
