@@ -1,6 +1,6 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { addDocument, getDocuments, updateDocument, deleteDocument } = require("../commons/functions");
+const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument } = require("../commons/functions");
 const { requireParamsNotSet, collectionNames, invalidId, defaultPrice } = require("../commons/variables");
 
 class Schedule {
@@ -46,6 +46,34 @@ class Schedule {
         }
     }
 
+    static async find(id) {
+        if (_.isUndefined(id)) {
+            throw new Error(requireParamsNotSet);
+        } else {
+            let _id;
+            try {
+                _id = new ObjectId(id);
+            } catch (error) {
+                throw new Error(invalidId);
+            }
+            try {
+                let schedule = await getDocument(collectionNames.schedules, { _id });
+                // @ts-ignore
+                if (schedule) {
+                    // @ts-ignore
+                    schedule.id = schedule._id + "";
+                    // @ts-ignore
+                    delete schedule._id;
+                    return new Schedule(schedule);
+                } else {
+                    return null;
+                }
+            } catch (error) {
+                throw error;
+            }
+        }
+    }
+    
     static async findAll() {
         try {
             let schedule = await getDocuments(collectionNames.schedules);

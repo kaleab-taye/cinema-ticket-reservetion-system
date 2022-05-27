@@ -256,7 +256,6 @@ users.get("/:id", async (req, res) => {
  *     500:
  *       description: Internal error
  */
-
 users.post("/", async (req, res) => {
     try {
         let newUser = new User(req.body);
@@ -271,6 +270,81 @@ users.post("/", async (req, res) => {
         }
     }
 })
+
+/**
+ * @swagger
+ * /{token}/users:
+ *  get:
+ *   description: Get all users
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *   tags:
+ *     - Users
+ *   responses:
+ *     200:
+ *       description: An array of all users
+ *     500:
+ *       description: Internal error
+ */
+ users.get("/", async (req, res) => {
+    try {
+        let allUsers = await User.findAll();
+        res.status(200).end(JSON.stringify(allUsers));
+    } catch (error) {
+        if (error.message.match(invalidCallRegex)) {
+            httpSingleResponse(res, 400, error.message);
+        } else {
+            errorLog("ERROR: Getting All Users", error);
+            httpInternalErrorResponse(res);
+        }
+    }
+})
+
+/**
+ * @swagger
+ * /{token}/users/{id}/saved:
+ *  get:
+ *   description: Get schedules saved by this user
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *     - in: path
+ *       name: id
+ *       required: true
+ *   tags:
+ *     - Users
+ *   responses:
+ *     200:
+ *       description: An array of schedules
+ *     400:
+ *       description: Invalid/incomplete parameters
+ *     404:
+ *       description: A user with the given id not found
+ *     500:
+ *       description: Internal error
+ */
+//  users.get("/:id/saved", async (req, res) => {
+//     let id = req.params.id;
+//     try {
+//         let user = await User.find({ id });
+//         if (user) {
+//             res.status(200).end(JSON.stringify(user));
+//         } else {
+//             httpNotFoundResponse(res);
+//         }
+//     } catch (error) {
+//         if (error.message.match(invalidCallRegex)) {
+//             httpSingleResponse(res, 400, error.message);
+//         } else {
+//             errorLog(`ERROR: Getting a User '${id}'`, error);
+//             httpInternalErrorResponse(res);
+//         }
+
+//     }
+// })
 
 /**
  * @swagger
@@ -304,7 +378,6 @@ users.post("/", async (req, res) => {
  *     500:
  *       description: Internal error
  */
-
 users.patch("/:id", async (req, res) => {
     let id = req.params.id;
     try {

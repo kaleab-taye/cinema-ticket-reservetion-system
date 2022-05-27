@@ -8,7 +8,7 @@ class Movie {
     title;
     description;
     imageUrl;
-    cast;
+    casts;
     genera;
 
     constructor({
@@ -16,14 +16,14 @@ class Movie {
         title,
         description,
         imageUrl,
-        cast,
+        casts,
         genera
     }) {
         this.id = id;
         this.title = title;
         this.description = _.isUndefined(description) ? "" : description;
         this.imageUrl = _.isUndefined(imageUrl) ? defaultImageUrl : imageUrl;
-        this.cast = _.isUndefined(cast) ? [] : cast;
+        this.casts = _.isUndefined(casts) ? [] : casts;
         this.genera = _.isUndefined(genera) ? "" : genera;
     }
 

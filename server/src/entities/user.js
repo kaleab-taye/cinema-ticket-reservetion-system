@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId } = require("../commons/variables");
+const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument, getDocuments } = require("../commons/functions");
+const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId, userInitBalance } = require("../commons/variables");
 
 class User {
     id;
@@ -27,7 +27,7 @@ class User {
         this.passwordHash = passwordHash;
         this.saved = _.isUndefined(saved) ? [] : saved;
         this.booked = _.isUndefined(booked) ? [] : booked;
-        this.balance = _.isUndefined(balance) ? 0 : balance;
+        this.balance = _.isUndefined(balance) ? userInitBalance : balance;
     }
 
     async save() {
@@ -41,7 +41,7 @@ class User {
                 if (userPhoneIsInUse) {
                     throw new Error(userPhoneAlreadyInUse);
                 } else {
-                    let id = await addDocument(collectionNames.user, this);
+                    let id = await addDocument(collectionNames.users, this);
                     this.id = id;
                     // @ts-ignore
                     delete this._id;
@@ -100,6 +100,23 @@ class User {
             } catch (error) {
                 throw error;
             }
+        }
+    }
+
+
+    static async findAll() {
+        try {
+            let users = await getDocuments(collectionNames.users);
+            let allUsers = []
+            await users.forEach(user => {
+                user.id = user._id + "";
+                delete user._id;
+                // @ts-ignore
+                allUsers.push(new User(user));
+            });
+            return allUsers;
+        } catch (error) {
+            throw error;
         }
     }
 

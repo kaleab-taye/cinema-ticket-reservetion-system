@@ -10,10 +10,13 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "cli-colors": "^0.0.2",
+    "cli-color": "^2.0.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "lodash": "^4.17.21",
-    "mongodb": "^4.6.0"
+    "mongodb": "^4.6.0",
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.1",
+    "swagger-ui-express": "^4.4.0"
   }
 }

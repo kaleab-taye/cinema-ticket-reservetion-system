@@ -3,38 +3,38 @@ const express = require("express");
 const { errorLog, httpSingleResponse, httpInternalErrorResponse, httpNotFoundResponse } = require("../commons/functions.js");
 const { invalidCallRegex } = require("../commons/variables.js");
 
-const Movie = require("../entities/movie.js")
+const Schedule = require("../entities/schedule.js")
 
-const movies = express.Router();
+const schedules = express.Router();
 
 /**
  * @swagger
- * /{token}/movies:
+ * /{token}/schedules:
  *  get:
- *   description: Get all movies
+ *   description: Get all schedules
  *   parameters:
  *     - in: path
  *       name: token
  *       required: true
  *   tags:
- *     - Movies
+ *     - Schedules
  *   responses:
  *     200:
- *       description: An array of all movies
+ *       description: An array of all schedules
  *     400:
  *       description: Invalid/incomplete parameters
  *     500:
  *       description: Internal error
  */
-movies.get("/", async (req, res) => {
+schedules.get("/", async (req, res) => {
     try {
-        let allMovies = await Movie.findAll();
-        res.status(200).end(JSON.stringify(allMovies));
+        let allSchedules = await Schedule.findAll();
+        res.status(200).end(JSON.stringify(allSchedules));
     } catch (error) {
         if (error.message.match(invalidCallRegex)) {
             httpSingleResponse(res, 400, error.message);
         } else {
-            errorLog("ERROR: Getting All Movies", error);
+            errorLog("ERROR: Getting All Schedules", error);
             httpInternalErrorResponse(res);
         }
     }
@@ -42,9 +42,9 @@ movies.get("/", async (req, res) => {
 
 /**
  * @swagger
- * /{token}/movies/{id}:
+ * /{token}/schedules/{id}:
  *  get:
- *   description: Get a movie by its id
+ *   description: Get a schedule by its id
  *   parameters:
  *     - in: path
  *       name: token
@@ -53,23 +53,23 @@ movies.get("/", async (req, res) => {
  *       name: id
  *       required: true
  *   tags:
- *     - Movies
+ *     - Schedules
  *   responses:
  *     200:
- *       description: A movie object
+ *       description: A schedule object
  *     400:
  *       description: Invalid/incomplete parameters
  *     404:
- *       description: A movie with the given id not found
+ *       description: A schedule with the given id not found
  *     500:
  *       description: Internal error
  */
-movies.get("/:id", async (req, res) => {
+schedules.get("/:id", async (req, res) => {
     let id = req.params.id;
     try {
-        let movie = await Movie.find({ id });
-        if (movie) {
-            res.status(200).end(JSON.stringify(movie));
+        let schedule = await Schedule.find({ id });
+        if (schedule) {
+            res.status(200).end(JSON.stringify(schedule));
         } else {
             httpNotFoundResponse(res);
         }
@@ -77,7 +77,7 @@ movies.get("/:id", async (req, res) => {
         if (error.message.match(invalidCallRegex)) {
             httpSingleResponse(res, 400, error.message);
         } else {
-            errorLog(`ERROR: Getting a Movie '${id}'`, error);
+            errorLog(`ERROR: Getting a Schedule '${id}'`, error);
             httpInternalErrorResponse(res);
         }
 
@@ -86,36 +86,36 @@ movies.get("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /{token}/movies:
+ * /{token}/schedules:
  *  post:
- *   description: Add a movie
+ *   description: Add a schedule
  *   parameters:
  *     - in: path
  *       name: token
  *       required: true
  *   requestBody:
- *     description: A movie object
+ *     description: A schedule object
  *     required: true
  *   tags:
- *     - Movies
+ *     - Schedules
  *   responses:
  *     200:
- *       description: A movie object
+ *       description: A schedule object
  *     400:
  *       description: Invalid/incomplete parameters
  *     500:
  *       description: Internal error
  */
-movies.post("/", async (req, res) => {
+schedules.post("/", async (req, res) => {
     try {
-        let newMovie = new Movie(req.body);
-        newMovie = await newMovie.save();
-        res.status(200).end(JSON.stringify(newMovie));
+        let newSchedule = new Schedule(req.body);
+        newSchedule = await newSchedule.save();
+        res.status(200).end(JSON.stringify(newSchedule));
     } catch (error) {
         if (error.message.match(invalidCallRegex)) {
             httpSingleResponse(res, 400, error.message);
         } else {
-            errorLog("ERROR: Adding New Movie", error);
+            errorLog("ERROR: Adding New Schedule", error);
             httpInternalErrorResponse(res);
         }
     }
@@ -123,9 +123,9 @@ movies.post("/", async (req, res) => {
 
 /**
  * @swagger
- * /{token}/movies/{id}:
+ * /{token}/schedules/{id}:
  *  patch:
- *   description: Updates a movie
+ *   description: Updates a schedule
  *   parameters:
  *     - in: path
  *       name: token
@@ -134,10 +134,10 @@ movies.post("/", async (req, res) => {
  *       name: id
  *       required: true
  *   requestBody:
- *     description: A movie object
+ *     description: A schedule object
  *     required: true
  *   tags:
- *     - Movies
+ *     - Schedules
  *   responses:
  *     200:
  *       content:
@@ -153,16 +153,16 @@ movies.post("/", async (req, res) => {
  *     500:
  *       description: Internal error
  */
-movies.patch("/:id", async (req, res) => {
+schedules.patch("/:id", async (req, res) => {
     let id = req.params.id;
     try {
-        let updatedCount = await Movie.update({ id, updates: req.body });
+        let updatedCount = await Schedule.update({ id, updates: req.body });
         res.status(200).end(JSON.stringify({ updated: !!updatedCount }));
     } catch (error) {
         if (error.message.match(invalidCallRegex)) {
             httpSingleResponse(res, 400, error.message);
         } else {
-            errorLog("ERROR: Updating a Movie", error);
+            errorLog("ERROR: Updating a Schedule", error);
             httpInternalErrorResponse(res);
         }
     }
@@ -170,9 +170,9 @@ movies.patch("/:id", async (req, res) => {
 
 /**
 * @swagger
-* /{token}/movies/{id}:
+* /{token}/schedules/{id}:
 *  delete:
-*   description: Deletes a movie by id
+*   description: Deletes a schedule by id
 *   parameters:
 *     - in: path
 *       name: token
@@ -181,7 +181,7 @@ movies.patch("/:id", async (req, res) => {
 *       name: id
 *       required: true
 *   tags:
-*     - Movies
+*     - Schedules
 *   responses:
 *     200:
 *       content:
@@ -197,19 +197,19 @@ movies.patch("/:id", async (req, res) => {
 *     500:
 *       description: Internal error
 */
-movies.delete("/:id", async (req, res) => {
+schedules.delete("/:id", async (req, res) => {
     let id = req.params.id;
     try {
-        let deletedCount = await Movie.delete({ id });
+        let deletedCount = await Schedule.delete({ id });
         res.status(200).end(JSON.stringify({ deleted: !!deletedCount }));
     } catch (error) {
         if (error.message.match(invalidCallRegex)) {
             httpSingleResponse(res, 400, error.message);
         } else {
-            errorLog("ERROR: Deleting a Movie", error);
+            errorLog("ERROR: Deleting a Schedule", error);
             httpInternalErrorResponse(res);
         }
     }
 })
 
-module.exports = movies;
+module.exports = schedules;

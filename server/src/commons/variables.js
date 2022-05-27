@@ -29,6 +29,7 @@ let pageNotFound = "Page_Not_Found";
 // defaults
 let defaultImageUrl = "";
 let defaultPrice = 50;
+let userInitBalance = 200;
 
 module.exports = {
     databaseName,
@@ -46,5 +47,6 @@ module.exports = {
     pageNotFound,
     defaultImageUrl,
     defaultPrice,
-    noAvailableSeats
+    noAvailableSeats,
+    userInitBalance
 }

@@ -1,0 +1,36 @@
+[
+    {
+        "Name": "User",
+        "id": "<string>",
+        "fullName": "<string> [required]",
+        "phone": "<string> [required]",
+        "passwordHash": "<string> [required]",
+        "booked": "<array>",
+        "saved": "<array>",
+        "balance":"<double>"
+    },
+    {
+        "Name": "Movie",
+        "id": "<string>",
+        "title": "<string> [required]",
+        "description": "<string>",
+        "imageUrl": "<string>",
+        "casts": "<string>",
+        "genera": "<string>"
+    },
+    {
+        "Name": "Booing",
+        "id": "<string>",
+        "userId": "<string> [required]",
+        "scheduleId": "<string> [required]"
+    },
+    {
+        "Name": "Schedule",
+        "id": "<string>",
+        "movieId": "<string> [required]",
+        "startingTime": "<integer> [required]",
+        "endTime": "<integer> [required]",
+        "soldOut": "<boolean>",
+        "price": "<integer>"
+    }
+]
