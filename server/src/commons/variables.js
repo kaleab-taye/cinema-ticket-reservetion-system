@@ -23,8 +23,10 @@ let requireParamsNotSet = invalidCall + "SOME_REQUIRED_PARAMS_NOT_SET";
 let invalidId = invalidCall + "INVALID_ID";
 let userPhoneAlreadyInUse = invalidCall + "USER_PHONE_ALREADY_IN_USE";
 let userPhoneNotInUse = invalidCall + "USER_PHONE_NOT_IN_USE";
-let noAvailableSeats = invalidCall + "No_Available_Seats";
-let pageNotFound = "Page_Not_Found";
+let noAvailableSeats = invalidCall + "NO_AVAILABLE_SEATS";
+let userDoesNotExist = invalidCall + "USER_DONT_EXIST";
+let scheduleDoesNotExist = invalidCall + "SCHEDULE_DONT_EXIST";
+let pageNotFound = "PAGE_NOT_FOUND";
 
 // defaults
 let defaultImageUrl = "";
@@ -44,6 +46,8 @@ module.exports = {
     invalidId,
     userPhoneAlreadyInUse,
     userPhoneNotInUse,
+    userDoesNotExist,
+    scheduleDoesNotExist,
     pageNotFound,
     defaultImageUrl,
     defaultPrice,

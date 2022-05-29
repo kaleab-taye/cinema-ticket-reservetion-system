@@ -8,7 +8,6 @@ class User {
     fullName;
     phone;
     passwordHash;
-    saved;
     booked;
     balance;
 
@@ -17,7 +16,6 @@ class User {
         fullName,
         phone,
         passwordHash,
-        saved,
         booked,
         balance
     }) {
@@ -25,7 +23,6 @@ class User {
         this.fullName = fullName;
         this.phone = phone;
         this.passwordHash = passwordHash;
-        this.saved = _.isUndefined(saved) ? [] : saved;
         this.booked = _.isUndefined(booked) ? [] : booked;
         this.balance = _.isUndefined(balance) ? userInitBalance : balance;
     }

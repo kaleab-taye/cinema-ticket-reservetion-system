@@ -2,17 +2,16 @@
     {
         "Name": "User",
         "id": "<string>",
-        "fullName": "<string> [required]",
-        "phone": "<string> [required]",
-        "passwordHash": "<string> [required]",
+        "fullName": "<string> [R]",
+        "phone": "<string> [R]",
+        "passwordHash": "<string> [R]",
         "booked": "<array>",
-        "saved": "<array>",
         "balance":"<double>"
     },
     {
         "Name": "Movie",
         "id": "<string>",
-        "title": "<string> [required]",
+        "title": "<string> [R]",
         "description": "<string>",
         "imageUrl": "<string>",
         "casts": "<string>",
@@ -21,15 +20,15 @@
     {
         "Name": "Booing",
         "id": "<string>",
-        "userId": "<string> [required]",
-        "scheduleId": "<string> [required]"
+        "userId": "<string> [R]",
+        "scheduleId": "<string> [R]"
     },
     {
         "Name": "Schedule",
         "id": "<string>",
-        "movieId": "<string> [required]",
-        "startingTime": "<integer> [required]",
-        "endTime": "<integer> [required]",
+        "movieId": "<string> [R]",
+        "startingTime": "<integer> [R]",
+        "endTime": "<integer> [R]",
         "soldOut": "<boolean>",
         "price": "<integer>"
     }

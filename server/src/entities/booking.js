@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { addDocument, deleteDocument, getDocuments, getDocument, updateDocument } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId } = require("../commons/variables");
+const { addDocument, deleteDocument, getDocuments, getDocument, updateDocument, checkExistence } = require("../commons/functions");
+const { requireParamsNotSet, collectionNames, invalidId, userDoesNotExist, scheduleDoesNotExist } = require("../commons/variables");
 
 class Booking {
     id;
@@ -24,12 +24,31 @@ class Booking {
         ) {
             throw new Error(requireParamsNotSet);
         } else {
+            let userIdObject, scheduleIdObject;
             try {
-                let id = await addDocument(collectionNames.bookings, this);
-                this.id = id;
-                // @ts-ignore
-                delete this._id;
-                return this;
+                userIdObject = new ObjectId(this.userId);
+                scheduleIdObject = new ObjectId(this.scheduleId);
+            } catch (error) {
+                throw new Error(invalidId);
+            }
+            try {
+                let userExist = await checkExistence(collectionNames.users, { _id: userIdObject });
+                if (!userExist) {
+                    throw new Error(userDoesNotExist);
+                } else {
+                    let scheduleExist = await checkExistence(collectionNames.schedules, { _id: scheduleIdObject });
+                    if (!scheduleExist) {
+                        throw new Error(scheduleDoesNotExist);
+                    } else {
+                        // { $push: { scores: 89 } }
+                        let bookingId = await addDocument(collectionNames.bookings, this);
+                        await updateDocument(collectionNames.users, { _id: userIdObject }, { booked: this.scheduleId }, "$push");
+                        this.id = bookingId;
+                        // @ts-ignore
+                        delete this._id;
+                        return this;
+                    }
+                }
             } catch (error) {
                 throw error;
             }
@@ -99,7 +118,7 @@ class Booking {
             }
         }
     }
-    
+
     static async delete({ id }) {
         if (_.isUndefined(id)) {
             throw new Error(requireParamsNotSet);

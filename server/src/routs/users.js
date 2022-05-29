@@ -304,50 +304,6 @@ users.post("/", async (req, res) => {
 
 /**
  * @swagger
- * /{token}/users/{id}/saved:
- *  get:
- *   description: Get schedules saved by this user
- *   parameters:
- *     - in: path
- *       name: token
- *       required: true
- *     - in: path
- *       name: id
- *       required: true
- *   tags:
- *     - Users
- *   responses:
- *     200:
- *       description: An array of schedules
- *     400:
- *       description: Invalid/incomplete parameters
- *     404:
- *       description: A user with the given id not found
- *     500:
- *       description: Internal error
- */
-//  users.get("/:id/saved", async (req, res) => {
-//     let id = req.params.id;
-//     try {
-//         let user = await User.find({ id });
-//         if (user) {
-//             res.status(200).end(JSON.stringify(user));
-//         } else {
-//             httpNotFoundResponse(res);
-//         }
-//     } catch (error) {
-//         if (error.message.match(invalidCallRegex)) {
-//             httpSingleResponse(res, 400, error.message);
-//         } else {
-//             errorLog(`ERROR: Getting a User '${id}'`, error);
-//             httpInternalErrorResponse(res);
-//         }
-
-//     }
-// })
-
-/**
- * @swagger
  * /{token}/users/{id}:
  *  patch:
  *   description: Updates a user
