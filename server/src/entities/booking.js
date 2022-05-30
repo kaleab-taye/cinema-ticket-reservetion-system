@@ -130,8 +130,16 @@ class Booking {
                 throw new Error(invalidId);
             }
             try {
-                let result = await deleteDocument(collectionNames.bookings, { _id });
-                return result.deletedCount;
+                let booking = await getDocument(collectionNames.bookings,{_id});
+                // @ts-ignore
+                if (booking){
+                    // @ts-ignore
+                    await updateDocument(collectionNames.users, { _id: new ObjectId(booking.userId) }, { booked: booking.scheduleId }, "$pull");
+                    let result = await deleteDocument(collectionNames.bookings, { _id });
+                    return result.deletedCount;
+                } else {
+                    return 0;
+                }
             } catch (error) {
                 throw error;
             }

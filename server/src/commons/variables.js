@@ -5,6 +5,7 @@ const path = require("path");
 let databaseName = "cinema";
 let collectionNames = {
     users: "users",
+    staffs: "staffs",
     movies: "movies",
     bookings: "bookings",
     schedules: "schedules"

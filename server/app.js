@@ -19,6 +19,7 @@ const users = require("./src/routs/users");
 const movies = require("./src/routs/movies");
 const schedules = require("./src/routs/schedules");
 const bookings = require("./src/routs/bookings");
+const staffs = require("./src/routs/staffs");
 
 require("dotenv").config();
 
@@ -56,6 +57,7 @@ app.use(basePath, (req, res, next) => {
 })
 
 app.use(basePath + "/users", users);
+app.use(basePath + "/staffs", staffs);
 app.use(basePath + "/movies", movies);
 app.use(basePath + "/bookings", bookings);
 app.use(basePath + "/schedules", schedules);
