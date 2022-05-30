@@ -5,10 +5,16 @@ const { errorLog,
     httpSingleResponse,
     httpInternalErrorResponse,
     httpNotFoundResponse,
-    checkExistence } = require("../commons/functions.js");
-const { invalidCallRegex, collectionNames, userPhoneAlreadyInUse, requireParamsNotSet, userPhoneNotInUse } = require("../commons/variables.js");
+    checkExistence,
+    createLoginJwt,
+    httpNotAuthorizedResponse } = require("../commons/functions.js");
+const {
+    invalidCallRegex,
+    collectionNames,
+    userPhoneAlreadyInUse,
+    requireParamsNotSet,
+    userPhoneNotInUse } = require("../commons/variables.js");
 const User = require("../entities/user.js")
-
 const users = express.Router();
 
 /**
@@ -111,7 +117,9 @@ users.post("/login", async (req, res) => {
         if (await User.verifyPassword(req.body)) {
             let user = await User.getByPhone({ phone: req.body.phone });
             if (user) {
-                res.status(200).end(JSON.stringify(user));
+                let loginToken = createLoginJwt("user", user.id);
+                let loginResponse = { user, loginToken }
+                res.status(200).end(JSON.stringify(loginResponse));
             } else {
                 errorLog("ERROR: Getting User After Password Got Verified", user);
                 httpInternalErrorResponse(res);
@@ -166,7 +174,7 @@ users.post("/login", async (req, res) => {
  *     500:
  *       description: Internal error
  */
- users.post("/recover", async (req, res) => {
+users.post("/recover", async (req, res) => {
     let phone = req.body.phone;
     if (_.isUndefined(phone)) {
         httpSingleResponse(res, 400, requireParamsNotSet);
@@ -187,50 +195,6 @@ users.post("/login", async (req, res) => {
                 httpInternalErrorResponse(res);
             }
         }
-    }
-})
-
-/**
- * @swagger
- * /{token}/users/{id}:
- *  get:
- *   description: Get a user by id
- *   parameters:
- *     - in: path
- *       name: token
- *       required: true
- *     - in: path
- *       name: id
- *       required: true
- *   tags:
- *     - Users
- *   responses:
- *     200:
- *       description: A user object
- *     400:
- *       description: Invalid/incomplete parameters
- *     404:
- *       description: A user with the given id not found
- *     500:
- *       description: Internal error
- */
-users.get("/:id", async (req, res) => {
-    let id = req.params.id;
-    try {
-        let user = await User.find({ id });
-        if (user) {
-            res.status(200).end(JSON.stringify(user));
-        } else {
-            httpNotFoundResponse(res);
-        }
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog(`ERROR: Getting a User '${id}'`, error);
-            httpInternalErrorResponse(res);
-        }
-
     }
 })
 
@@ -275,7 +239,7 @@ users.post("/", async (req, res) => {
  * @swagger
  * /{token}/users:
  *  get:
- *   description: Get all users
+ *   description: Get all users (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
@@ -288,7 +252,7 @@ users.post("/", async (req, res) => {
  *     500:
  *       description: Internal error
  */
- users.get("/", async (req, res) => {
+users.get("/", async (req, res) => {
     try {
         let allUsers = await User.findAll();
         res.status(200).end(JSON.stringify(allUsers));
@@ -305,8 +269,99 @@ users.post("/", async (req, res) => {
 /**
  * @swagger
  * /{token}/users/{id}:
+ *  get:
+ *   description: Get a user by id (FOR TESTING ONLY)
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *     - in: path
+ *       name: id
+ *       required: true
+ *   tags:
+ *     - Users
+ *   responses:
+ *     200:
+ *       description: A user object
+ *     400:
+ *       description: Invalid/incomplete parameters
+ *     404:
+ *       description: A user with the given id not found
+ *     500:
+ *       description: Internal error
+ */
+users.get("/:id", async (req, res) => {
+    let id = req.params.id;
+    try {
+        let user = await User.find({ id });
+        if (user) {
+            res.status(200).end(JSON.stringify(user));
+        } else {
+            httpNotFoundResponse(res);
+        }
+    } catch (error) {
+        if (error.message.match(invalidCallRegex)) {
+            httpSingleResponse(res, 400, error.message);
+        } else {
+            errorLog(`ERROR: Getting a User '${id}'`, error);
+            httpInternalErrorResponse(res);
+        }
+
+    }
+})
+
+/**
+ * @swagger
+ * /{token}/users/{id}/bookings:
+ *  get:
+ *   description: Get bookings of a user by its id (Requires JWT as the user)
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *     - in: path
+ *       name: id
+ *       required: true
+ *   tags:
+ *     - Users
+ *   responses:
+ *     200:
+ *       description: Array of booking objects
+ *     400:
+ *       description: Invalid/incomplete parameters
+ *     404:
+ *       description: A user with the given id not found
+ *     500:
+ *       description: Internal error
+ */
+users.get("/:id/bookings", async (req, res) => {
+    // -JWT
+    let id = req.params.id;
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.id != id) {
+        httpNotAuthorizedResponse(res);
+    } else {
+        try {
+            let bookings = await User.getBookings(id);
+            res.status(200).end(JSON.stringify(bookings));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog(`ERROR: Getting all bookings for a user '${id}'`, error);
+                httpInternalErrorResponse(res);
+            }
+
+        }
+    }
+})
+
+/**
+ * @swagger
+ * /{token}/users/{id}:
  *  patch:
- *   description: Updates a user
+ *   description: Updates a user (Requires JWT as the user)
  *   parameters:
  *     - in: path
  *       name: token
@@ -335,16 +390,23 @@ users.post("/", async (req, res) => {
  *       description: Internal error
  */
 users.patch("/:id", async (req, res) => {
+    // -JWT
     let id = req.params.id;
-    try {
-        let updatedCount = await User.update({ id, updates: req.body });
-        res.status(200).end(JSON.stringify({ updated: !!updatedCount }));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Updating a User", error);
-            httpInternalErrorResponse(res);
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.id != id) {
+        httpNotAuthorizedResponse(res);
+    } else {
+        try {
+            let updatedCount = await User.update({ id, updates: req.body });
+            res.status(200).end(JSON.stringify({ updated: !!updatedCount }));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Updating a User", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })
@@ -353,7 +415,7 @@ users.patch("/:id", async (req, res) => {
  * @swagger
  * /{token}/users/{id}:
  *  delete:
- *   description: Deletes a user by id
+ *   description: Deletes a user by id (Requires JWT as the user)
  *   parameters:
  *     - in: path
  *       name: token
@@ -379,16 +441,23 @@ users.patch("/:id", async (req, res) => {
  *       description: Internal error
  */
 users.delete("/:id", async (req, res) => {
+    // -JWT
     let id = req.params.id;
-    try {
-        let deletedCount = await User.delete({ id });
-        res.status(200).end(JSON.stringify({ deleted: !!deletedCount }));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Deleting a User", error);
-            httpInternalErrorResponse(res);
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.id != id) {
+        httpNotAuthorizedResponse(res);
+    } else {
+        try {
+            let deletedCount = await User.delete({ id });
+            res.status(200).end(JSON.stringify({ deleted: !!deletedCount }));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Deleting a User", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })

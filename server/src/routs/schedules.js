@@ -1,6 +1,7 @@
 
+const _ = require("lodash");
 const express = require("express");
-const { errorLog, httpSingleResponse, httpInternalErrorResponse, httpNotFoundResponse } = require("../commons/functions.js");
+const { errorLog, httpSingleResponse, httpInternalErrorResponse, httpNotFoundResponse, httpNotAuthorizedResponse } = require("../commons/functions.js");
 const { invalidCallRegex } = require("../commons/variables.js");
 
 const Schedule = require("../entities/schedule.js")
@@ -11,7 +12,7 @@ const schedules = express.Router();
  * @swagger
  * /{token}/schedules:
  *  get:
- *   description: Get all schedules
+ *   description: Get all schedules (Requires JWT as user or staff)
  *   parameters:
  *     - in: path
  *       name: token
@@ -27,15 +28,22 @@ const schedules = express.Router();
  *       description: Internal error
  */
 schedules.get("/", async (req, res) => {
-    try {
-        let allSchedules = await Schedule.findAll();
-        res.status(200).end(JSON.stringify(allSchedules));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Getting All Schedules", error);
-            httpInternalErrorResponse(res);
+    // -JWT
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || !(loggedInUser.type == "staff" || loggedInUser.type == "user")) {
+        httpNotAuthorizedResponse(res);
+    } else {
+        try {
+            let allSchedules = await Schedule.findAll();
+            res.status(200).end(JSON.stringify(allSchedules));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Getting All Schedules", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })
@@ -44,7 +52,7 @@ schedules.get("/", async (req, res) => {
  * @swagger
  * /{token}/schedules/{id}:
  *  get:
- *   description: Get a schedule by its id
+ *   description: Get a schedule by its id (Requires JWT as user or staff)
  *   parameters:
  *     - in: path
  *       name: token
@@ -65,22 +73,29 @@ schedules.get("/", async (req, res) => {
  *       description: Internal error
  */
 schedules.get("/:id", async (req, res) => {
-    let id = req.params.id;
-    try {
-        let schedule = await Schedule.find({ id });
-        if (schedule) {
-            res.status(200).end(JSON.stringify(schedule));
-        } else {
-            httpNotFoundResponse(res);
-        }
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog(`ERROR: Getting a Schedule '${id}'`, error);
-            httpInternalErrorResponse(res);
-        }
+    // -JWT
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || !(loggedInUser.type == "staff" || loggedInUser.type == "user")) {
+        httpNotAuthorizedResponse(res);
+    } else {
+        let id = req.params.id;
+        try {
+            let schedule = await Schedule.find({ id });
+            if (schedule) {
+                res.status(200).end(JSON.stringify(schedule));
+            } else {
+                httpNotFoundResponse(res);
+            }
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog(`ERROR: Getting a Schedule '${id}'`, error);
+                httpInternalErrorResponse(res);
+            }
 
+        }
     }
 })
 
@@ -88,7 +103,7 @@ schedules.get("/:id", async (req, res) => {
  * @swagger
  * /{token}/schedules:
  *  post:
- *   description: Add a schedule
+ *   description: Add a schedule (Requires JWT as staff)
  *   parameters:
  *     - in: path
  *       name: token
@@ -107,16 +122,23 @@ schedules.get("/:id", async (req, res) => {
  *       description: Internal error
  */
 schedules.post("/", async (req, res) => {
-    try {
-        let newSchedule = new Schedule(req.body);
-        newSchedule = await newSchedule.save();
-        res.status(200).end(JSON.stringify(newSchedule));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Adding New Schedule", error);
-            httpInternalErrorResponse(res);
+    // -JWT
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.type != "staff") {
+        httpNotAuthorizedResponse(res);
+    } else {
+        try {
+            let newSchedule = new Schedule(req.body);
+            newSchedule = await newSchedule.save();
+            res.status(200).end(JSON.stringify(newSchedule));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Adding New Schedule", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })
@@ -125,7 +147,7 @@ schedules.post("/", async (req, res) => {
  * @swagger
  * /{token}/schedules/{id}:
  *  patch:
- *   description: Updates a schedule
+ *   description: Updates a schedule (Requires JWT as staff)
  *   parameters:
  *     - in: path
  *       name: token
@@ -154,16 +176,23 @@ schedules.post("/", async (req, res) => {
  *       description: Internal error
  */
 schedules.patch("/:id", async (req, res) => {
-    let id = req.params.id;
-    try {
-        let updatedCount = await Schedule.update({ id, updates: req.body });
-        res.status(200).end(JSON.stringify({ updated: !!updatedCount }));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Updating a Schedule", error);
-            httpInternalErrorResponse(res);
+    // -JWT
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.type != "staff") {
+        httpNotAuthorizedResponse(res);
+    } else {
+        let id = req.params.id;
+        try {
+            let updatedCount = await Schedule.update({ id, updates: req.body });
+            res.status(200).end(JSON.stringify({ updated: !!updatedCount }));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Updating a Schedule", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })
@@ -172,7 +201,7 @@ schedules.patch("/:id", async (req, res) => {
 * @swagger
 * /{token}/schedules/{id}:
 *  delete:
-*   description: Deletes a schedule by id
+*   description: Deletes a schedule by id (Requires JWT as staff)
 *   parameters:
 *     - in: path
 *       name: token
@@ -198,16 +227,23 @@ schedules.patch("/:id", async (req, res) => {
 *       description: Internal error
 */
 schedules.delete("/:id", async (req, res) => {
-    let id = req.params.id;
-    try {
-        let deletedCount = await Schedule.delete({ id });
-        res.status(200).end(JSON.stringify({ deleted: !!deletedCount }));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Deleting a Schedule", error);
-            httpInternalErrorResponse(res);
+    // -JWT
+    // @ts-ignore
+    let loggedInUser = req.loggedInUser;
+    if (_.isUndefined(loggedInUser) || loggedInUser.type != "staff") {
+        httpNotAuthorizedResponse(res);
+    } else {
+        let id = req.params.id;
+        try {
+            let deletedCount = await Schedule.delete({ id });
+            res.status(200).end(JSON.stringify({ deleted: !!deletedCount }));
+        } catch (error) {
+            if (error.message.match(invalidCallRegex)) {
+                httpSingleResponse(res, 400, error.message);
+            } else {
+                errorLog("ERROR: Deleting a Schedule", error);
+                httpInternalErrorResponse(res);
+            }
         }
     }
 })

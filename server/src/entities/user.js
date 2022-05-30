@@ -2,6 +2,7 @@ const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument, getDocuments } = require("../commons/functions");
 const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId, userInitBalance } = require("../commons/variables");
+const Booking = require("./booking");
 
 class User {
     id;
@@ -116,7 +117,25 @@ class User {
             throw error;
         }
     }
-
+    static async getBookings(id) {
+        if (_.isUndefined(id)) {
+            throw new Error(requireParamsNotSet);
+        } else {
+            try {
+                let bookings = await getDocuments(collectionNames.bookings, { userId: id });
+                let allBookings = [];
+                await bookings.forEach(booking => {
+                    booking.id = booking._id + "";
+                    delete booking._id;
+                    // @ts-ignore
+                    allBookings.push(new Booking(booking));
+                });
+                return allBookings;
+            } catch (error) {
+                throw error;
+            }
+        }
+    }
     static async update({ id, updates }) {
         if (_.isUndefined(id) || _.isEmpty(updates)) {
             throw new Error(requireParamsNotSet);

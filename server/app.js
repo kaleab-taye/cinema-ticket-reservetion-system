@@ -14,7 +14,7 @@ const {
     publicFilesPath,
     pageNotFound } = require("./src/commons/variables");
 const {
-    httpSingleResponse } = require("./src/commons/functions");
+    httpSingleResponse, getLoginJwt } = require("./src/commons/functions");
 const users = require("./src/routs/users");
 const movies = require("./src/routs/movies");
 const schedules = require("./src/routs/schedules");
@@ -55,7 +55,7 @@ app.use(basePath, (req, res, next) => {
         httpSingleResponse(res, 400, "INVALID_TOKEN");
     } else next();
 })
-
+app.use(getLoginJwt);
 app.use(basePath + "/users", users);
 app.use(basePath + "/staffs", staffs);
 app.use(basePath + "/movies", movies);

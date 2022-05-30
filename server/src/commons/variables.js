@@ -15,7 +15,7 @@ let collectionNames = {
 let defaultPort = 5000;
 let hostUrl = "http://127.0.0.1";
 let basePath = "/:token";
-let publicFilesPath = path.resolve("public")
+let publicFilesPath = path.resolve("assets");
 
 // Error message vars
 let invalidCall = "INVALID_CALL:|:";
@@ -30,7 +30,7 @@ let scheduleDoesNotExist = invalidCall + "SCHEDULE_DONT_EXIST";
 let pageNotFound = "PAGE_NOT_FOUND";
 
 // defaults
-let defaultImageUrl = "";
+let defaultImageUrl = `images/movie.jpg`;
 let defaultPrice = 50;
 let userInitBalance = 200;
 

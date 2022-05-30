@@ -88,7 +88,7 @@ movies.get("/:id", async (req, res) => {
  * @swagger
  * /{token}/movies:
  *  post:
- *   description: Add a movie
+ *   description: Add a movie (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
@@ -125,7 +125,7 @@ movies.post("/", async (req, res) => {
  * @swagger
  * /{token}/movies/{id}:
  *  patch:
- *   description: Updates a movie
+ *   description: Updates a movie (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
@@ -172,7 +172,7 @@ movies.patch("/:id", async (req, res) => {
 * @swagger
 * /{token}/movies/{id}:
 *  delete:
-*   description: Deletes a movie by id
+*   description: Deletes a movie by id (FOR TESTING ONLY)
 *   parameters:
 *     - in: path
 *       name: token

@@ -1,8 +1,9 @@
 
+require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const color = require("cli-color");
+const jwt = require("jsonwebtoken");
 const { databaseName } = require("./variables.js");
-require("dotenv").config();
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 
@@ -24,6 +25,10 @@ function httpSingleResponse(res, code, message) {
 
 function httpInternalErrorResponse(res) {
     return httpSingleResponse(res, 500, "INTERNAL_ERROR");
+}
+
+function httpNotAuthorizedResponse(res) {
+    return httpSingleResponse(res, 401, "NOT_AUTHORIZED");
 }
 
 function httpNotFoundResponse(res) {
@@ -124,10 +129,25 @@ async function getCount(collectionName, conditions) {
         throw error;
     }
 }
+
+// JWT
+function createLoginJwt(type, id) {
+    let loggedInUser = { type, id };
+    return jwt.sign(loggedInUser, process.env.SECURE_JWT_TOKEN);
+}
+
+function getLoginJwt(req, res, next) {
+    let headerToken = req.headers["authorization"]?.split(" ")[1]
+    jwt.verify(headerToken, process.env.SECURE_JWT_TOKEN, (error, loggedInUser) => {
+        req.loggedInUser = loggedInUser;
+        next()
+    })
+}
 module.exports = {
     errorLog,
     httpSingleResponse,
     httpInternalErrorResponse,
+    httpNotAuthorizedResponse,
     httpNotFoundResponse,
     addDocument,
     checkExistence,
@@ -138,5 +158,7 @@ module.exports = {
     deleteDocument,
     deleteDocuments,
     generateRandomInt,
-    getCount
+    getCount,
+    createLoginJwt,
+    getLoginJwt
 }

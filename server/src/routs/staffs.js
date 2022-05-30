@@ -5,7 +5,8 @@ const { errorLog,
     httpSingleResponse,
     httpInternalErrorResponse,
     httpNotFoundResponse,
-    checkExistence } = require("../commons/functions.js");
+    checkExistence, 
+    createLoginJwt} = require("../commons/functions.js");
 const { invalidCallRegex, collectionNames, userPhoneAlreadyInUse, requireParamsNotSet } = require("../commons/variables.js");
 const Staff = require("../entities/staff.js")
 
@@ -50,7 +51,9 @@ staffs.post("/login", async (req, res) => {
         if (await Staff.verifyPassword(req.body)) {
             let staff = await Staff.getByPhone({ phone: req.body.phone });
             if (staff) {
-                res.status(200).end(JSON.stringify(staff));
+                let loginToken = createLoginJwt("staff",staff.id);
+                let loginResponse = {staff, loginToken}
+                res.status(200).end(JSON.stringify(loginResponse));
             } else {
                 errorLog("ERROR: Getting Staff After Password Got Verified", staff);
                 httpInternalErrorResponse(res);
@@ -70,9 +73,77 @@ staffs.post("/login", async (req, res) => {
 
 /**
  * @swagger
+ * /{token}/staffs:
+ *  post:
+ *   description: Add a staff (FOR TESTING ONLY)
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *   requestBody:
+ *     description: A staff object
+ *     required: true
+ *   tags:
+ *     - Staffs
+ *   responses:
+ *     200:
+ *       description: A staff object
+ *     400:
+ *       description: Invalid/incomplete parameters
+ *     500:
+ *       description: Internal error
+ */
+staffs.post("/", async (req, res) => {
+    try {
+        let newStaff = new Staff(req.body);
+        newStaff = await newStaff.save();
+        res.status(200).end(JSON.stringify(newStaff));
+    } catch (error) {
+        if (error.message.match(invalidCallRegex)) {
+            httpSingleResponse(res, 400, error.message);
+        } else {
+            errorLog("ERROR: Adding New Staff", error);
+            httpInternalErrorResponse(res);
+        }
+    }
+})
+
+/**
+ * @swagger
+ * /{token}/staffs:
+ *  get:
+ *   description: Get all staffs (FOR TESTING ONLY)
+ *   parameters:
+ *     - in: path
+ *       name: token
+ *       required: true
+ *   tags:
+ *     - Staffs
+ *   responses:
+ *     200:
+ *       description: An array of all staffs
+ *     500:
+ *       description: Internal error
+ */
+ staffs.get("/", async (req, res) => {
+    try {
+        let allStaffs = await Staff.findAll();
+        res.status(200).end(JSON.stringify(allStaffs));
+    } catch (error) {
+        if (error.message.match(invalidCallRegex)) {
+            httpSingleResponse(res, 400, error.message);
+        } else {
+            errorLog("ERROR: Getting All Staffs", error);
+            httpInternalErrorResponse(res);
+        }
+    }
+})
+
+/**
+ * @swagger
  * /{token}/staffs/{id}:
  *  get:
- *   description: Get a staff by id
+ *   description: Get a staff by id (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
@@ -114,77 +185,9 @@ staffs.get("/:id", async (req, res) => {
 
 /**
  * @swagger
- * /{token}/staffs:
- *  post:
- *   description: Add a staff
- *   parameters:
- *     - in: path
- *       name: token
- *       required: true
- *   requestBody:
- *     description: A staff object
- *     required: true
- *   tags:
- *     - Staffs
- *   responses:
- *     200:
- *       description: A staff object
- *     400:
- *       description: Invalid/incomplete parameters
- *     500:
- *       description: Internal error
- */
-staffs.post("/", async (req, res) => {
-    try {
-        let newStaff = new Staff(req.body);
-        newStaff = await newStaff.save();
-        res.status(200).end(JSON.stringify(newStaff));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Adding New Staff", error);
-            httpInternalErrorResponse(res);
-        }
-    }
-})
-
-/**
- * @swagger
- * /{token}/staffs:
- *  get:
- *   description: Get all staffs
- *   parameters:
- *     - in: path
- *       name: token
- *       required: true
- *   tags:
- *     - Staffs
- *   responses:
- *     200:
- *       description: An array of all staffs
- *     500:
- *       description: Internal error
- */
- staffs.get("/", async (req, res) => {
-    try {
-        let allStaffs = await Staff.findAll();
-        res.status(200).end(JSON.stringify(allStaffs));
-    } catch (error) {
-        if (error.message.match(invalidCallRegex)) {
-            httpSingleResponse(res, 400, error.message);
-        } else {
-            errorLog("ERROR: Getting All Staffs", error);
-            httpInternalErrorResponse(res);
-        }
-    }
-})
-
-/**
- * @swagger
  * /{token}/staffs/{id}:
  *  patch:
- *   description: Updates a staff
+ *   description: Updates a staff (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
@@ -231,7 +234,7 @@ staffs.patch("/:id", async (req, res) => {
  * @swagger
  * /{token}/staffs/{id}:
  *  delete:
- *   description: Deletes a staff by id
+ *   description: Deletes a staff by id (FOR TESTING ONLY)
  *   parameters:
  *     - in: path
  *       name: token
