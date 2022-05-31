@@ -96,7 +96,7 @@ class Booking {
                 booking.id = booking._id + "";
                 delete booking._id;
                 // @ts-ignore
-                allBookings.push(new User(booking));
+                allBookings.push(new Booking(booking));
             });
             return allBookings;
         } catch (error) {

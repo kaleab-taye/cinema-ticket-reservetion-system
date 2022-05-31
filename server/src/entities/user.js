@@ -124,12 +124,24 @@ class User {
             try {
                 let bookings = await getDocuments(collectionNames.bookings, { userId: id });
                 let allBookings = [];
-                await bookings.forEach(booking => {
+                for await (let booking of bookings) {
                     booking.id = booking._id + "";
                     delete booking._id;
+                    // let Movie = require("./movie");
+                    // let movie;
+                    // try {
+                    //     movie = await Movie.find(booking.movieId);
+                    //     booking.movie = movie;
+                    // } catch (error) { }
+                    // let Schedule = require("./schedule");
+                    // let schedule;
+                    // try {
+                    //     schedule = await Schedule.find(booking.scheduleId);
+                    //     booking.schedule = schedule;
+                    // } catch (error) { }
                     // @ts-ignore
                     allBookings.push(new Booking(booking));
-                });
+                }
                 return allBookings;
             } catch (error) {
                 throw error;

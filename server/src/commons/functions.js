@@ -183,6 +183,7 @@ async function initDb() {
                 }
             }
             await addDocument("init", { "init": true });
+            console.log("Database initialized with: 5 movies, 20 schedules");
             return true;
         } else {
             return true;

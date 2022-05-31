@@ -1,12 +1,13 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity } = require("../commons/variables");
+const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity, scheduleOverlap } = require("../commons/variables");
 
 class Schedule {
     id;
     movieId;
     startTime;
+    movie;
     endTime;
     capacity;
     seatsLeft;
@@ -15,6 +16,7 @@ class Schedule {
     constructor({
         id,
         movieId,
+        movie,
         startTime,
         endTime,
         capacity,
@@ -23,6 +25,7 @@ class Schedule {
     }) {
         this.id = id;
         this.movieId = movieId;
+        this.movie = movie;
         this.startTime = startTime;
         this.endTime = endTime;
         this.capacity = _.isUndefined(capacity) ? defaultCapacity : capacity;
@@ -38,14 +41,23 @@ class Schedule {
             throw new Error(requireParamsNotSet);
         } else {
             try {
-                // let scheduleOverlap = await checkExistence(collectionNames.schedules,
-                //     { startTime: { "$gte": this.startTime,"$lse": this.endTime }, endTime: { "$lse": this.endTime } }
-                // );
-                let id = await addDocument(collectionNames.schedules, this);
-                this.id = id;
-                // @ts-ignore
-                delete this._id;
-                return this;
+                let scheduleOverlaps = await checkExistence(collectionNames.schedules,
+                    {
+                        "$or": [
+                            { startTime: { "$lte": this.startTime }, endTime: { "$gt": this.startTime } },
+                            { endTime: { "$gte": this.endTime }, startTime: { "$lt": this.endTime } }
+                        ]
+                    }
+                );
+                if (scheduleOverlaps) {
+                    throw new Error(scheduleOverlap);
+                } else {
+                    let id = await addDocument(collectionNames.schedules, this);
+                    this.id = id;
+                    // @ts-ignore
+                    delete this._id;
+                    return this;
+                }
             } catch (error) {
                 throw error;
             }
@@ -80,22 +92,42 @@ class Schedule {
         }
     }
 
+    // static async findAll() {
+    //     try {
+    //         let schedule = await getDocuments(collectionNames.schedules);
+    //         let allSchedules = []
+    //         await schedule.forEach(schedule => {
+    //             schedule.id = schedule._id + "";
+    //             delete schedule._id;
+    //             // @ts-ignore
+    //             allSchedules.push(new Schedule(schedule));
+    //         });
+    //         return allSchedules;
+    //     } catch (error) {
+    //         throw error;
+    //     }
+    // }
     static async findAll() {
         try {
-            let schedule = await getDocuments(collectionNames.schedules);
+            let schedules = await getDocuments(collectionNames.schedules);
             let allSchedules = []
-            await schedule.forEach(schedule => {
+            for await (let schedule of schedules) {
                 schedule.id = schedule._id + "";
                 delete schedule._id;
+                let Movie = require("./movie");
+                let movie;
+                try {
+                    movie = await Movie.find(schedule.movieId);
+                    schedule.movie = movie;
+                } catch (error) { }
                 // @ts-ignore
                 allSchedules.push(new Schedule(schedule));
-            });
+            }
             return allSchedules;
         } catch (error) {
             throw error;
         }
     }
-
     static async update({ id, updates }) {
         if (_.isUndefined(id) || _.isEmpty(updates)) {
             throw new Error(requireParamsNotSet);

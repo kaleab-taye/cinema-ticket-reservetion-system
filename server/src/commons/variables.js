@@ -28,6 +28,7 @@ let noAvailableSeats = invalidCall + "NO_AVAILABLE_SEATS";
 let userDoesNotExist = invalidCall + "USER_DONT_EXIST";
 let scheduleDoesNotExist = invalidCall + "SCHEDULE_DONT_EXIST";
 let scheduleSoldOut = invalidCall + "SCHEDULE_SOLD_OUT";
+let scheduleOverlap = invalidCall + "SCHEDULE_OVERLAP";
 let pageNotFound = "PAGE_NOT_FOUND";
 
 // defaults
@@ -52,6 +53,7 @@ module.exports = {
     userDoesNotExist,
     scheduleDoesNotExist,
     scheduleSoldOut,
+    scheduleOverlap,
     pageNotFound,
     defaultImageUrl,
     defaultPrice,
