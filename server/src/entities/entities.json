@@ -18,7 +18,7 @@
         "genera": "<array>"
     },
     {
-        "Name": "Booing",
+        "Name": "Booking",
         "id": "<string>",
         "userId": "<string> [R]",
         "scheduleId": "<string> [R]"
