@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { addDocument, deleteDocument, getDocuments, getDocument, updateDocument, checkExistence } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId, userDoesNotExist, scheduleDoesNotExist } = require("../commons/variables");
+const { requireParamsNotSet, collectionNames, invalidId, userDoesNotExist, scheduleDoesNotExist, scheduleSoldOut } = require("../commons/variables");
 
 class Booking {
     id;
@@ -36,13 +36,18 @@ class Booking {
                 if (!userExist) {
                     throw new Error(userDoesNotExist);
                 } else {
-                    let scheduleExist = await checkExistence(collectionNames.schedules, { _id: scheduleIdObject });
-                    if (!scheduleExist) {
+                    let schedule = await getDocument(collectionNames.schedules, { _id: scheduleIdObject });
+                    // @ts-ignore
+                    if (!schedule) {
                         throw new Error(scheduleDoesNotExist);
+                        // @ts-ignore
+                    } else if (schedule.seatsLeft < 1) {
+                        throw new Error(scheduleSoldOut);
                     } else {
-                        // { $push: { scores: 89 } }
                         let bookingId = await addDocument(collectionNames.bookings, this);
                         await updateDocument(collectionNames.users, { _id: userIdObject }, { booked: this.scheduleId }, "$push");
+                        // @ts-ignore
+                        await updateDocument(collectionNames.schedules, { _id: scheduleIdObject }, { seatsLeft: -1 }, "$inc");
                         this.id = bookingId;
                         // @ts-ignore
                         delete this._id;
@@ -130,9 +135,9 @@ class Booking {
                 throw new Error(invalidId);
             }
             try {
-                let booking = await getDocument(collectionNames.bookings,{_id});
+                let booking = await getDocument(collectionNames.bookings, { _id });
                 // @ts-ignore
-                if (booking){
+                if (booking) {
                     // @ts-ignore
                     await updateDocument(collectionNames.users, { _id: new ObjectId(booking.userId) }, { booked: booking.scheduleId }, "$pull");
                     let result = await deleteDocument(collectionNames.bookings, { _id });

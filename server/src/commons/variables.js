@@ -27,11 +27,13 @@ let userPhoneNotInUse = invalidCall + "USER_PHONE_NOT_IN_USE";
 let noAvailableSeats = invalidCall + "NO_AVAILABLE_SEATS";
 let userDoesNotExist = invalidCall + "USER_DONT_EXIST";
 let scheduleDoesNotExist = invalidCall + "SCHEDULE_DONT_EXIST";
+let scheduleSoldOut = invalidCall + "SCHEDULE_SOLD_OUT";
 let pageNotFound = "PAGE_NOT_FOUND";
 
 // defaults
 let defaultImageUrl = `images/movie.jpg`;
 let defaultPrice = 50;
+let defaultCapacity = 200;
 let userInitBalance = 200;
 
 module.exports = {
@@ -49,9 +51,11 @@ module.exports = {
     userPhoneNotInUse,
     userDoesNotExist,
     scheduleDoesNotExist,
+    scheduleSoldOut,
     pageNotFound,
     defaultImageUrl,
     defaultPrice,
+    defaultCapacity,
     noAvailableSeats,
     userInitBalance
 }

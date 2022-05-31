@@ -1,14 +1,15 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId, defaultPrice } = require("../commons/variables");
+const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence } = require("../commons/functions");
+const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity } = require("../commons/variables");
 
 class Schedule {
     id;
     movieId;
     startTime;
     endTime;
-    soldOut;
+    capacity;
+    seatsLeft;
     price;
 
     constructor({
@@ -16,14 +17,16 @@ class Schedule {
         movieId,
         startTime,
         endTime,
-        soldOut,
+        capacity,
+        seatsLeft,
         price
     }) {
         this.id = id;
         this.movieId = movieId;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.soldOut = _.isUndefined(soldOut) ? false : soldOut;
+        this.capacity = _.isUndefined(capacity) ? defaultCapacity : capacity;
+        this.seatsLeft = _.isUndefined(seatsLeft) ? this.capacity : seatsLeft;
         this.price = _.isUndefined(price) ? defaultPrice : price;
     }
 
@@ -35,6 +38,9 @@ class Schedule {
             throw new Error(requireParamsNotSet);
         } else {
             try {
+                // let scheduleOverlap = await checkExistence(collectionNames.schedules,
+                //     { startTime: { "$gte": this.startTime,"$lse": this.endTime }, endTime: { "$lse": this.endTime } }
+                // );
                 let id = await addDocument(collectionNames.schedules, this);
                 this.id = id;
                 // @ts-ignore
@@ -73,7 +79,7 @@ class Schedule {
             }
         }
     }
-    
+
     static async findAll() {
         try {
             let schedule = await getDocuments(collectionNames.schedules);
@@ -109,7 +115,6 @@ class Schedule {
             }
         }
     }
-
 
     static async delete({ id }) {
         if (_.isUndefined(id)) {

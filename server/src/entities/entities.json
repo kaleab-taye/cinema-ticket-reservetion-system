@@ -6,7 +6,7 @@
         "phone": "<string> [R]",
         "passwordHash": "<string> [R]",
         "booked": "<array>",
-        "balance":"<double>"
+        "balance": "<double>"
     },
     {
         "Name": "Movie",
@@ -14,8 +14,8 @@
         "title": "<string> [R]",
         "description": "<string>",
         "imageUrl": "<string>",
-        "casts": "<string>",
-        "genera": "<string>"
+        "casts": "<array>",
+        "genera": "<array>"
     },
     {
         "Name": "Booing",
@@ -29,7 +29,8 @@
         "movieId": "<string> [R]",
         "startingTime": "<integer> [R]",
         "endTime": "<integer> [R]",
-        "soldOut": "<boolean>",
+        "capacity": "<integer>",
+        "seatsLeft": "<integer>",
         "price": "<integer>"
     }
 ]

@@ -1,0 +1,75 @@
+{
+    "movies": [
+        {
+            "title": "Cover",
+            "description": "They are married men that pass H.I.V. to their male or female partners. Many of the men hide behind the vow of marriage, but still desire men. The women know, but have grown accustomed to the extravagant lifestyle.",
+            "imageUrl": "/images/cover.png",
+            "casts": [
+                "Aunjanue Ellis",
+                "Razaaq Adoti",
+                "Vivica A. Fox"
+            ],
+            "genera": [
+                "drama",
+                "thriller"
+            ]
+        },
+        {
+            "title": "Shattered",
+            "description": "Chris is a lonely tech millionaire who develops a passionate relationship with the charming and sexy Sky. She also steps in as his nurse when he's attacked and injured by a punk on the street. However, Sky's odd behavior makes Chris suspect that she has more sinister intentions, especially when her roommate dies under mysterious circumstances.",
+            "imageUrl": "/images/shattered.jpg",
+            "casts": [
+                "Cameron Monaghan",
+                "Frank Grillo",
+                "Lilly Krug",
+                "John Malkovich"
+            ],
+            "genera": [
+                "thriller"
+            ]
+        },
+        {
+            "title": "Avatar",
+            "description": "James Cameron's Avatar franchise is a planned series of science fiction films produced by Cameron's Lightstorm Entertainment and distributed by 20th Century Studios, as well as associated computer games and theme park rides.",
+            "imageUrl": "images/avatar.png",
+            "casts": [
+                "Sam Worthington",
+                "Stephen Lang",
+                "Sigourney Weaver",
+                "Michelle Rodriguez"
+            ],
+            "genera": [
+                "science fiction"
+            ]
+        },
+        {
+            "title": "War Horse",
+            "description": "Albert and his horse Joey are inseparable. However, when Joey is sold off to the British cavalry, Albert follows him in the hope of reuniting with his best friend.",
+            "imageUrl": "images/war-horse.jpg",
+            "casts": [
+                "Sam Worthington",
+                "Stephen Lang",
+                "Sigourney Weaver",
+                "Michelle Rodriguez"
+            ],
+            "genera": [
+                "war",
+                "drama"
+            ]
+        },
+        {
+            "title": "Rampage",
+            "description": "When three different animals become infected with a dangerous pathogen, a primatologist and a geneticist team up to stop them from destroying Chicago.",
+            "imageUrl": "images/rampage.jpg",
+            "casts": [
+                "Dwayne Johnson",
+                "Naomie Harris",
+                "Malin Akerman"
+            ],
+            "genera": [
+                "action",
+                "adventure"
+            ]
+        }
+    ]
+}

@@ -3,7 +3,8 @@ require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const color = require("cli-color");
 const jwt = require("jsonwebtoken");
-const { databaseName } = require("./variables.js");
+const { databaseName, collectionNames } = require("./variables.js");
+const initData = require("../../assets/init_data.json");
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 
@@ -143,6 +144,54 @@ function getLoginJwt(req, res, next) {
         next()
     })
 }
+
+// initializations
+async function initDb() {
+    try {
+        let inited = await checkExistence("init", { "init": true });
+        if (!inited) {
+            for (let [collectionName, documents] of Object.entries(initData)) {
+                for (let document of documents) {
+                    await addDocument(collectionName, document);
+                }
+            }
+            let now = Date.now();
+            let today = now - (now % (24 * 3600000))
+            let startTime = today + (14 * 3600000);
+            let columCount = 0;
+            for (let i = 0; i < 2; i++) {
+                let allMovies = await getDocuments(collectionNames.movies);
+                for await (let movie of allMovies) {
+                    let movieId = movie._id + "";
+                    let Schedule = require("../entities/schedule")
+                    // @ts-ignore
+                    let schedule1 = new  Schedule({ movieId, startTime, endTime: startTime + (2 * 3600000) });
+                    await schedule1.save();
+                    // await addDocument(collectionNames.schedules, schedule);
+                    startTime += 2 * 3600000;
+                    // @ts-ignore
+                    let schedule2 = new  Schedule({ movieId, startTime, endTime: startTime + 2 * 3600000 });
+                    await schedule2.save();
+                    // await addDocument(collectionNames.schedules, schedule2);
+                    columCount += 2
+                    if (columCount >= 4) {
+                        columCount = 0;
+                        startTime += 18 * 3600000
+                    } else {
+                        startTime += 2 * 3600000
+                    }
+                }
+            }
+            await addDocument("init", { "init": true });
+            return true;
+        } else {
+            return true;
+        }
+    } catch (error) {
+        errorLog("Error while initializing db", error);
+        return false
+    }
+}
 module.exports = {
     errorLog,
     httpSingleResponse,
@@ -160,5 +209,6 @@ module.exports = {
     generateRandomInt,
     getCount,
     createLoginJwt,
-    getLoginJwt
+    getLoginJwt,
+    initDb
 }
