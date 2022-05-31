@@ -27,6 +27,7 @@
         "Name": "Schedule",
         "id": "<string>",
         "movieId": "<string> [R]",
+        "movie":"<Movie>",
         "startingTime": "<integer> [R]",
         "endTime": "<integer> [R]",
         "capacity": "<integer>",
