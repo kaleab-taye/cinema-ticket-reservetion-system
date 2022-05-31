@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity } = require("../commons/variables");
+const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity, scheduleOverlap } = require("../commons/variables");
 
 class Schedule {
     id;
@@ -38,14 +38,23 @@ class Schedule {
             throw new Error(requireParamsNotSet);
         } else {
             try {
-                // let scheduleOverlap = await checkExistence(collectionNames.schedules,
-                //     { startTime: { "$gte": this.startTime,"$lse": this.endTime }, endTime: { "$lse": this.endTime } }
-                // );
-                let id = await addDocument(collectionNames.schedules, this);
-                this.id = id;
-                // @ts-ignore
-                delete this._id;
-                return this;
+                let scheduleOverlaps = await checkExistence(collectionNames.schedules,
+                    {
+                        "$or": [
+                            { startTime: { "$lte": this.startTime }, endTime: { "$gt": this.startTime } },
+                            { endTime: { "$gte": this.endTime }, startTime: { "$lt": this.endTime } }
+                        ]
+                    }
+                );
+                if (scheduleOverlaps) {
+                    throw new Error(scheduleOverlap);
+                } else {
+                    let id = await addDocument(collectionNames.schedules, this);
+                    this.id = id;
+                    // @ts-ignore
+                    delete this._id;
+                    return this;
+                }
             } catch (error) {
                 throw error;
             }
