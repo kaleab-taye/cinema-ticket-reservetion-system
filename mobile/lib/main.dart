@@ -1,21 +1,21 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:royal_cinema/bloc/movie_bloc.dart';
-import 'package:royal_cinema/pages/booked.dart';
-import 'package:royal_cinema/pages/editProfile.dart';
-import 'package:royal_cinema/pages/favourite.dart';
-import 'package:royal_cinema/pages/homepage.dart';
-import 'package:royal_cinema/pages/login.dart';
-import 'package:royal_cinema/pages/profile.dart';
-import 'package:royal_cinema/pages/signup.dart';
-import 'package:royal_cinema/royal_cinema/presentation/bloc/user_bloc.dart';
-import 'package:royal_cinema/royal_cinema/presentation/bloc/user_event.dart';
+import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
+import 'package:royal_cinema/features/auth/signup/screens/screens.dart';
+import 'package:royal_cinema/features/home/index.dart';
+import 'package:royal_cinema/features/home/repository/movie_repository.dart';
+import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
+import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
+
+import 'features/auth/login/bloc/auth_bloc.dart';
+import 'features/auth/login/screens/login.dart';
+import 'features/home/bloc/movie_bloc.dart';
+import 'features/user/screens/editProfile.dart';
+import 'features/user/screens/profile.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,14 +30,18 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
 
+    final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
+
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => UserBloc()..add(LoadUserCounter())),
-        BlocProvider(create: (context) => MovieBloc()..add(LoadMovieCounter())),
+        BlocProvider(create: (_) => AuthBloc()),
+        BlocProvider(create: (_) => SignUpBloc()),
+        BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
       ],
       child: MaterialApp.router(
           routeInformationParser: _router.routeInformationParser,
@@ -64,7 +68,7 @@ class MyApp extends StatelessWidget {
           path: '/',
           pageBuilder: (context, state) => MaterialPage(
               key: state.pageKey,
-              child: Login(),
+              child: LoginScreen(),
           ),
       ),
       GoRoute(
@@ -85,15 +89,25 @@ class MyApp extends StatelessWidget {
         path: '/signup',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: SignUp(),
+          child: SignUpScreen(),
         ),
       ),
       GoRoute(
         path: '/home',
         pageBuilder: (context, state) => MaterialPage(
           key: state.pageKey,
-          child: HomePage(),
+          child: MovieHomePage(),
         ),
+      ),
+      GoRoute(
+        path: '/movie_details',
+        pageBuilder: (context, state) {
+          final movie = _movieFrom(state.params['id']!);
+          return MaterialPage(
+            key: state.pageKey,
+            child: MovieDetailsScreen(),
+          );
+  },
       ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
@@ -105,4 +119,10 @@ class MyApp extends StatelessWidget {
       ),
     ),
   );
+}
+
+Movie _movieFrom(String s){
+
+  var movies;
+  return movies.where((movie) => movie.id == s);
 }

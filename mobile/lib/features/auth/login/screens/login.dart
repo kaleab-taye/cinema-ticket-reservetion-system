@@ -1,0 +1,316 @@
+// ignore_for_file: prefer_const_constructors
+
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/features/auth/login/bloc/bloc.dart';
+
+import '../../../../core/utils/colors.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  bool _secureText = true;
+  final _formKey = GlobalKey<FormState>();
+  final phoneController = TextEditingController();
+  final passwordHashController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Col.background,
+      body: SingleChildScrollView(
+        child: Container(
+          color: Col.background,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.fromLTRB(15, 40, 0, 0),
+                  child: Text(
+                    "ROYAL",
+                    style: TextStyle(
+                      color: Col.primary,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Nunito',
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+                  child: Text(
+                    "CINEMA",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Nunito',
+                      letterSpacing: 0.3,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(15, 65, 0, 0),
+                  child: Text(
+                    "LOGIN",
+                    style: TextStyle(
+                      color: Col.textColor,
+                      fontSize: 35,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Nunito',
+                      letterSpacing: 0.1,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 60, 25, 0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      controller: phoneController,
+                      onChanged: (value) {},
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "This field can not be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: "",
+                        hintStyle: TextStyle(
+                          color: Col.textColor,
+                          fontSize: 14,
+                          fontFamily: 'Nunito',
+                          letterSpacing: 0.1,
+                        ),
+                        labelText: "Phone Number",
+                        labelStyle: TextStyle(
+                          color: Col.textColor,
+                          fontSize: 14,
+                          fontFamily: 'Nunito',
+                          letterSpacing: 0,
+                        ),
+                        border: OutlineInputBorder(),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
+                  child: Container(
+                    alignment: Alignment.center,
+                    child: TextFormField(
+                      controller: passwordHashController,
+                      onChanged: (value) {},
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return "This field can not be empty";
+                        } else {
+                          return null;
+                        }
+                      },
+                      decoration: InputDecoration(
+                          hintText: "Password",
+                          hintStyle: TextStyle(
+                            color: Col.textColor,
+                            fontSize: 14,
+                            fontFamily: 'Nunito',
+                            letterSpacing: 0.1,
+                          ),
+                          labelText: "Password",
+                          labelStyle: TextStyle(
+                            color: Col.textColor,
+                            fontSize: 14,
+                            fontFamily: 'Nunito',
+                            letterSpacing: 0,
+                          ),
+                          border: OutlineInputBorder(),
+                          suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _secureText = !_secureText;
+                              });
+                            },
+                            icon: Icon(
+                              _secureText == true
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Col.background,
+                            ),
+                          )),
+                      obscureText: _secureText,
+                    ),
+                  ),
+                ),
+                // (response == "Not Found")
+                //     ? Padding(
+                //         padding: const EdgeInsets.only(top: 15, left: 25),
+                //         child: Text(
+                //           "One of the credentials is incorrect",
+                //           style: TextStyle(
+                //               color: Colors.redAccent,
+                //               fontWeight: FontWeight.bold,
+                //               fontSize: 15),
+                //         ),
+                //       )
+                //     : Text(""),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 65, 25, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: BlocConsumer<AuthBloc, AuthState>(
+                      listenWhen: (previous, current) {
+                        return current is LoginSuccessful;
+                      },
+                      listener: (_, AuthState state) {
+                        GoRouter.of(context).go('/home');
+                      },
+                      builder: (_, AuthState state) {
+                        Widget buttonChild = Text(
+                          "Login",
+                          style: TextStyle(
+                            color: Col.textColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito',
+                            letterSpacing: 0.3,
+                          ),
+                        );
+
+                        if (state is LogingIn) {
+                          buttonChild = SizedBox(
+                            height: 10,
+                            width: 10,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+
+                        if (state is LoginSuccessful) {
+                          buttonChild = Text(
+                            "Login successful",
+                            style: TextStyle(
+                              color: Col.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
+                              letterSpacing: 0.3,
+                            ),
+                          );
+                        }
+
+                        if (state is LoginFailed) {
+                          buttonChild = Text(
+                            "Login Failed",
+                            style: TextStyle(
+                              color: Col.textColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
+                              letterSpacing: 0.3,
+                            ),
+                          );
+                        }
+                        return RaisedButton(
+                            color: Col.primary,
+                            child: buttonChild,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8)),
+                            onPressed: () {
+                              final formValid =
+                                  _formKey.currentState!.validate();
+                              if (!formValid) return;
+
+                              final authBloc =
+                                  BlocProvider.of<AuthBloc>(context);
+                              authBloc.add(Login(
+                                  phone: phoneController.text,
+                                  password: passwordHashController.text));
+                              // if (_formKey.currentState!.validate()) {
+                              //   GoRouter.of(context).go('/home');
+                              // }
+                            });
+                      },
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        "Forgot password",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                          letterSpacing: 0.3,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(25, 50, 25, 0),
+                  child: Container(
+                    width: double.infinity,
+                    child: Center(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                                style: TextStyle(
+                                  color: Col.textColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Nunito',
+                                  letterSpacing: 0.3,
+                                ),
+                                text: "Don’t have an account?"),
+                            TextSpan(
+                                style: TextStyle(
+                                  color: Col.primary,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Nunito',
+                                  letterSpacing: 0.3,
+                                ),
+                                text: " SignUp",
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    GoRouter.of(context).go('/signup');
+                                  }),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

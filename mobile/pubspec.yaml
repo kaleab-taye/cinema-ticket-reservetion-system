@@ -44,6 +44,7 @@ dependencies:
   mockito: ^5.2.0
   data_connection_checker: ^0.3.4
   http: ^0.13.4
+  meta: ^1.2.4
 
 dev_dependencies:
   flutter_test:
@@ -68,8 +69,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - images/Parking-amico.svg
-    - images/60578.jpg
+    - images/
 
   # To add assets to your application, add an assets section, like this:
   # assets:
