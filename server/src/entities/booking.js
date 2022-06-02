@@ -49,7 +49,6 @@ class Booking {
                     } else {
                         this.schedule = schedule;
                         let bookingId = await addDocument(collectionNames.bookings, this);
-                        await updateDocument(collectionNames.users, { _id: userIdObject }, { booked: this.scheduleId }, "$push");
                         // @ts-ignore
                         await updateDocument(collectionNames.schedules, { _id: scheduleIdObject }, { seatsLeft: -1 }, "$inc");
                         this.id = bookingId;
@@ -103,8 +102,7 @@ class Booking {
                 allBookings.push(new Booking(booking));
             };
             // @ts-ignore
-            allBookings = groupInDates(allBookings, ["schedule","startTime"]);
-            return allBookings;
+            return groupInDates(allBookings, ["schedule", "startTime"]);
         } catch (error) {
             throw error;
         }
@@ -141,16 +139,8 @@ class Booking {
                 throw new Error(invalidId);
             }
             try {
-                let booking = await getDocument(collectionNames.bookings, { _id });
-                // @ts-ignore
-                if (booking) {
-                    // @ts-ignore
-                    await updateDocument(collectionNames.users, { _id: new ObjectId(booking.userId) }, { booked: booking.scheduleId }, "$pull");
-                    let result = await deleteDocument(collectionNames.bookings, { _id });
-                    return result.deletedCount;
-                } else {
-                    return 0;
-                }
+                let result = await deleteDocument(collectionNames.bookings, { _id });
+                return result.deletedCount;
             } catch (error) {
                 throw error;
             }

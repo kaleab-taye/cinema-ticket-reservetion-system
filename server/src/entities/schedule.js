@@ -103,8 +103,7 @@ class Schedule {
                 allSchedules.push(new Schedule(schedule));
             }
             // @ts-ignore
-            allSchedules = groupInDates(allSchedules, ["startTime"]);
-            return allSchedules;
+            return groupInDates(allSchedules, ["startTime"]);
         } catch (error) {
             throw error;
         }

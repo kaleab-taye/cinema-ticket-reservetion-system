@@ -1,6 +1,6 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument, getDocuments } = require("../commons/functions");
+const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument, getDocuments, groupInDates } = require("../commons/functions");
 const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId, userInitBalance } = require("../commons/variables");
 const Booking = require("./booking");
 
@@ -9,7 +9,6 @@ class User {
     fullName;
     phone;
     passwordHash;
-    booked;
     balance;
 
     constructor({
@@ -17,14 +16,12 @@ class User {
         fullName,
         phone,
         passwordHash,
-        booked,
         balance
     }) {
         this.id = id;
         this.fullName = fullName;
         this.phone = phone;
         this.passwordHash = passwordHash;
-        this.booked = _.isUndefined(booked) ? [] : booked;
         this.balance = _.isUndefined(balance) ? userInitBalance : balance;
     }
 
@@ -127,22 +124,10 @@ class User {
                 for (let booking of bookings) {
                     booking.id = booking._id + "";
                     delete booking._id;
-                    // let Movie = require("./movie");
-                    // let movie;
-                    // try {
-                    //     movie = await Movie.find(booking.movieId);
-                    //     booking.movie = movie;
-                    // } catch (error) { }
-                    // let Schedule = require("./schedule");
-                    // let schedule;
-                    // try {
-                    //     schedule = await Schedule.find(booking.scheduleId);
-                    //     booking.schedule = schedule;
-                    // } catch (error) { }
                     // @ts-ignore
                     allBookings.push(new Booking(booking));
                 }
-                return allBookings;
+                return groupInDates(allBookings, ["schedule","startTime"]);
             } catch (error) {
                 throw error;
             }
