@@ -4,21 +4,21 @@ import 'movie_provider.dart';
 import '../model/movie.dart';
 
 class MovieLocalProvider implements MovieProvider {
-  final List<Movie> _movies = [
+  final List<Movie> movies = [
     for (int i in List.generate(15, (i) => i))
       Movie(title: "Bad Boys", description: "What r u", imageUrl: "imageUrl", casts: [], genera: [])
   ];
 
   @override
   addMovie(Movie movie) async {
-    return _movies.add(movie);
+    return movies.add(movie);
   }
 
   @override
   editMovie(String id, Movie movie) async {
     int index = -1;
-    for (int i = 0; i < _movies.length; i++) {
-      if (_movies[i].id == id) {
+    for (int i = 0; i < movies.length; i++) {
+      if (movies[i].id == id) {
         index = i;
         break;
       }
@@ -28,7 +28,7 @@ class MovieLocalProvider implements MovieProvider {
       throw Exception("Movie not found");
     }
 
-    _movies[index] = Movie(title: movie.title,
+    movies[index] = Movie(title: movie.title,
         description: movie.description,
         imageUrl: movie.imageUrl,
         casts: movie.casts,
@@ -37,9 +37,9 @@ class MovieLocalProvider implements MovieProvider {
 
   @override
   Future<Movie> getMovie(String id) async {
-    for (int i = 0; i < _movies.length; i++) {
-      if (_movies[i].id == id) {
-        return _movies[i];
+    for (int i = 0; i < movies.length; i++) {
+      if (movies[i].id == id) {
+        return movies[i];
       }
     }
 
@@ -48,6 +48,6 @@ class MovieLocalProvider implements MovieProvider {
 
   @override
   Future<List<Movie>> getAllMovies() async {
-    return _movies;
+    return movies;
   }
 }

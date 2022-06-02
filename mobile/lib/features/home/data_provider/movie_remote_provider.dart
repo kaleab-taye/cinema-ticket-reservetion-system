@@ -79,6 +79,7 @@ class MovieRemoteProvider implements MovieProvider {
     var headersList = {
       'Accept': '*/*',
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      "Authorization": "Bearer token",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/movies');
@@ -110,9 +111,6 @@ class MovieRemoteProvider implements MovieProvider {
   Future<List<Movie>> getAllMovies() async {
     final response = await http.get(Uri.parse('$_baseUrl/movies'));
 
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbbbbb");
-    print(jsonDecode(response.body));
-
     if (response.statusCode == 200) {
       final courses = jsonDecode(response.body) as List;
       //
@@ -120,15 +118,10 @@ class MovieRemoteProvider implements MovieProvider {
       // print(courses);
       //
       // return courses.map((course) => Course.fromJson(course)).toList();
-      print(-2);
       List<Movie> c = await courses.map((movie) {
-        print(-4);
-        print(movie);
         Movie c2 = Movie.fromJson(movie);
-        print(-3);
         return c2;
       }).toList();
-      print(-1);
       return c;
     // var headersList = {
     //   'Accept': '*/*',

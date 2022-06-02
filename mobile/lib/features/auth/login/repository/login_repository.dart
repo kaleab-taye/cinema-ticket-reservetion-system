@@ -4,10 +4,9 @@ import '../data_provider/data_provider.dart';
 import '../models/login.dart';
 
 class LoginRepository {
-  final LoginDataProvider dataProvider;
+  LoginDataProvider dataProvider;
 
-  LoginRepository({required this.dataProvider})
-      : assert(dataProvider != null);
+  LoginRepository(this.dataProvider);
 
   Future<Login> loginUser(Login login) async {
     return await dataProvider.loginUser(login);

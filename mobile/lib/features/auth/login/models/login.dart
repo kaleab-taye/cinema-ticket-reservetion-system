@@ -1,22 +1,19 @@
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+import 'dart:math';
 
-@immutable
-class Login extends Equatable {
-  Login(
-      {required this.phone,
-        required this.passwordHash,});
-
+class Login {
   final String phone;
   final String passwordHash;
 
-  @override
-  List<Object> get props => [phone, passwordHash];
+  Login({required this.phone, required this.passwordHash,});
 
-  factory Login.fromJson(Map<String, dynamic> json) {
-    return Login(
-      phone: json['phone'],
-      passwordHash: json['passwordHash'],
-    );
-  }
+  factory Login.fromJson(Map<String, dynamic> json) => Login(
+    phone: json['phone'],
+    passwordHash: json['passwordHash'],
+  );
+
+  Map<String, dynamic> toJson() => {
+    'phone': phone,
+    'passwordHash': passwordHash,
+  };
+
 }

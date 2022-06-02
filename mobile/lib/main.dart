@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/features/auth/login/login.dart';
 import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
 import 'package:royal_cinema/features/auth/signup/screens/screens.dart';
 import 'package:royal_cinema/features/home/index.dart';
@@ -13,63 +14,29 @@ import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
 
 import 'features/auth/login/bloc/auth_bloc.dart';
 import 'features/auth/login/screens/login.dart';
-import 'features/home/bloc/movie_bloc.dart';
+import 'features/home/bloc/bloc.dart';
 import 'features/user/screens/editProfile.dart';
 import 'features/user/screens/profile.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitDown,
-    DeviceOrientation.portraitUp,
-  ]);
-  SystemChrome.setEnabledSystemUIMode(
-    SystemUiMode.immersive,
-  );
-  runApp(MyApp());
+class LoginInfo {
+  var isLoggedIn = false;
 }
 
-class MyApp extends StatelessWidget {
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-
-    final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => AuthBloc()),
-        BlocProvider(create: (_) => SignUpBloc()),
-        BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
-      ],
-      child: MaterialApp.router(
-          routeInformationParser: _router.routeInformationParser,
-          routerDelegate: _router.routerDelegate,
-        debugShowCheckedModeBanner: false,
-      ),
-    );
-
-    // return MaterialApp(
-    //   title: 'Royal Cinema',
-    //   debugShowCheckedModeBanner: false,
-    //   theme: ThemeData(
-    //     primarySwatch: Colors.blue,
-    //     visualDensity: VisualDensity.adaptivePlatformDensity,
-    //   ),
-    //   home: Login(),
-    // );
-  }
+Future<void> main() async {
+  final loginInfo = LoginInfo();
 
   final _router = GoRouter(
+    redirect: (state) {
+      final loggedIn = loginInfo.isLoggedIn;
+    },
     urlPathStrategy: UrlPathStrategy.path,
     routes: [
       GoRoute(
-          path: '/',
-          pageBuilder: (context, state) => MaterialPage(
-              key: state.pageKey,
-              child: LoginScreen(),
-          ),
+        path: '/',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: LoginScreen(),
+        ),
       ),
       GoRoute(
         path: '/profile',
@@ -93,22 +60,29 @@ class MyApp extends StatelessWidget {
         ),
       ),
       GoRoute(
-        path: '/home',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: MovieHomePage(),
-        ),
-      ),
-      GoRoute(
-        path: '/movie_details',
-        pageBuilder: (context, state) {
-          final movie = _movieFrom(state.params['id']!);
-          return MaterialPage(
-            key: state.pageKey,
-            child: MovieDetailsScreen(),
-          );
-  },
-      ),
+          path: '/home',
+          pageBuilder: (context, state) => MaterialPage(
+                key: state.pageKey,
+                child: MovieHomePage(),
+              ),
+          routes: [
+            GoRoute(
+              name: 'movie_details',
+              path: ':id',
+              pageBuilder: (context, state) {
+                // final movie = _movieFrom(state.params['id']!);
+                String id = state.params['id']!;
+
+                //movie = bloc.getMovie(id);
+                return MaterialPage(
+                  key: state.pageKey,
+                  child: MovieDetailsScreen(
+                    id: id,
+                  ),
+                );
+              },
+            ),
+          ]),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
@@ -119,10 +93,40 @@ class MyApp extends StatelessWidget {
       ),
     ),
   );
+
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.portraitUp,
+  ]);
+  SystemChrome.setEnabledSystemUIMode(
+    SystemUiMode.immersive,
+  );
+
+  final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
+  final AuthBloc loginBloc = AuthBloc(LoginRepository(LoginDataProvider()));
+
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => loginBloc..add(LoadLogin())),
+        BlocProvider(create: (_) => SignUpBloc()),
+        BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
+      ],
+      child: MaterialApp.router(
+        routeInformationParser: _router.routeInformationParser,
+        routerDelegate: _router.routerDelegate,
+        debugShowCheckedModeBanner: false,
+      ),
+    ),
+  );
 }
 
-Movie _movieFrom(String s){
+Movie _movieFrom(String s) {
 
-  var movies;
-  return movies.where((movie) => movie.id == s);
+  final List<Movie> movies = [
+    Movie(id: "62968871cb506893d53ce76f", title: "title", description: "description", imageUrl: "imageUrl", casts: [], genera: []),
+  ];
+
+  return movies.where((coffee) => coffee.id.toString() == s).first;
 }

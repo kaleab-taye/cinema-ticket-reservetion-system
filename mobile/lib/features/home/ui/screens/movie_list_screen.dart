@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:royal_cinema/core/api_data.dart';
 import 'package:royal_cinema/features/home/bloc/movie_bloc.dart';
 import 'package:royal_cinema/features/home/bloc/movie_event.dart';
 import 'package:royal_cinema/features/home/bloc/movie_state.dart';
+import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../../model/movie.dart';
@@ -67,9 +69,27 @@ class MovieListScreen extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         return GestureDetector(
-                          onTap: () {
-                            context.go("/movie_details");
-                          },
+                          onTap: () async {
+                          // final result = await Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //     builder: (_) => MovieDetailsScreen(
+                          //       movie: state.movies[index],
+                          //     ),
+                          //   ),
+                          // );
+                          //
+                          // if (result == null) return;
+                          //
+                          // final movieBloc = BlocProvider.of<MovieBloc>(context);
+                          // movieBloc.add(LoadMovies());
+                            String movie = jsonEncode(state.movies[index].toJson());
+                            context.goNamed(
+                              'movie_details',
+                              params: {'id': movie},
+                            );
+                        },
+                            // context.go("/movie_details");
                           child: Container(
                             decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),

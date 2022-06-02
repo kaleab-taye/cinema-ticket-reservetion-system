@@ -9,26 +9,35 @@ import '../models/login.dart';
 class LoginDataProvider {
   final _baseUrl = 'http://127.0.0.1:5000/${TokenData.token}'; //new
   // final _baseUrl = 'http://192.168.56.1:3000';
-  final http.Client httpClient;
 
-  LoginDataProvider({required this.httpClient}) : assert(httpClient != null);
+  LoginDataProvider();
 
   Future<Login> loginUser(Login login) async {
-    final response = await httpClient.post(
-      Uri.http('$_baseUrl', '/users/login'),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, dynamic>{
-        'phone': login.phone,
-        'passwordHash': login.passwordHash,
-      }),
-    );
+    var headersList = {
+      'Accept': '*/*',
+      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/users/login');
 
-    if (response.statusCode == 200) {
-      return Login.fromJson(jsonDecode(response.body));
-    } else {
-      throw Exception('Failed to create course.');
+    var body = {
+      "phone": login.phone,
+      "passwordHash": login.passwordHash
+    };
+    var req = http.Request('POST', url);
+    req.headers.addAll(headersList);
+    req.body = json.encode(body);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(resBody);
+      return Login.fromJson(jsonDecode(resBody));
+    }
+    else {
+      print(res.reasonPhrase);
+      throw Exception('Failed to Login.');
     }
   }
 }

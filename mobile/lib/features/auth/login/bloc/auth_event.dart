@@ -1,8 +1,10 @@
+import 'package:royal_cinema/features/auth/login/models/login.dart';
+
 abstract class AuthEvent {}
 
-class Login extends AuthEvent {
-  final String phone;
-  final String password;
+class LoadLogin extends AuthEvent {}
 
-  Login({required this.phone, required this.password});
+class LoginAuth extends AuthEvent {
+  final Login login;
+  LoginAuth(this.login);
 }

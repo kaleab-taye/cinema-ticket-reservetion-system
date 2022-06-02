@@ -1,14 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:royal_cinema/features/auth/login/login.dart';
 import 'bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  AuthBloc() : super(Idle()) {
-    on<Login>(_onLogin);
+
+  final LoginRepository loginRepository;
+
+  AuthBloc(this.loginRepository) : super(Idle()) {
+    on<LoginAuth>(_onLogin);
   }
 
-  void _onLogin(Login event, Emitter emit) async {
-    emit(LogingIn());
-    await Future.delayed(const Duration(seconds: 3));
+  void _onLogin(LoginAuth event, Emitter emit) async {
+    await loginRepository.loginUser(event.login);
     emit(LoginSuccessful());
   }
 }
+

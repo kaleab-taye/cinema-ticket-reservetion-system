@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/features/auth/login/bloc/bloc.dart';
 
 import '../../../../core/utils/colors.dart';
+import '../models/login.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -79,7 +80,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: phoneController,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        phoneController.text = value;
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "This field can not be empty";
@@ -116,7 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: passwordHashController,
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        passwordHashController.text = value;
+                      },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "This field can not be empty";
@@ -157,18 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                // (response == "Not Found")
-                //     ? Padding(
-                //         padding: const EdgeInsets.only(top: 15, left: 25),
-                //         child: Text(
-                //           "One of the credentials is incorrect",
-                //           style: TextStyle(
-                //               color: Colors.redAccent,
-                //               fontWeight: FontWeight.bold,
-                //               fontSize: 15),
-                //         ),
-                //       )
-                //     : Text(""),
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 65, 25, 0),
                   child: Container(
@@ -239,9 +232,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
                               final authBloc =
                                   BlocProvider.of<AuthBloc>(context);
-                              authBloc.add(Login(
-                                  phone: phoneController.text,
-                                  password: passwordHashController.text));
+                              authBloc.add(LoginAuth(
+                                  Login(phone: phoneController.text, passwordHash: passwordHashController.text)));
                               // if (_formKey.currentState!.validate()) {
                               //   GoRouter.of(context).go('/home');
                               // }
