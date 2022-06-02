@@ -1,6 +1,6 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence } = require("../commons/functions");
+const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence, groupInDates } = require("../commons/functions");
 const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity, scheduleOverlap } = require("../commons/variables");
 
 class Schedule {
@@ -52,8 +52,9 @@ class Schedule {
                 if (scheduleOverlaps) {
                     throw new Error(scheduleOverlap);
                 } else {
-                    let id = await addDocument(collectionNames.schedules, this);
-                    this.id = id;
+                    let Movie = require("./movie");
+                    this.movie = await Movie.find(this.movieId);
+                    this.id = await addDocument(collectionNames.schedules, this);
                     // @ts-ignore
                     delete this._id;
                     return this;
@@ -91,22 +92,6 @@ class Schedule {
             }
         }
     }
-
-    // static async findAll() {
-    //     try {
-    //         let schedule = await getDocuments(collectionNames.schedules);
-    //         let allSchedules = []
-    //         schedule.forEach(schedule => {
-    //             schedule.id = schedule._id + "";
-    //             delete schedule._id;
-    //             // @ts-ignore
-    //             allSchedules.push(new Schedule(schedule));
-    //         });
-    //         return allSchedules;
-    //     } catch (error) {
-    //         throw error;
-    //     }
-    // }
     static async findAll() {
         try {
             let schedules = await getDocuments(collectionNames.schedules);
@@ -114,15 +99,11 @@ class Schedule {
             for (let schedule of schedules) {
                 schedule.id = schedule._id + "";
                 delete schedule._id;
-                let Movie = require("./movie");
-                let movie;
-                try {
-                    movie = await Movie.find(schedule.movieId);
-                    schedule.movie = movie;
-                } catch (error) { }
                 // @ts-ignore
                 allSchedules.push(new Schedule(schedule));
             }
+            // @ts-ignore
+            allSchedules = groupInDates(allSchedules, ["startTime"]);
             return allSchedules;
         } catch (error) {
             throw error;

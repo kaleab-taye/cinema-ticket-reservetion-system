@@ -1,6 +1,11 @@
 
 const path = require("path");
 
+// constants
+const oneHour = 3600000;
+const oneDay = 24 * oneHour;
+const todayString = "Today";
+const tomorrowString = "Tomorrow";
 // database vars
 let databaseName = "cinema";
 let collectionNames = {
@@ -38,6 +43,10 @@ let defaultCapacity = 200;
 let userInitBalance = 200;
 
 module.exports = {
+    oneHour,
+    oneDay,
+    todayString,
+    tomorrowString,
     databaseName,
     collectionNames,
     defaultPort,

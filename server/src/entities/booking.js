@@ -1,21 +1,24 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
-const { addDocument, deleteDocument, getDocuments, getDocument, updateDocument, checkExistence } = require("../commons/functions");
+const { addDocument, deleteDocument, getDocuments, getDocument, updateDocument, checkExistence, groupInDates } = require("../commons/functions");
 const { requireParamsNotSet, collectionNames, invalidId, userDoesNotExist, scheduleDoesNotExist, scheduleSoldOut } = require("../commons/variables");
 
 class Booking {
     id;
     userId;
     scheduleId;
+    schedule;
 
     constructor({
         id,
         userId,
-        scheduleId
+        scheduleId,
+        schedule
     }) {
         this.id = id;
         this.userId = userId;
         this.scheduleId = scheduleId;
+        this.schedule = schedule;
     }
 
     async save() {
@@ -44,6 +47,7 @@ class Booking {
                     } else if (schedule.seatsLeft < 1) {
                         throw new Error(scheduleSoldOut);
                     } else {
+                        this.schedule = schedule;
                         let bookingId = await addDocument(collectionNames.bookings, this);
                         await updateDocument(collectionNames.users, { _id: userIdObject }, { booked: this.scheduleId }, "$push");
                         // @ts-ignore
@@ -92,12 +96,14 @@ class Booking {
         try {
             let bookings = await getDocuments(collectionNames.bookings);
             let allBookings = []
-            bookings.forEach(booking => {
+            for (let booking of bookings) {
                 booking.id = booking._id + "";
                 delete booking._id;
                 // @ts-ignore
                 allBookings.push(new Booking(booking));
-            });
+            };
+            // @ts-ignore
+            allBookings = groupInDates(allBookings, ["schedule","startTime"]);
             return allBookings;
         } catch (error) {
             throw error;

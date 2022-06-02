@@ -3,8 +3,9 @@ require("dotenv").config();
 const { MongoClient } = require("mongodb");
 const color = require("cli-color");
 const jwt = require("jsonwebtoken");
-const { databaseName, collectionNames } = require("./variables.js");
+const { databaseName, collectionNames, oneHour, oneDay, todayString, tomorrowString } = require("./variables.js");
 const initData = require("../../assets/init_data.json");
+const { includes } = require("lodash");
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL, { connectTimeoutMS: 30000, keepAlive: true });
 
@@ -174,8 +175,8 @@ async function initDb() {
                 }
             }
             let now = Date.now();
-            let today = now - (now % (24 * 3600000))
-            let startTime = today + (14 * 3600000);
+            let today = now - (now % oneDay)
+            let startTime = today + (14 * oneHour);
             let columCount = 0;
             for (let i = 0; i < 2; i++) {
                 let allMovies = await getDocuments(collectionNames.movies);
@@ -183,20 +184,20 @@ async function initDb() {
                     let movieId = movie._id + "";
                     let Schedule = require("../entities/schedule")
                     // @ts-ignore
-                    let schedule1 = new Schedule({ movieId, startTime, endTime: startTime + (2 * 3600000) });
+                    let schedule1 = new Schedule({ movieId, startTime, endTime: startTime + (2 * oneHour) });
                     await schedule1.save();
                     // await addDocument(collectionNames.schedules, schedule);
-                    startTime += 2 * 3600000;
+                    startTime += 2 * oneHour;
                     // @ts-ignore
-                    let schedule2 = new Schedule({ movieId, startTime, endTime: startTime + 2 * 3600000 });
+                    let schedule2 = new Schedule({ movieId, startTime, endTime: startTime + 2 * oneHour });
                     await schedule2.save();
                     // await addDocument(collectionNames.schedules, schedule2);
                     columCount += 2
                     if (columCount >= 4) {
                         columCount = 0;
-                        startTime += 18 * 3600000
+                        startTime += 18 * oneHour
                     } else {
-                        startTime += 2 * 3600000
+                        startTime += 2 * oneHour
                     }
                 }
             }
@@ -211,6 +212,41 @@ async function initDb() {
         return false
     }
 }
+
+// repository likes
+function groupInDates(objects, groupBy) {
+    objects = objects.sort((a, b) => {
+        let asTime = a;
+        groupBy.forEach(key => asTime = asTime[key]);
+        let bsTime = b;
+        groupBy.forEach(key => bsTime = bsTime[key]);
+        asTime < bsTime ? -1 : 1
+    });
+    let grouped = {}
+    let now = Date.now();
+    let todayStart = now - (now % oneDay)
+    let todayTomorrow = [todayStart, todayStart + oneDay, todayStart + 2 * oneDay];
+    objects.forEach(object => {
+        let time = object;
+        groupBy.forEach(key => time = time[key]);
+        let date;
+        if (time >= todayTomorrow[0] && time < todayTomorrow[1]) {
+            date = todayString
+        } else if (time >= todayTomorrow[1] && time < todayTomorrow[2]) {
+            date = tomorrowString
+        } else {
+            let dateObject = new Date(time);
+            date = `${dateObject.toLocaleString('default', { month: 'short' })} ${dateObject.getDate()},${dateObject.getFullYear()}`;
+        }
+        if (date in grouped) {
+            grouped[date].push(object);
+        } else {
+            grouped[date] = [object];
+        }
+    });
+    return grouped;
+}
+
 module.exports = {
     errorLog,
     httpSingleResponse,
@@ -229,5 +265,6 @@ module.exports = {
     getCount,
     createLoginJwt,
     getLoginJwt,
-    initDb
+    initDb,
+    groupInDates
 }
