@@ -71,5 +71,13 @@
                 "adventure"
             ]
         }
+    ],
+    "staffs": [
+        {
+            "id": "<string>",
+            "fullName": "Default Staff",
+            "phone": "0987654321",
+            "passwordHash": "1562206543da764123c21bd524674f0a8aaf49c8a89744c97352fe677f7e4006"
+        }
     ]
 }

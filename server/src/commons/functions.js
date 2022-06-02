@@ -201,8 +201,9 @@ async function initDb() {
                     }
                 }
             }
+
             await addDocument("init", { "init": true });
-            console.log("Database initialized with: 5 movies, 20 schedules");
+            console.log(color.blue("\nDatabase initialized with:1 staff, 5 movies, and 20 schedules. (for demo)"));
             return true;
         } else {
             return true;

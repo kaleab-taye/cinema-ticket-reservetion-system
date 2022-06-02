@@ -9,6 +9,13 @@
         "balance": "<double>"
     },
     {
+        "Name": "Staff",
+        "id": "<string>",
+        "fullName": "<string> [R]",
+        "phone": "<string> [R]",
+        "passwordHash": "<string> [R]"
+    },
+    {
         "Name": "Movie",
         "id": "<string>",
         "title": "<string> [R]",
@@ -27,7 +34,7 @@
         "Name": "Schedule",
         "id": "<string>",
         "movieId": "<string> [R]",
-        "movie":"<Movie>",
+        "movie": "<Movie>",
         "startingTime": "<integer> [R]",
         "endTime": "<integer> [R]",
         "capacity": "<integer>",
