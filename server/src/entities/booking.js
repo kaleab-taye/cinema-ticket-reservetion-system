@@ -92,7 +92,7 @@ class Booking {
         try {
             let bookings = await getDocuments(collectionNames.bookings);
             let allBookings = []
-            await bookings.forEach(booking => {
+            bookings.forEach(booking => {
                 booking.id = booking._id + "";
                 delete booking._id;
                 // @ts-ignore

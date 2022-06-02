@@ -106,7 +106,7 @@ class User {
         try {
             let users = await getDocuments(collectionNames.users);
             let allUsers = []
-            await users.forEach(user => {
+            users.forEach(user => {
                 user.id = user._id + "";
                 delete user._id;
                 // @ts-ignore
@@ -124,7 +124,7 @@ class User {
             try {
                 let bookings = await getDocuments(collectionNames.bookings, { userId: id });
                 let allBookings = [];
-                for await (let booking of bookings) {
+                for (let booking of bookings) {
                     booking.id = booking._id + "";
                     delete booking._id;
                     // let Movie = require("./movie");

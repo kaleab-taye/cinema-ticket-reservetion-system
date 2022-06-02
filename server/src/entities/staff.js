@@ -98,7 +98,7 @@ class Staff {
         try {
             let staffs = await getDocuments(collectionNames.staffs);
             let allStaffs = []
-            await staffs.forEach(staff => {
+            staffs.forEach(staff => {
                 staff.id = staff._id + "";
                 delete staff._id;
                 // @ts-ignore

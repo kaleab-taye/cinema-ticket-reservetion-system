@@ -75,7 +75,7 @@ class Movie {
         try {
             let movies = await getDocuments(collectionNames.movies);
             let allMovies = []
-            await movies.forEach(movie => {
+            movies.forEach(movie => {
                 movie.id = movie._id + "";
                 delete movie._id;
                 // @ts-ignore

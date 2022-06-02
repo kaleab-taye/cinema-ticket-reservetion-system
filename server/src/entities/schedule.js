@@ -96,7 +96,7 @@ class Schedule {
     //     try {
     //         let schedule = await getDocuments(collectionNames.schedules);
     //         let allSchedules = []
-    //         await schedule.forEach(schedule => {
+    //         schedule.forEach(schedule => {
     //             schedule.id = schedule._id + "";
     //             delete schedule._id;
     //             // @ts-ignore
@@ -111,7 +111,7 @@ class Schedule {
         try {
             let schedules = await getDocuments(collectionNames.schedules);
             let allSchedules = []
-            for await (let schedule of schedules) {
+            for (let schedule of schedules) {
                 schedule.id = schedule._id + "";
                 delete schedule._id;
                 let Movie = require("./movie");

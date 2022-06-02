@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const { databaseName, collectionNames } = require("./variables.js");
 const initData = require("../../assets/init_data.json");
 
-const mongoClient = new MongoClient(process.env.MONGODB_URL);
+const mongoClient = new MongoClient(process.env.MONGODB_URL, { connectTimeoutMS: 30000, keepAlive: true });
 
 // utility functions
 function errorLog(errorMessage, error) {
@@ -45,6 +45,8 @@ async function addDocument(collectionName, document) {
         return result.insertedId + "";
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -56,6 +58,8 @@ async function checkExistence(collectionName, conditions) {
         return result != null;
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -66,6 +70,8 @@ async function getDocument(collectionName, conditions) {
         return await collection.findOne(conditions);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -73,9 +79,11 @@ async function getDocuments(collectionName, conditions, sort = {}) {
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.find(conditions).sort(sort);
+        return await collection.find(conditions).sort(sort).toArray();
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -87,6 +95,8 @@ async function updateDocument(collectionName, filters, updates, operator = "$set
         return await collection.updateOne(filters, updates);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -98,6 +108,8 @@ async function updateDocuments(collectionName, filters, updates, operator = "$se
         return await collection.updateMany(filters, updates);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -108,6 +120,8 @@ async function deleteDocument(collectionName, conditions) {
         return await collection.deleteOne(conditions);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -118,6 +132,8 @@ async function deleteDocuments(collectionName, conditions) {
         return await collection.deleteMany(conditions);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -128,6 +144,8 @@ async function getCount(collectionName, conditions) {
         return await collection.countDocuments(conditions);
     } catch (error) {
         throw error;
+    } finally {
+        await mongoClient.close();
     }
 }
 
@@ -161,16 +179,16 @@ async function initDb() {
             let columCount = 0;
             for (let i = 0; i < 2; i++) {
                 let allMovies = await getDocuments(collectionNames.movies);
-                for await (let movie of allMovies) {
+                for (let movie of allMovies) {
                     let movieId = movie._id + "";
                     let Schedule = require("../entities/schedule")
                     // @ts-ignore
-                    let schedule1 = new  Schedule({ movieId, startTime, endTime: startTime + (2 * 3600000) });
+                    let schedule1 = new Schedule({ movieId, startTime, endTime: startTime + (2 * 3600000) });
                     await schedule1.save();
                     // await addDocument(collectionNames.schedules, schedule);
                     startTime += 2 * 3600000;
                     // @ts-ignore
-                    let schedule2 = new  Schedule({ movieId, startTime, endTime: startTime + 2 * 3600000 });
+                    let schedule2 = new Schedule({ movieId, startTime, endTime: startTime + 2 * 3600000 });
                     await schedule2.save();
                     // await addDocument(collectionNames.schedules, schedule2);
                     columCount += 2
