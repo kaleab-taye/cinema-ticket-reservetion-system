@@ -1,10 +1,14 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
+import 'package:royal_cinema/features/auth/signup/models/models.dart';
 
 import '../../../../core/utils/colors.dart';
 
@@ -81,7 +85,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       alignment: Alignment.center,
                       child: TextFormField(
                         controller: fullNameController,
-                        onChanged: (value) {},
+                        // onChanged: (value) {
+                        //   fullNameController.text = value;
+                        // },
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "This field can not be empty";
@@ -117,9 +123,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       alignment: Alignment.center,
                       child: TextFormField(
                         controller: phoneController,
-                        onChanged: (value) {
-                          // user.phone = value;
-                        },
+                        // onChanged: (value) {
+                        //   // user.phone = value;
+                        //   phoneController.text = value;
+                        // },
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "This field can not be empty";
@@ -149,31 +156,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                   ),
-                  // (signUpresponse == "INVALID_CALL:|:USER_PHONE_ALREADY_IN_USE")
-                  //     ? Padding(
-                  //   padding: const EdgeInsets.only(top: 5, left: 25),
-                  //   child: Text(
-                  //     "Phone number already in use",
-                  //     style: TextStyle(
-                  //         color: Colors.redAccent,
-                  //         fontWeight: FontWeight.bold,
-                  //         fontSize: 15),
-                  //   ),
-                  // )
-                  //     : Text(""),
                   Padding(
                     padding: EdgeInsets.fromLTRB(25, 15, 25, 0),
                     child: Container(
                       alignment: Alignment.center,
                       child: TextFormField(
                         controller: passwordHashController,
-                        onChanged: (value) {
-                          // var bytes = utf8.encode(value);
-                          // var sha512 = sha256.convert(bytes);
-                          // var hashedPassword = sha512.toString();
-                          // this.hashedPassword = hashedPassword;
-                          // user.passwordHash = value;
-                        },
+                        // onChanged: (value) {
+                        //   // var bytes = utf8.encode(value);
+                        //   // var sha512 = sha256.convert(bytes);
+                        //   // var hashedPassword = sha512.toString();
+                        //   passwordHashController.text = value;
+                        // },
                         validator: (value) {
                           if (value!.isEmpty) {
                             return "This field can not be empty";
@@ -282,11 +276,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8)),
                             onPressed: () {
-                              if (_formKey.currentState!.validate()) {
-                                GoRouter.of(context).go('/home');
-                              } else {
-                                print("Enter fields");
-                              }
+                              final formValid =
+                              _formKey.currentState!.validate();
+                              if (!formValid) return;
+
+                              final authBloc =
+                              BlocProvider.of<SignUpBloc>(context);
+                              authBloc.add(SignUpAuth(
+                                  SignUp(fullName: fullNameController.text, phone: phoneController.text, passwordHash: passwordHashController.text)));
                             },
                           );
                         },

@@ -8,7 +8,7 @@ class LoginRepository {
 
   LoginRepository(this.dataProvider);
 
-  Future<Login> loginUser(Login login) async {
-    return await dataProvider.loginUser(login);
+  Future loginUser(Login login) async {
+    await dataProvider.loginUser(login);
   }
 }

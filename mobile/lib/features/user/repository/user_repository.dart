@@ -39,7 +39,6 @@ class UserRepository {
         fullName: user.fullName,
         phone: user.phone,
         passwordHash: user.passwordHash,
-        booked: user.booked,
         balance: user.balance);
 
     await userProvider.addUser(newUser);
@@ -52,7 +51,6 @@ class UserRepository {
           fullName: user.fullName,
           phone: user.phone,
           passwordHash: user.passwordHash,
-          booked: user.booked,
           balance: user.balance);
 
       await userProvider.editUser(id, newUser);

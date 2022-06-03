@@ -5,7 +5,8 @@ abstract class UserState {}
 class UsersLoading extends UserState {}
 
 class UsersLoaded extends UserState {
-  List<User> users;
+  // List<User> users;
+  User users;
   UsersLoaded(this.users);
 }
 

@@ -5,7 +5,6 @@ class User {
   final String fullName;
   final String phone;
   final String passwordHash;
-  final List<dynamic> booked;
   final double balance;
 
   String get id => _id;
@@ -14,7 +13,6 @@ class User {
       {required this.fullName,
       required this.phone,
       required this.passwordHash,
-      required this.booked,
       required this.balance,
       String? id}) {
     _id = (id ?? Random.secure().nextInt(1000)).toString();
@@ -25,7 +23,6 @@ class User {
     fullName: json['fullName'],
     phone: json['phone'],
     passwordHash: json['passwordHash'],
-    booked: json['booked'],
     balance: json['balance'],
   );
 
@@ -34,7 +31,6 @@ class User {
     'fullName': fullName,
     'phone': phone,
     'passwordHash': passwordHash,
-    'booked': booked,
     'balance': balance,
   };
 

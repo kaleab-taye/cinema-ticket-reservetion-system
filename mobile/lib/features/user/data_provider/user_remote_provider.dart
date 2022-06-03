@@ -25,7 +25,6 @@ class UserRemoteProvider implements UserProvider {
       "fullName": user.fullName,
       "phone": user.phone,
       "passwordHash": user.passwordHash,
-      "booked": user.booked,
       "balance": user.balance
     };
     var req = http.Request('POST', url);
@@ -56,7 +55,6 @@ class UserRemoteProvider implements UserProvider {
       "fullName": user.fullName,
       "phone": user.phone,
       "passwordHash": user.passwordHash,
-      "booked": user.booked,
       "balance": user.balance
     };
     var req = http.Request('PATCH', url);
@@ -78,10 +76,9 @@ class UserRemoteProvider implements UserProvider {
   Future<User?> getUser(String id) async {
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/users');
+    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/users/$id');
 
     var body = {
 
@@ -94,6 +91,10 @@ class UserRemoteProvider implements UserProvider {
     final resBody = await res.stream.bytesToString();
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
+
+      print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbb");
+      print(resBody);
+
       final List users = json.decode(resBody);
 
       for (int i = 0; i < users.length; i++) {
@@ -110,9 +111,6 @@ class UserRemoteProvider implements UserProvider {
   Future<List<User>> getAllUsers() async {
     final response = await http.get(Uri.parse('$_baseUrl/users'));
 
-    print("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBbbbbb");
-    print(jsonDecode(response.body));
-
     if (response.statusCode == 200) {
       final courses = jsonDecode(response.body) as List;
       //
@@ -120,15 +118,10 @@ class UserRemoteProvider implements UserProvider {
       // print(courses);
       //
       // return courses.map((course) => Course.fromJson(course)).toList();
-      print(-2);
       List<User> c = await courses.map((user) {
-        print(-4);
-        print(user);
         User c2 = User.fromJson(user);
-        print(-3);
         return c2;
       }).toList();
-      print(-1);
       return c;
     // var headersList = {
     //   'Accept': '*/*',
