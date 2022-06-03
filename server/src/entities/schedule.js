@@ -55,6 +55,7 @@ class Schedule {
                     let Movie = require("./movie");
                     this.movie = await Movie.find(this.movieId);
                     this.id = await addDocument(collectionNames.schedules, this);
+                    await updateDocument(collectionNames.schedules, {_id:new ObjectId(this.id)}, this);
                     // @ts-ignore
                     delete this._id;
                     return this;
@@ -100,7 +101,6 @@ class Schedule {
             let today = now - (now % oneDay)
             for (let schedule of schedules) {
                 if (schedule.startTime < today) continue;
-                schedule.id = schedule._id + "";
                 delete schedule._id;
                 // @ts-ignore
                 allSchedules.push(new Schedule(schedule));

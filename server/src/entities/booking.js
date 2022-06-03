@@ -39,8 +39,8 @@ class Booking {
                 if (!userExist) {
                     throw new Error(userDoesNotExist);
                 } else {
-                    let schedule = await getDocument(collectionNames.schedules, { _id: scheduleIdObject });
-                    // @ts-ignore
+                    let Schedule = require("./schedule")
+                    let schedule = await Schedule.find(this.scheduleId);
                     if (!schedule) {
                         throw new Error(scheduleDoesNotExist);
                         // @ts-ignore
