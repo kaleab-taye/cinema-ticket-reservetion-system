@@ -57,7 +57,7 @@ class MovieRemoteProvider implements MovieProvider {
       "description": movie.description,
       "imageUrl": movie.imageUrl,
       "casts": movie.casts,
-      "genera": movie.genera,
+      "genera": movie.genera
     };
     var req = http.Request('PATCH', url);
     req.headers.addAll(headersList);

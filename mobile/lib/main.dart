@@ -9,8 +9,10 @@ import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
 import 'package:royal_cinema/features/auth/signup/data_provider/data_provider.dart';
 import 'package:royal_cinema/features/auth/signup/repository/repository.dart';
 import 'package:royal_cinema/features/auth/signup/screens/screens.dart';
+import 'package:royal_cinema/features/home/data_provider/schedule_remote_provider.dart';
 import 'package:royal_cinema/features/home/index.dart';
 import 'package:royal_cinema/features/home/repository/movie_repository.dart';
+import 'package:royal_cinema/features/home/repository/schedule_repository.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
 import 'package:royal_cinema/features/user/bloc/bloc.dart';
@@ -111,6 +113,7 @@ Future<void> main() async {
   );
 
   final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
+  final ScheduledBloc scheduledBloc = ScheduledBloc(ScheduledRepository(ScheduledRemoteProvider()));
 
   runApp(
     MultiBlocProvider(
@@ -118,6 +121,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => AuthBloc(LoginRepository(LoginDataProvider()))),
         BlocProvider(create: (_) => SignUpBloc(SignUpRepository(SignUpDataProvider()))),
         BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
+        BlocProvider(create: (_) => scheduledBloc..add(LoadScheduleds())),
         BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))..add(LoadUsers())),
       ],
       child: MaterialApp.router(
