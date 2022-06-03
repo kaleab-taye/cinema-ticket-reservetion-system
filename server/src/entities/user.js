@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { checkExistence, addDocument, getDocument, updateDocument, deleteDocument, getDocuments, groupInDates } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId, userInitBalance } = require("../commons/variables");
+const { requireParamsNotSet, collectionNames, userPhoneAlreadyInUse, invalidId, userInitBalance, oneDay } = require("../commons/variables");
 const Booking = require("./booking");
 
 class User {
@@ -121,7 +121,10 @@ class User {
             try {
                 let bookings = await getDocuments(collectionNames.bookings, { userId: id });
                 let allBookings = [];
+                let now = Date.now();
+                let today = now - (now % oneDay)
                 for (let booking of bookings) {
+                    if (booking.schedule?.startTime < today) continue;
                     booking.id = booking._id + "";
                     delete booking._id;
                     // @ts-ignore
