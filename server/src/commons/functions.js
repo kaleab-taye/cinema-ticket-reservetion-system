@@ -218,10 +218,10 @@ async function initDb() {
 function groupInDates(objects, groupBy) {
     objects = objects.sort((a, b) => {
         let asTime = a;
-        groupBy.forEach(key => asTime = asTime[key]);
         let bsTime = b;
+        groupBy.forEach(key => asTime = asTime[key]);
         groupBy.forEach(key => bsTime = bsTime[key]);
-        asTime < bsTime ? -1 : 1
+        return asTime < bsTime ? -1 : 1
     });
     let grouped = {}
     let now = Date.now();
