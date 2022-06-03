@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/features/home/index.dart';
+import 'package:royal_cinema/features/home/ui/screens/scheduled_booked_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/scheduled_list_screen.dart';
 
 import '../../../../core/utils/colors.dart';
@@ -24,9 +25,10 @@ class _MovieHomePageState extends State<MovieHomePage> {
   void initState() {
     super.initState();
     screens = [
-      MovieListScreen(),
-      BookedMovieScreen(),
-      ScheduledListScreen()
+      ScheduledListScreen(),
+      BookedListScreen()
+      // BookedMovieScreen()
+      // MovieListScreen()
     ];
   }
 
@@ -90,10 +92,10 @@ class _MovieHomePageState extends State<MovieHomePage> {
             icon: Icon(Icons.book_online),
             label: "Booked",
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: "Favourite",
-          ),
+          // BottomNavigationBarItem(
+          //   icon: Icon(Icons.schedule),
+          //   label: "Schedules",
+          // ),
         ],
       ),
     );

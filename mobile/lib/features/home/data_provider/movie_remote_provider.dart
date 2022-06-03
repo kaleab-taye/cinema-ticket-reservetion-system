@@ -111,17 +111,18 @@ class MovieRemoteProvider implements MovieProvider {
     final response = await http.get(Uri.parse('$_baseUrl/movies'));
 
     if (response.statusCode == 200) {
-      final courses = jsonDecode(response.body) as List;
+      final moviesList = jsonDecode(response.body) as List;
       //
       // print(courses.map((course) => Course.fromJson(course)).toList());
       // print(courses);
       //
       // return courses.map((course) => Course.fromJson(course)).toList();
-      List<Movie> c = await courses.map((movie) {
-        Movie c2 = Movie.fromJson(movie);
-        return c2;
+      List<Movie> allMovies = await moviesList.map((movie) {
+        Movie movies = Movie.fromJson(movie);
+        return movies;
       }).toList();
-      return c;
+
+      return allMovies;
     // var headersList = {
     //   'Accept': '*/*',
     //   'User-Agent': 'Thunder Client (https://www.thunderclient.com)',

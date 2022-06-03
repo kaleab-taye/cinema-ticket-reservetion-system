@@ -1,16 +1,23 @@
 
 import 'package:royal_cinema/features/home/index.dart';
+import 'package:royal_cinema/features/home/model/schedule_response.dart';
 
 import '../model/scheduledMovie.dart';
 import 'schedule_provider.dart';
 
 class ScheduledLocalProvider implements ScheduledProvider {
+
+  final List<ScheduleResponse> schedules = [
+    for (int i in List.generate(15, (i) => i))
+      ScheduleResponse(date: "Today", schedules: [])
+  ];
+
   final List<ScheduledMovie> scheduleds = [
     for (int i in List.generate(15, (i) => i))
       ScheduledMovie(
           movieId: "movieId",
           movie: Movie(title: "title", description: "description", imageUrl: "imageUrl", casts:[], genera: []),
-          startingTime: 123,
+          startTime: 123,
           endTime: 520,
           capacity: 20,
           seatsLeft: 12,
@@ -40,7 +47,7 @@ class ScheduledLocalProvider implements ScheduledProvider {
     scheduleds[index] = ScheduledMovie(
         movieId: scheduled.movieId,
         movie: scheduled.movie,
-        startingTime: scheduled.startingTime,
+        startTime: scheduled.startTime,
         endTime: scheduled.endTime,
         capacity: scheduled.capacity,
         seatsLeft: scheduled.seatsLeft,
@@ -59,7 +66,7 @@ class ScheduledLocalProvider implements ScheduledProvider {
   }
 
   @override
-  Future<List<ScheduledMovie>> getAllScheduleds() async {
-    return scheduleds;
+  Future<List<ScheduleResponse>> getAllScheduleds() async {
+    return schedules;
   }
 }

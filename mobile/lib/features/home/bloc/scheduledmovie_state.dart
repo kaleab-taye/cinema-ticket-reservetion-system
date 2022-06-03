@@ -1,4 +1,6 @@
 
+import 'package:royal_cinema/features/home/model/schedule_response.dart';
+
 import '../model/scheduledMovie.dart';
 
 abstract class ScheduledState {}
@@ -6,7 +8,7 @@ abstract class ScheduledState {}
 class ScheduledsLoading extends ScheduledState {}
 
 class ScheduledsLoaded extends ScheduledState {
-  List<ScheduledMovie> scheduleds;
+  List<ScheduleResponse> scheduleds;
   ScheduledsLoaded(this.scheduleds);
 }
 

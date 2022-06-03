@@ -15,6 +15,7 @@ import 'package:royal_cinema/features/home/repository/movie_repository.dart';
 import 'package:royal_cinema/features/home/repository/schedule_repository.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
+import 'package:royal_cinema/features/home/ui/screens/scheduled_details_screen.dart';
 import 'package:royal_cinema/features/user/bloc/bloc.dart';
 import 'package:royal_cinema/features/user/data_provider/user_remote_provider.dart';
 import 'package:royal_cinema/features/user/repository/user_repository.dart';
@@ -75,18 +76,34 @@ Future<void> main() async {
                 child: MovieHomePage(),
               ),
           routes: [
+            // GoRoute(
+            //   name: 'movie_details',
+            //   path: ':id',
+            //   pageBuilder: (context, state) {
+            //     // final movie = _movieFrom(state.params['id']!);
+            //     String id = state.params['id']!;
+            //
+            //     //movie = bloc.getMovie(id);
+            //     return MaterialPage(
+            //       key: state.pageKey,
+            //       child: MovieDetailsScreen(
+            //         id: id,
+            //       ),
+            //     );
+            //   },
+            // ),
             GoRoute(
-              name: 'movie_details',
-              path: ':id',
+              name: 'schedule_details',
+              path: ':schedule_id',
               pageBuilder: (context, state) {
                 // final movie = _movieFrom(state.params['id']!);
-                String id = state.params['id']!;
+                String schedule_id = state.params['schedule_id']!;
 
                 //movie = bloc.getMovie(id);
                 return MaterialPage(
                   key: state.pageKey,
-                  child: MovieDetailsScreen(
-                    id: id,
+                  child: ScheduleDetailsScreen(
+                    schedule_id: schedule_id
                   ),
                 );
               },
