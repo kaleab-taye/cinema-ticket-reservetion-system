@@ -7,10 +7,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final LoginRepository loginRepository;
 
   AuthBloc(this.loginRepository) : super(Idle()) {
-    on<LoginAuth>(_onLogin);
+    on<LoginAuth>(_onLoginAuth);
   }
 
-  void _onLogin(LoginAuth event, Emitter emit) async {
+  void _onLoginAuth(LoginAuth event, Emitter emit) async {
     await loginRepository.loginUser(event.login);
     emit(LoginSuccessful());
   }

@@ -1,9 +1,9 @@
+import '../models/signup.dart';
+
 abstract class SignUpEvent {}
 
-class SignUp extends SignUpEvent {
-  final String fullName;
-  final String phone;
-  final String password;
+class SignUpAuth extends SignUpEvent {
+  final SignUp signUp;
 
-  SignUp({required this.fullName, required this.phone, required this.password});
+  SignUpAuth(this.signUp);
 }

@@ -6,11 +6,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/features/auth/login/login.dart';
 import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
+import 'package:royal_cinema/features/auth/signup/data_provider/data_provider.dart';
+import 'package:royal_cinema/features/auth/signup/repository/repository.dart';
 import 'package:royal_cinema/features/auth/signup/screens/screens.dart';
 import 'package:royal_cinema/features/home/index.dart';
 import 'package:royal_cinema/features/home/repository/movie_repository.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
+import 'package:royal_cinema/features/user/bloc/bloc.dart';
+import 'package:royal_cinema/features/user/data_provider/user_remote_provider.dart';
+import 'package:royal_cinema/features/user/repository/user_repository.dart';
 
 import 'features/auth/login/bloc/auth_bloc.dart';
 import 'features/auth/login/screens/login.dart';
@@ -40,10 +45,12 @@ Future<void> main() async {
       ),
       GoRoute(
         path: '/profile',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: Profile(),
-        ),
+        pageBuilder: (context, state) {
+          return MaterialPage(
+            key: state.pageKey,
+            child: Profile(),
+          );
+        },
       ),
       GoRoute(
         path: '/editProfile',
@@ -104,14 +111,14 @@ Future<void> main() async {
   );
 
   final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
-  final AuthBloc loginBloc = AuthBloc(LoginRepository(LoginDataProvider()));
 
   runApp(
     MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => loginBloc..add(LoadLogin())),
-        BlocProvider(create: (_) => SignUpBloc()),
+        BlocProvider(create: (_) => AuthBloc(LoginRepository(LoginDataProvider()))),
+        BlocProvider(create: (_) => SignUpBloc(SignUpRepository(SignUpDataProvider()))),
         BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
+        BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))..add(LoadUsers())),
       ],
       child: MaterialApp.router(
         routeInformationParser: _router.routeInformationParser,

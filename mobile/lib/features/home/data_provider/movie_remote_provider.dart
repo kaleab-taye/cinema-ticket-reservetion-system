@@ -78,7 +78,6 @@ class MovieRemoteProvider implements MovieProvider {
   Future<Movie?> getMovie(String id) async {
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       "Authorization": "Bearer token",
       'Content-Type': 'application/json'
     };

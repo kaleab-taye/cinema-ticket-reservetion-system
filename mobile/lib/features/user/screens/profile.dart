@@ -1,15 +1,29 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/core/utils/colors.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class Profile extends StatelessWidget {
+import '../bloc/bloc.dart';
+import '../model/user.dart';
+
+class Profile extends StatefulWidget {
+
   const Profile({Key? key}) : super(key: key);
 
   @override
+  _Profile createState() => _Profile();
+}
+
+class _Profile extends State<Profile>{
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Col.background,
@@ -23,7 +37,10 @@ class Profile extends StatelessWidget {
           onPressed: () {
             GoRouter.of(context).go('/home');
           },
-          icon: Icon(Icons.arrow_back, color: Col.textColor,),
+          icon: Icon(
+            Icons.arrow_back,
+            color: Col.textColor,
+          ),
         ),
         actions: [
           IconButton(
@@ -69,6 +86,8 @@ class Profile extends StatelessWidget {
                           ),
                           FlatButton(
                             onPressed: () async {
+                              final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              sharedPreferences.remove("fullName");
                               GoRouter.of(context).go('/');
                             },
                             child: Text(
@@ -109,7 +128,7 @@ class Profile extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
+              child: Container(
                 color: Col.background,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -130,7 +149,7 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 50, 0, 0),
                       child: Text(
-                        "hghg",
+                        "Full Name",
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 18,
@@ -143,7 +162,8 @@ class Profile extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
-                        "Beka Dessalegn",
+                        // sharedPreferences.getString("fullName").toString(),
+                        "",
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,
@@ -217,7 +237,7 @@ class Profile extends StatelessWidget {
                   ],
                 ),
               ),
-      ),
+            ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           GoRouter.of(context).go('/editProfile');

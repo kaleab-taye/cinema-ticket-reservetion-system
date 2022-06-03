@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:royal_cinema/features/auth/login/bloc/bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../models/login.dart';
@@ -24,6 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Col.background,
@@ -80,9 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: phoneController,
-                      onChanged: (value) {
-                        phoneController.text = value;
-                      },
+                      // onChanged: (value) {
+                      //   phoneController.text = value;
+                      // },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "This field can not be empty";
@@ -119,9 +121,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: passwordHashController,
-                      onChanged: (value) {
-                        passwordHashController.text = value;
-                      },
+                      // onChanged: (value) {
+                      //   passwordHashController.text = value;
+                      // },
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "This field can not be empty";
@@ -155,7 +157,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               _secureText == true
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Col.background,
+                              color: Col.textColor,
                             ),
                           )),
                       obscureText: _secureText,
@@ -234,34 +236,31 @@ class _LoginScreenState extends State<LoginScreen> {
                                   BlocProvider.of<AuthBloc>(context);
                               authBloc.add(LoginAuth(
                                   Login(phone: phoneController.text, passwordHash: passwordHashController.text)));
-                              // if (_formKey.currentState!.validate()) {
-                              //   GoRouter.of(context).go('/home');
-                              // }
                             });
                       },
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        "Forgot password",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Nunito',
-                          letterSpacing: 0.3,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
+                //   child: Container(
+                //     width: double.infinity,
+                //     child: TextButton(
+                //       onPressed: () {},
+                //       child: Text(
+                //         "Forgot password",
+                //         style: TextStyle(
+                //           color: Colors.black,
+                //           fontSize: 18,
+                //           fontWeight: FontWeight.bold,
+                //           fontFamily: 'Nunito',
+                //           letterSpacing: 0.3,
+                //         ),
+                //         textAlign: TextAlign.center,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 50, 25, 0),
                   child: Container(

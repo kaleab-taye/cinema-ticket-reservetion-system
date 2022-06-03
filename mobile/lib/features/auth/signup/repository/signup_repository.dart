@@ -4,12 +4,11 @@ import '../data_provider/data_provider.dart';
 import '../models/signup.dart';
 
 class SignUpRepository {
-  final SignUpDataProvider dataProvider;
+  SignUpDataProvider dataProvider;
 
-  SignUpRepository({required this.dataProvider})
-      : assert(dataProvider != null);
+  SignUpRepository(this.dataProvider);
 
-  Future<SignUp> signUpUser(SignUp signUp) async {
-    return await dataProvider.signUpUser(signUp);
+  Future signUpUser(SignUp signUp) async {
+    await dataProvider.signUpUser(signUp);
   }
 }

@@ -1,14 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:royal_cinema/features/auth/signup/signup.dart';
 import 'bloc.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(Idle()) {
-    on<SignUp>(_onSignUp);
+
+  final SignUpRepository signUpRepository;
+
+  SignUpBloc(this.signUpRepository) : super(Idle()) {
+    on<SignUpAuth>(_onSignUpAuth);
   }
 
-  void _onSignUp(SignUp event, Emitter emit) async {
-    emit(SigningUp());
-    await Future.delayed(const Duration(seconds: 3));
+  void _onSignUpAuth(SignUpAuth event, Emitter emit) async {
+    await signUpRepository.signUpUser(event.signUp);
     emit(SignUpSuccessful());
   }
 }
