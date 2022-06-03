@@ -1,7 +1,7 @@
 const _ = require("lodash");
 const { ObjectId } = require("mongodb");
 const { addDocument, getDocuments, updateDocument, deleteDocument, getDocument, checkExistence, groupInDates } = require("../commons/functions");
-const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity, scheduleOverlap } = require("../commons/variables");
+const { requireParamsNotSet, collectionNames, invalidId, defaultPrice, defaultCapacity, scheduleOverlap, oneDay } = require("../commons/variables");
 
 class Schedule {
     id;
@@ -95,8 +95,11 @@ class Schedule {
     static async findAll() {
         try {
             let schedules = await getDocuments(collectionNames.schedules);
-            let allSchedules = []
+            let allSchedules = [];
+            let now = Date.now();
+            let today = now - (now % oneDay)
             for (let schedule of schedules) {
+                if (schedule.startTime < today) continue;
                 schedule.id = schedule._id + "";
                 delete schedule._id;
                 // @ts-ignore
