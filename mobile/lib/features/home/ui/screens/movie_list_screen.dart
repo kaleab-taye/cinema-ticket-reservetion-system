@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,6 +21,26 @@ class MovieListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          buildSearch(),
+          SizedBox(
+            height: 5,
+          ),
+          daysPresenter(context),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSearch() => SearchWidget(
+        text: "Search ...",
+        hintText: 'Search ...',
+      );
+
+  Widget daysPresenter(BuildContext context) {
     return BlocBuilder<MovieBloc, MovieState>(
       buildWhen: (p, c) => c is! UpdateSuccessful,
       builder: (_, MovieState state) {
@@ -38,38 +57,33 @@ class MovieListScreen extends StatelessWidget {
         }
 
         if (state is MoviesLoaded) {
-          return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                buildSearch(),
-                SizedBox(
-                  height: 5,
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 25),
+                child: Text(
+                  "Today's",
+                  style: TextStyle(
+                      color: Col.textColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(left: 25),
-                  child: Text(
-                    "Today's",
-                    style: TextStyle(
-                        color: Col.textColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  height: 200,
-                  width: MediaQuery.of(context).size.width,
-                  padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                  decoration: BoxDecoration(color: Col.secondary),
-                  child: ListView.builder(
-                      itemCount: state.movies.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async {
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                height: 200,
+                width: MediaQuery.of(context).size.width,
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                decoration: BoxDecoration(color: Col.secondary),
+                child: ListView.builder(
+                    itemCount: state.movies.length,
+                    scrollDirection: Axis.horizontal,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () async {
                           // final result = await Navigator.push(
                           //   context,
                           //   MaterialPageRoute(
@@ -83,52 +97,53 @@ class MovieListScreen extends StatelessWidget {
                           //
                           // final movieBloc = BlocProvider.of<MovieBloc>(context);
                           // movieBloc.add(LoadMovies());
-                            String movie = jsonEncode(state.movies[index].toJson());
-                            context.goNamed(
-                              'movie_details',
-                              params: {'id': movie},
-                            );
+                          String movie =
+                              jsonEncode(state.movies[index].toJson());
+                          context.goNamed(
+                            'movie_details',
+                            params: {'id': movie},
+                          );
                         },
-                            // context.go("/movie_details");
-                          child: Container(
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                      "${ApiData.baseUrl}/${state.movies[index].imageUrl}"),),
-                                color: Col.textColor),
-                            width: 150,
-                            margin: EdgeInsets.only(right: 10),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: IconButton(
-                                    onPressed: () {},
-                                    icon: Icon(Icons.favorite),
-                                    color: Col.secondary,
-                                    iconSize: 28,
-                                  ),
+                        // context.go("/movie_details");
+                        child: Container(
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              image: DecorationImage(
+                                fit: BoxFit.fill,
+                                image: NetworkImage(
+                                    "${ApiData.imageBaseUrl}/${state.movies[index].imageUrl}"),
+                              ),
+                              color: Col.textColor),
+                          width: 150,
+                          margin: EdgeInsets.only(right: 10),
+                          child: Stack(
+                            children: [
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: IconButton(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.favorite),
+                                  color: Col.secondary,
+                                  iconSize: 28,
                                 ),
-                                Align(
-                                  alignment: Alignment.topCenter,
-                                  child: Text(state.movies[index].title,
-                                    style: TextStyle(
-                                        color: Col.primary,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold
-                                    ),
-                                  ),
+                              ),
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  state.movies[index].title,
+                                  style: TextStyle(
+                                      color: Col.primary,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-                        );
-                      }),
-                ),
-              ],
-            ),
+                        ),
+                      );
+                    }),
+              ),
+            ],
           );
         }
 
@@ -136,9 +151,4 @@ class MovieListScreen extends StatelessWidget {
       },
     );
   }
-
-  Widget buildSearch() => SearchWidget(
-        text: "Search ...",
-        hintText: 'Search ...',
-      );
 }

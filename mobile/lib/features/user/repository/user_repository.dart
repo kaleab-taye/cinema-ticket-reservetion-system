@@ -31,32 +31,32 @@ class UserRepository {
     }
   }
 
-  addUser(User user) async {
-    // check for profanity
-    // user.description.contains("sidib");
-    final newUser = User(
-        id: user.id,
-        fullName: user.fullName,
-        phone: user.phone,
-        passwordHash: user.passwordHash,
-        balance: user.balance);
+  // addUser(User user) async {
+  //   // check for profanity
+  //   // user.description.contains("sidib");
+  //   final newUser = User(
+  //       id: user.id,
+  //       fullName: user.fullName,
+  //       phone: user.phone,
+  //       passwordHash: user.passwordHash,
+  //       balance: user.balance);
+  //
+  //   await userProvider.addUser(newUser);
+  // }
 
-    await userProvider.addUser(newUser);
-  }
-
-  Future<Either<String>> editUser(String id, User user) async {
-    try {
-      final newUser = User(
-          id: user.id,
-          fullName: user.fullName,
-          phone: user.phone,
-          passwordHash: user.passwordHash,
-          balance: user.balance);
-
-      await userProvider.editUser(id, newUser);
-      return Either(val: "");
-    } catch (err) {
-      return Either(error: "User not found");
-    }
-  }
+  // Future<Either<String>> editUser(String id, User user) async {
+  //   try {
+  //     final newUser = User(
+  //         id: user.id,
+  //         fullName: user.fullName,
+  //         phone: user.phone,
+  //         passwordHash: user.passwordHash,
+  //         balance: user.balance);
+  //
+  //     await userProvider.editUser(id, newUser);
+  //     return Either(val: "");
+  //   } catch (err) {
+  //     return Either(error: "User not found");
+  //   }
+  // }
 }

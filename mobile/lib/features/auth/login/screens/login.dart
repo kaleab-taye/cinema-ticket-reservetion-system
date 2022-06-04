@@ -232,8 +232,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _formKey.currentState!.validate();
                               if (!formValid) return;
 
-                              final authBloc =
-                                  BlocProvider.of<AuthBloc>(context);
+                              final authBloc = BlocProvider.of<AuthBloc>(context);
                               authBloc.add(LoginAuth(
                                   Login(phone: phoneController.text, passwordHash: passwordHashController.text)));
                             });

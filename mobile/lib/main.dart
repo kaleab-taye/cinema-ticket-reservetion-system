@@ -15,6 +15,7 @@ import 'package:royal_cinema/features/home/repository/movie_repository.dart';
 import 'package:royal_cinema/features/home/repository/schedule_repository.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
+import 'package:royal_cinema/features/home/ui/screens/scheduled_details_screen.dart';
 import 'package:royal_cinema/features/user/bloc/bloc.dart';
 import 'package:royal_cinema/features/user/data_provider/user_remote_provider.dart';
 import 'package:royal_cinema/features/user/repository/user_repository.dart';
@@ -25,17 +26,24 @@ import 'features/home/bloc/bloc.dart';
 import 'features/user/screens/editProfile.dart';
 import 'features/user/screens/profile.dart';
 
-class LoginInfo {
-  var isLoggedIn = false;
-}
+// class LoginInfo {
+//   var isLoggedIn = true;
+// }
 
 Future<void> main() async {
-  final loginInfo = LoginInfo();
+  // final loginInfo = LoginInfo();
 
   final _router = GoRouter(
-    redirect: (state) {
-      final loggedIn = loginInfo.isLoggedIn;
-    },
+    // redirect: (state) {
+    //   final loggedIn = loginInfo.isLoggedIn;
+    //   final isLogging = state.location == '/';
+    //
+    //   if(!loggedIn && !isLogging) return '/';
+    //
+    //   if(loggedIn && isLogging) return '/home';
+    //
+    //   return null;
+    // },
     urlPathStrategy: UrlPathStrategy.path,
     routes: [
       GoRoute(
@@ -46,11 +54,17 @@ Future<void> main() async {
         ),
       ),
       GoRoute(
+        // name: 'profile',
         path: '/profile',
         pageBuilder: (context, state) {
+
+          // String user_id = state.params['user_id']!;
+
           return MaterialPage(
             key: state.pageKey,
-            child: Profile(),
+            child: Profile(
+              // id: user_id,
+            ),
           );
         },
       ),
@@ -75,18 +89,34 @@ Future<void> main() async {
                 child: MovieHomePage(),
               ),
           routes: [
+            // GoRoute(
+            //   name: 'movie_details',
+            //   path: ':id',
+            //   pageBuilder: (context, state) {
+            //     // final movie = _movieFrom(state.params['id']!);
+            //     String id = state.params['id']!;
+            //
+            //     //movie = bloc.getMovie(id);
+            //     return MaterialPage(
+            //       key: state.pageKey,
+            //       child: MovieDetailsScreen(
+            //         id: id,
+            //       ),
+            //     );
+            //   },
+            // ),
             GoRoute(
-              name: 'movie_details',
-              path: ':id',
+              name: 'schedule_details',
+              path: ':schedule_id',
               pageBuilder: (context, state) {
                 // final movie = _movieFrom(state.params['id']!);
-                String id = state.params['id']!;
+                String schedule_id = state.params['schedule_id']!;
 
                 //movie = bloc.getMovie(id);
                 return MaterialPage(
                   key: state.pageKey,
-                  child: MovieDetailsScreen(
-                    id: id,
+                  child: ScheduleDetailsScreen(
+                    schedule_id: schedule_id
                   ),
                 );
               },
@@ -122,7 +152,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => SignUpBloc(SignUpRepository(SignUpDataProvider()))),
         BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
         BlocProvider(create: (_) => scheduledBloc..add(LoadScheduleds())),
-        BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))..add(LoadUsers())),
+        BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))),
       ],
       child: MaterialApp.router(
         routeInformationParser: _router.routeInformationParser,

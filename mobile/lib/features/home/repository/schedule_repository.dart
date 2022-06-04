@@ -1,5 +1,6 @@
 
 import 'package:royal_cinema/core/utils/either.dart';
+import 'package:royal_cinema/features/home/model/schedule_response.dart';
 import 'package:royal_cinema/features/home/model/scheduledMovie.dart';
 
 import '../data_provider/schedule_provider.dart';
@@ -8,12 +9,12 @@ class ScheduledRepository {
   ScheduledProvider scheduledProvider;
   ScheduledRepository(this.scheduledProvider);
 
-  Future<List<ScheduledMovie>> getScheduledsWithTitle(String id) async {
-    final scheduleds = await scheduledProvider.getAllScheduleds();
-    return scheduleds.where((scheduled) => scheduled.id == id).toList();
-  }
+  // Future<List<ScheduledMovie>> getScheduledsWithTitle(String id) async {
+  //   final scheduleds = await scheduledProvider.getAllScheduleds();
+  //   return scheduleds.where((scheduled) => scheduled.id == id).toList();
+  // }
 
-  Future<Either<List<ScheduledMovie>>> getAllScheduleds() async {
+  Future<Either<List<ScheduleResponse>>> getAllScheduleds() async {
     try {
       final scheduleds = await scheduledProvider.getAllScheduleds();
       return Either(val: scheduleds);
@@ -38,7 +39,7 @@ class ScheduledRepository {
     final newScheduled = ScheduledMovie(
         movieId: scheduled.movieId,
         movie: scheduled.movie,
-        startingTime: scheduled.startingTime,
+        startTime: scheduled.startTime,
         endTime: scheduled.endTime,
         capacity: scheduled.capacity,
         seatsLeft: scheduled.seatsLeft,
@@ -53,7 +54,7 @@ class ScheduledRepository {
       final newScheduled = ScheduledMovie(
           movieId: scheduled.movieId,
           movie: scheduled.movie,
-          startingTime: scheduled.startingTime,
+          startTime: scheduled.startTime,
           endTime: scheduled.endTime,
           capacity: scheduled.capacity,
           seatsLeft: scheduled.seatsLeft,

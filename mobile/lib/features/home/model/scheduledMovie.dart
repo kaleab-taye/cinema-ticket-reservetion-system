@@ -6,7 +6,7 @@ class ScheduledMovie {
   late String _id;
   final String movieId;
   final Movie movie;
-  final int startingTime;
+  final int startTime;
   final int endTime;
   final int capacity;
   final int seatsLeft;
@@ -17,7 +17,7 @@ class ScheduledMovie {
   ScheduledMovie(
       {required this.movieId,
         required this.movie,
-        required this.startingTime,
+        required this.startTime,
         required this.endTime,
         required this.capacity,
         required this.seatsLeft,
@@ -29,8 +29,8 @@ class ScheduledMovie {
   factory ScheduledMovie.fromJson(Map<String, dynamic> json) => ScheduledMovie(
     id: json['id'],
     movieId: json['movieId'],
-    movie: json['movie'],
-    startingTime: json['startingTime'],
+    movie: Movie.fromJson(json['movie']),
+    startTime: json['startTime'],
     endTime: json['endTime'],
     capacity: json['capacity'],
     seatsLeft: json['seatsLeft'],
@@ -41,7 +41,7 @@ class ScheduledMovie {
     'id': id,
     'movieId': movieId,
     'movie': movie,
-    'startingTime': startingTime,
+    'startTime': startTime,
     'endTime': endTime,
     'capacity': capacity,
     'seatsLeft': seatsLeft,
