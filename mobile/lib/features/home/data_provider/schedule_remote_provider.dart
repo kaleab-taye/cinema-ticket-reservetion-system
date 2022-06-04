@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:royal_cinema/core/api_data.dart';
 import 'package:royal_cinema/core/token_data.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,9 +11,6 @@ import 'schedule_provider.dart';
 
 class ScheduledRemoteProvider implements ScheduledProvider {
 
-  final _baseUrl = 'http://127.0.0.1:5000/${TokenData.token}'; //new
-  // final _baseUrl = 'http://192.168.56.1:3000';
-
   @override
   addScheduled(ScheduledMovie scheduled) async {
     var headersList = {
@@ -20,7 +18,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/schedules');
+    var url = Uri.parse('${ApiData.baseUrl}/schedules');
 
     var body = {
       "movieId": scheduled.movieId,
@@ -53,7 +51,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/schedules/${scheduled.id}');
+    var url = Uri.parse('${ApiData.baseUrl}/schedules/${scheduled.id}');
 
     var body = {
       "movieId": scheduled.movieId,
@@ -86,7 +84,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       "Authorization": "Bearer token",
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/schedules');
+    var url = Uri.parse('${ApiData.baseUrl}/schedules');
 
     var body = {
 
@@ -120,7 +118,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3RhZmYiLCJpZCI6IjYyOThiOTZmZTk1OThmYWNmMGI2OTQwYyIsImlhdCI6MTY1NDIwMTg0NX0.BkxEosQ8y2jVSZkRDhfohOe9dB0K7wVOnv-VwHSu69k"
     };
 
-    final response = await http.get(Uri.parse('${_baseUrl}/schedules'),
+    final response = await http.get(Uri.parse('${ApiData.baseUrl}/schedules'),
         headers: headersList);
 
     if (response.statusCode == 200) {
@@ -157,7 +155,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
   //     'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoidXNlciIsImlkIjoiNjI5OGExZTcyYjEyYWFhYTI5ODYzODJjIiwiaWF0IjoxNjU0MTcwMTUzfQ.KpOgJoKqfp55TN9y3vfGdibl_taN5tgGojEoCVSCrMc',
   //     'Content-Type': 'application/json'
   //   };
-  //   var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/schedules');
+  //   var url = Uri.parse('${ApiData.baseUrl}/schedules');
   //
   //   var body = {
   //   };

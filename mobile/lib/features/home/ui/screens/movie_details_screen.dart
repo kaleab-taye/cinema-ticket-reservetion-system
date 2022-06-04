@@ -77,7 +77,7 @@ class _MovieDetailsScreen extends State<MovieDetailsScreen> {
                   image: DecorationImage(
                     fit: BoxFit.fill,
                     image: NetworkImage(
-                        "${ApiData.baseUrl}/${widget.movie.imageUrl}"),),
+                        "${ApiData.imageBaseUrl}/${widget.movie.imageUrl}"),),
                   color: Col.textColor),
               ),
             SizedBox(height: 10,),

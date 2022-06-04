@@ -15,4 +15,4 @@ class UsersLoadingFailed extends UserState {
   UsersLoadingFailed(this.msg);
 }
 
-class UpdateSuccessful extends UserState {}
+class UserUpdateSuccessful extends UserState {}

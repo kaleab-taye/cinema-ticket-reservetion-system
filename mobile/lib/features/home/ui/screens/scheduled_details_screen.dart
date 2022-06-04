@@ -125,7 +125,7 @@ class _ScheduleDetailsScreen extends State<ScheduleDetailsScreen> {
                   image: DecorationImage(
                     fit: BoxFit.fill,
                     image: NetworkImage(
-                        "${ApiData.baseUrl}/${widget.schedule.movie.imageUrl}"),),
+                        "${ApiData.imageBaseUrl}/${widget.schedule.movie.imageUrl}"),),
                   color: Col.textColor),
             ),
             SizedBox(height: 10,),

@@ -13,7 +13,7 @@ import '../model/user.dart';
 
 class Profile extends StatefulWidget {
 
-  const Profile({Key? key}) : super(key: key);
+  Profile({Key? key}) : super(key: key);
 
   @override
   _Profile createState() => _Profile();
@@ -21,9 +21,28 @@ class Profile extends StatefulWidget {
 
 class _Profile extends State<Profile>{
 
+  String? fullName = "";
+  String? phone = "";
+  String? loginToken = "";
+
+  @override
+  void initState() {
+    getUser();
+    super.initState();
+  }
+
+  Future getUser() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = sharedPreferences.getString("fullName");
+      phone = sharedPreferences.getString("phone");
+      // balance = sharedPreferences.getString("balance");
+      loginToken = sharedPreferences.getString("loginToken");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Col.background,
@@ -163,7 +182,7 @@ class _Profile extends State<Profile>{
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
                         // sharedPreferences.getString("fullName").toString(),
-                        "",
+                        fullName!,
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,
@@ -250,4 +269,5 @@ class _Profile extends State<Profile>{
       ),
     );
   }
+
 }

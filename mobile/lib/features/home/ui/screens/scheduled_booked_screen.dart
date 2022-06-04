@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,7 +28,9 @@ class BookedListScreen extends StatelessWidget {
             color: Col.textColor,
             fontWeight: FontWeight.bold,
             fontSize: 26,
-          ),),),
+          ),
+          ),
+          ),
           BlocBuilder<ScheduledBloc, ScheduledState>(
             buildWhen: (p, c) => c is! ScheduleUpdateSuccessful,
             builder: (_, ScheduledState state) {
@@ -174,7 +175,7 @@ class BookedListScreen extends StatelessWidget {
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
                                     image: NetworkImage(
-                                        "${ApiData.baseUrl}/${state.scheduleds[i].schedules[index].movie.imageUrl}"),
+                                        "${ApiData.imageBaseUrl}/${state.scheduleds[i].schedules[index].movie.imageUrl}"),
                                   ),
                                   color: Col.textColor),
                               width: 150,
@@ -182,15 +183,6 @@ class BookedListScreen extends StatelessWidget {
                               margin: EdgeInsets.only(right: 10),
                               child: Stack(
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.bookmark),
-                                      color: Col.secondary,
-                                      iconSize: 28,
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -211,7 +203,8 @@ class BookedListScreen extends StatelessWidget {
                               ),
                             ),
                             RaisedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                              },
                               padding: EdgeInsets.symmetric(
                                   horizontal: 70, vertical: 1),
                               child: Text(

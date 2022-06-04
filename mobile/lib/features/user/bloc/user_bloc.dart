@@ -10,7 +10,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   UserBloc(this.userRepository) : super(UsersLoading()) {
     on<LoadUser>(_onLoadUsers);
-    on<UpdateUser>(_onUpdateUser);
+    // on<UpdateUser>(_onUpdateUser);
   }
 
   void _onLoadUsers(LoadUser event, Emitter emit) async {
@@ -36,8 +36,8 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   //   }
   // }
 
-  void _onUpdateUser(UpdateUser event, Emitter emit) async {
-    await userRepository.editUser(event.user.id, event.user);
-    emit(UpdateSuccessful());
-  }
+  // void _onUpdateUser(UpdateUser event, Emitter emit) async {
+  //   await userRepository.editUser(event.user.id, event.user);
+  //   emit(UserUpdateSuccessful());
+  // }
 }

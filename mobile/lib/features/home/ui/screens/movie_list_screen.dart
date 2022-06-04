@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -112,7 +111,7 @@ class MovieListScreen extends StatelessWidget {
                               image: DecorationImage(
                                 fit: BoxFit.fill,
                                 image: NetworkImage(
-                                    "${ApiData.baseUrl}/${state.movies[index].imageUrl}"),
+                                    "${ApiData.imageBaseUrl}/${state.movies[index].imageUrl}"),
                               ),
                               color: Col.textColor),
                           width: 150,

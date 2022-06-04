@@ -26,17 +26,24 @@ import 'features/home/bloc/bloc.dart';
 import 'features/user/screens/editProfile.dart';
 import 'features/user/screens/profile.dart';
 
-class LoginInfo {
-  var isLoggedIn = false;
-}
+// class LoginInfo {
+//   var isLoggedIn = true;
+// }
 
 Future<void> main() async {
-  final loginInfo = LoginInfo();
+  // final loginInfo = LoginInfo();
 
   final _router = GoRouter(
-    redirect: (state) {
-      final loggedIn = loginInfo.isLoggedIn;
-    },
+    // redirect: (state) {
+    //   final loggedIn = loginInfo.isLoggedIn;
+    //   final isLogging = state.location == '/';
+    //
+    //   if(!loggedIn && !isLogging) return '/';
+    //
+    //   if(loggedIn && isLogging) return '/home';
+    //
+    //   return null;
+    // },
     urlPathStrategy: UrlPathStrategy.path,
     routes: [
       GoRoute(
@@ -47,11 +54,17 @@ Future<void> main() async {
         ),
       ),
       GoRoute(
+        // name: 'profile',
         path: '/profile',
         pageBuilder: (context, state) {
+
+          // String user_id = state.params['user_id']!;
+
           return MaterialPage(
             key: state.pageKey,
-            child: Profile(),
+            child: Profile(
+              // id: user_id,
+            ),
           );
         },
       ),
@@ -139,7 +152,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => SignUpBloc(SignUpRepository(SignUpDataProvider()))),
         BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
         BlocProvider(create: (_) => scheduledBloc..add(LoadScheduleds())),
-        BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))..add(LoadUsers())),
+        BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))),
       ],
       child: MaterialApp.router(
         routeInformationParser: _router.routeInformationParser,

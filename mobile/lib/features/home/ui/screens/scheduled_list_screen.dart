@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:convert';
-import 'dart:html';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +44,6 @@ class ScheduledListScreen extends StatelessWidget {
                     itemCount: state.scheduleds.length,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    physics: AlwaysScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
                       return daysPresenter(context, i);
                     });
@@ -95,7 +93,7 @@ class ScheduledListScreen extends StatelessWidget {
                 height: 10,
               ),
               Container(
-                height: 250,
+                height: 270,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 decoration: BoxDecoration(color: Col.secondary),
@@ -143,25 +141,27 @@ class ScheduledListScreen extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                SizedBox(width: 10,),
-                                Text(
-                                  "${state.scheduleds[i].schedules[index].movie.title}",
-                                  style: TextStyle(
-                                      color: Col.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                SizedBox(width: 40,),
-                                Text(
-                                  "${state.scheduleds[i].schedules[index].price} birr",
-                                  style: TextStyle(
-                                      color: Col.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ],
+                            Container(
+                              width: 150,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Text(
+                                    "${state.scheduleds[i].schedules[index].movie.title}",
+                                    style: TextStyle(
+                                        color: Col.textColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    "${state.scheduleds[i].schedules[index].price} birr",
+                                    style: TextStyle(
+                                        color: Col.textColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ],
+                              ),
                             ),
                             Container(
                               decoration: BoxDecoration(
@@ -169,7 +169,7 @@ class ScheduledListScreen extends StatelessWidget {
                                   image: DecorationImage(
                                     fit: BoxFit.fill,
                                     image: NetworkImage(
-                                        "${ApiData.baseUrl}/${state.scheduleds[i].schedules[index].movie.imageUrl}"),
+                                        "${ApiData.imageBaseUrl}/${state.scheduleds[i].schedules[index].movie.imageUrl}"),
                                   ),
                                   color: Col.textColor),
                               width: 150,
@@ -177,15 +177,6 @@ class ScheduledListScreen extends StatelessWidget {
                               margin: EdgeInsets.only(right: 10),
                               child: Stack(
                                 children: [
-                                  Align(
-                                    alignment: Alignment.topRight,
-                                    child: IconButton(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.bookmark),
-                                      color: Col.secondary,
-                                      iconSize: 28,
-                                    ),
-                                  ),
                                 ],
                               ),
                             ),
@@ -194,19 +185,72 @@ class ScheduledListScreen extends StatelessWidget {
                             ),
                             Container(
                               width: 150,
-                              child:
-                                  Center(
-                                    child: Text(
-                                      "$formattedStartTime - $formattedEndTime",
-                                      style: TextStyle(
-                                          color: Col.textColor,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
+                              child: Center(
+                                child: Text(
+                                  "$formattedStartTime - $formattedEndTime",
+                                  style: TextStyle(
+                                      color: Col.textColor,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
                             ),
                             RaisedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        backgroundColor: Col.background,
+                                        title: Text(
+                                          "ROYAL CINEMA",
+                                          style: TextStyle(
+                                            color: Col.primary,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Nunito',
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          "${state.scheduleds[i].schedules[index].price} birr is going to be deducted from your balance to book ${state.scheduleds[i].schedules[index].movie.title} from $formattedStartTime to $formattedEndTime",
+                                          style: TextStyle(
+                                            color: Col.textColor,
+                                            fontSize: 20,
+                                            fontFamily: 'Nunito',
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                            onPressed: () {
+
+                                            },
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () {
+                                              // PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                                            },
+                                            child: Text(
+                                              "Ok",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        elevation: 10.0,
+                                      );
+                                    });
+                              },
                               padding: EdgeInsets.symmetric(
                                   horizontal: 70, vertical: 1),
                               child: Text(

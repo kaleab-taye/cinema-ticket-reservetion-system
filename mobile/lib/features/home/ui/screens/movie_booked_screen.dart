@@ -80,7 +80,7 @@ class _BookedMovieScreenState extends State<BookedMovieScreen> {
                                         image: DecorationImage(
                                           fit: BoxFit.fill,
                                           image: NetworkImage(
-                                              "${ApiData.baseUrl}/${state.movies[index].imageUrl}"),
+                                              "${ApiData.imageBaseUrl}/${state.movies[index].imageUrl}"),
                                         ),
                                       ),
                                       width: double.infinity,

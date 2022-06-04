@@ -1,15 +1,12 @@
 import 'dart:convert';
 
-import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
+import 'package:royal_cinema/core/api_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../core/token_data.dart';
 import '../models/login.dart';
 
 class LoginDataProvider {
-  final _baseUrl = 'http://127.0.0.1:5000/${TokenData.token}'; //new
-  // final _baseUrl = 'http://192.168.56.1:3000';
 
   LoginDataProvider();
 
@@ -19,7 +16,7 @@ class LoginDataProvider {
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('$_baseUrl/users/login');
+    var url = Uri.parse('${ApiData.baseUrl}/users/login');
 
     var body = {
       "phone": login.phone,
@@ -39,19 +36,21 @@ class LoginDataProvider {
       String fullName = data["fullName"].toString();
       String phone = data["phone"].toString();
       String passwordHash = data["passwordHash"].toString();
-      // List<String>? booked = data["booked"];
-      // double? balance = data["balance"];
+      // String balance = data["balance"];
       String loginToken = data["loginToken"].toString();
+
+      print(data);
 
       final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString("id", id);
       sharedPreferences.setString("fullName", fullName);
       sharedPreferences.setString("phone", phone);
       sharedPreferences.setString("passwordHash", passwordHash);
-      // sharedPreferences.setStringList("booked", booked!);
-      // sharedPreferences.setDouble("balance", balance!);
+      // sharedPreferences.setString("balance", balance);
       sharedPreferences.setString("loginToken", loginToken);
       print(resBody);
+      String full = sharedPreferences.getString("fullName").toString();
+      print("Full Name : $full");
       // return Login.fromJson(jsonDecode(resBody));
     }
     else {

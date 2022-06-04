@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:royal_cinema/core/api_data.dart';
 import 'package:royal_cinema/core/token_data.dart';
 
 import '../model/movie.dart';
@@ -9,9 +10,6 @@ import 'package:http/http.dart' as http;
 
 class MovieRemoteProvider implements MovieProvider {
 
-  final _baseUrl = 'http://127.0.0.1:5000/${TokenData.token}'; //new
-  // final _baseUrl = 'http://192.168.56.1:3000';
-
   @override
   addMovie(Movie movie) async {
     var headersList = {
@@ -19,7 +17,7 @@ class MovieRemoteProvider implements MovieProvider {
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/movies');
+    var url = Uri.parse('${ApiData.baseUrl}/movies');
 
     var body = {
       "title": movie.title,
@@ -50,7 +48,7 @@ class MovieRemoteProvider implements MovieProvider {
       'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/movies/${movie.id}');
+    var url = Uri.parse('${ApiData.baseUrl}/movies/${movie.id}');
 
     var body = {
       "title": movie.title,
@@ -81,7 +79,7 @@ class MovieRemoteProvider implements MovieProvider {
       "Authorization": "Bearer token",
       'Content-Type': 'application/json'
     };
-    var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/movies');
+    var url = Uri.parse('${ApiData.baseUrl}/movies');
 
     var body = {
 
@@ -108,7 +106,7 @@ class MovieRemoteProvider implements MovieProvider {
 
   @override
   Future<List<Movie>> getAllMovies() async {
-    final response = await http.get(Uri.parse('$_baseUrl/movies'));
+    final response = await http.get(Uri.parse('${ApiData.baseUrl}/movies'));
 
     if (response.statusCode == 200) {
       final moviesList = jsonDecode(response.body) as List;
@@ -128,7 +126,7 @@ class MovieRemoteProvider implements MovieProvider {
     //   'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
     //   'Content-Type': 'application/json'
     // };
-    // var url = Uri.parse('http://127.0.0.1:5000/token:bhjbtyBHgtyvytyv/movies');
+    // var url = Uri.parse('${ApiData.baseUrl}/movies');
     //
     // var body = {
     //
