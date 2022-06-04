@@ -29,6 +29,20 @@
             ]
         },
         {
+            "title": "Harry Potter",
+            "description": "Albert and his horse Joey are inseparable. However, when Joey is sold off to the British cavalry, Albert follows him in the hope of reuniting with his best friend.",
+            "imageUrl": "images/harrypotter.jpg",
+            "casts": [
+                "Cameron Monaghan",
+                "Frank Grillo",
+                "Lilly Krug",
+                "John Malkovich"
+            ],
+            "genera": [
+                "thriller"
+            ]
+        },
+        {
             "title": "Avatar",
             "description": "James Cameron's Avatar franchise is a planned series of science fiction films produced by Cameron's Lightstorm Entertainment and distributed by 20th Century Studios, as well as associated computer games and theme park rides.",
             "imageUrl": "images/avatar.png",
@@ -74,10 +88,18 @@
     ],
     "staffs": [
         {
-            "id": "<string>",
+            "id": "",
             "fullName": "Default Staff",
             "phone": "0987654321",
             "passwordHash": "1562206543da764123c21bd524674f0a8aaf49c8a89744c97352fe677f7e4006"
+        }
+    ],
+    "users": [
+        {
+            "id": "",
+            "fullName": "Default User",
+            "phone": "0987654321",
+            "passwordHash": "948fe603f61dc036b5c596dc09fe3ce3f3d30dc90f024c85f3c82db2ccab679d"
         }
     ]
 }

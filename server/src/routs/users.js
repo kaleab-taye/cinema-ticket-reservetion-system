@@ -64,7 +64,7 @@ users.post("/signup", async (req, res) => {
             if (userPhoneIsInUse) {
                 httpSingleResponse(res, 400, userPhoneAlreadyInUse);
             } else {
-                let phoneVerificationCode = 1345;
+                let phoneVerificationCode = 12345;
                 res.status(200).end(JSON.stringify({ phoneVerificationCode }));
             }
         } catch (error) {

@@ -27,7 +27,9 @@
         "Name": "Booking",
         "id": "<string>",
         "userId": "<string> [R]",
-        "scheduleId": "<string> [R]"
+        "scheduleId": "<string> [R]",
+        "user": "<User>",
+        "schedule": "<Schedule>"
     },
     {
         "Name": "Schedule",

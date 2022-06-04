@@ -8,16 +8,19 @@ class Booking {
     userId;
     scheduleId;
     schedule;
+    user;
 
     constructor({
         id,
         userId,
         scheduleId,
-        schedule
+        schedule,
+        user
     }) {
         this.id = id;
         this.userId = userId;
         this.scheduleId = scheduleId;
+        this.user = user;
         this.schedule = schedule;
     }
 
@@ -39,22 +42,30 @@ class Booking {
                 if (!userExist) {
                     throw new Error(userDoesNotExist);
                 } else {
-                    let Schedule = require("./schedule")
-                    let schedule = await Schedule.find(this.scheduleId);
-                    if (!schedule) {
-                        throw new Error(scheduleDoesNotExist);
+                    let User = require("./user")
+                    let user = await User.find(this.userId);
+                    if (!user) {
+                        throw new Error(userDoesNotExist);
                         // @ts-ignore
-                    } else if (schedule.seatsLeft < 1) {
-                        throw new Error(scheduleSoldOut);
                     } else {
-                        this.schedule = schedule;
-                        let bookingId = await addDocument(collectionNames.bookings, this);
-                        // @ts-ignore
-                        await updateDocument(collectionNames.schedules, { _id: scheduleIdObject }, { seatsLeft: -1 }, "$inc");
-                        this.id = bookingId;
-                        // @ts-ignore
-                        delete this._id;
-                        return this;
+                        this.user = user;
+                        let Schedule = require("./schedule")
+                        let schedule = await Schedule.find(this.scheduleId);
+                        if (!schedule) {
+                            throw new Error(scheduleDoesNotExist);
+                            // @ts-ignore
+                        } else if (schedule.seatsLeft < 1) {
+                            throw new Error(scheduleSoldOut);
+                        } else {
+                            this.schedule = schedule;
+                            let bookingId = await addDocument(collectionNames.bookings, this);
+                            // @ts-ignore
+                            await updateDocument(collectionNames.schedules, { _id: scheduleIdObject }, { seatsLeft: -1 }, "$inc");
+                            this.id = bookingId;
+                            // @ts-ignore
+                            delete this._id;
+                            return this;
+                        }
                     }
                 }
             } catch (error) {

@@ -167,43 +167,54 @@ function getLoginJwt(req, res, next) {
 // initializations
 async function initDb() {
     try {
+        let defaultUserId = "";
         let inited = await checkExistence("init", { "init": true });
         if (!inited) {
             for (let [collectionName, documents] of Object.entries(initData)) {
                 for (let document of documents) {
-                    await addDocument(collectionName, document);
+                    let addedId = await addDocument(collectionName, document);
+                    if (collectionName == "users") {
+                        defaultUserId = addedId;
+                    }
                 }
             }
             let now = Date.now();
             let today = now - (now % oneDay)
             let startTime = today + (14 * oneHour);
             let columCount = 0;
-            for (let i = 0; i < 2; i++) {
+            let schedulesToBeBooked = [];
+            let addSchedulesCount = 0;
+            for (let i = 0; i < 4; i++) {
                 let allMovies = await getDocuments(collectionNames.movies);
                 for (let movie of allMovies) {
                     let movieId = movie._id + "";
-                    let Schedule = require("../entities/schedule")
+                    let Schedule = require("../entities/schedule");
                     // @ts-ignore
-                    let schedule1 = new Schedule({ movieId, startTime, endTime: startTime + (2 * oneHour) });
-                    await schedule1.save();
-                    // await addDocument(collectionNames.schedules, schedule);
-                    startTime += 2 * oneHour;
-                    // @ts-ignore
-                    let schedule2 = new Schedule({ movieId, startTime, endTime: startTime + 2 * oneHour });
-                    await schedule2.save();
-                    // await addDocument(collectionNames.schedules, schedule2);
-                    columCount += 2
+                    let schedule = new Schedule({ movieId, startTime, endTime: startTime + (2 * oneHour) });
+                    console.log(`${new Date(schedule.startTime).toUTCString()} - ${new Date(schedule.endTime).toUTCString()}`);
+                    schedule = await schedule.save();
+                    if (addSchedulesCount % 5 == 0) {
+                        schedulesToBeBooked.push(schedule.id);
+                    }
+                    columCount += 1
                     if (columCount >= 4) {
                         columCount = 0;
                         startTime += 18 * oneHour
                     } else {
                         startTime += 2 * oneHour
                     }
+                    addSchedulesCount++;
                 }
+            }
+            for (let scheduleId of schedulesToBeBooked) {
+                let Booking = require("../entities/booking");
+                // @ts-ignore
+                let booking = new Booking({ scheduleId, userId:defaultUserId });
+                await booking.save();
             }
 
             await addDocument("init", { "init": true });
-            console.log(color.blue("\nDatabase initialized with:1 staff, 5 movies, and 20 schedules. (for demo)"));
+            console.log(color.blue(`\nDatabase initialized with:1 User, 1 Staff, 6 Movies, ${addSchedulesCount} Schedules, and ${schedulesToBeBooked.length} Bookings. (for demo)`));
             return true;
         } else {
             return true;
