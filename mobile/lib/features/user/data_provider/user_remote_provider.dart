@@ -1,6 +1,7 @@
 
 import 'dart:convert';
 
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/core/token_data.dart';
 
 import '../model/user.dart';
@@ -9,6 +10,8 @@ import 'user_provider.dart';
 import 'package:http/http.dart' as http;
 
 class UserRemoteProvider implements UserProvider {
+
+  LocalDbProvider localDbProvider = LocalDbProvider();
 
   // @override
   // addUser(User user) async {
@@ -72,8 +75,11 @@ class UserRemoteProvider implements UserProvider {
 
   @override
   Future<User?> getUser(String id) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/users/$id');
@@ -107,6 +113,14 @@ class UserRemoteProvider implements UserProvider {
 
   @override
   Future<List<User>> getAllUsers() async {
+    User userOut = await localDbProvider.getUser();
+
+    var headersList = {
+      'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
+      'Content-Type': 'application/json'
+    };
+
     final response = await http.get(Uri.parse('${ApiData.baseUrl}/users'));
 
     if (response.statusCode == 200) {

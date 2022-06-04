@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/core/utils/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -20,26 +21,6 @@ class Profile extends StatefulWidget {
 }
 
 class _Profile extends State<Profile>{
-
-  String? fullName = "";
-  String? phone = "";
-  String? loginToken = "";
-
-  @override
-  void initState() {
-    getUser();
-    super.initState();
-  }
-
-  Future getUser() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    setState(() {
-      fullName = sharedPreferences.getString("fullName");
-      phone = sharedPreferences.getString("phone");
-      // balance = sharedPreferences.getString("balance");
-      loginToken = sharedPreferences.getString("loginToken");
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +86,12 @@ class _Profile extends State<Profile>{
                           ),
                           FlatButton(
                             onPressed: () async {
-                              final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-                              sharedPreferences.remove("fullName");
-                              GoRouter.of(context).go('/');
+                              // final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+                              // sharedPreferences.remove("fullName");
+                              LocalDbProvider localDbProvider = LocalDbProvider();
+                              await localDbProvider.deleteUsers();
+
+                              GoRouter.of(context).go('/login');
                             },
                             child: Text(
                               "Log out",
@@ -182,7 +166,7 @@ class _Profile extends State<Profile>{
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
                         // sharedPreferences.getString("fullName").toString(),
-                        fullName!,
+                        "",
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,

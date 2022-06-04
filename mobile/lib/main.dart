@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/features/auth/login/login.dart';
 import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
 import 'package:royal_cinema/features/auth/signup/data_provider/data_provider.dart';
@@ -16,6 +17,7 @@ import 'package:royal_cinema/features/home/repository/schedule_repository.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_details_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/movie_home_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/scheduled_details_screen.dart';
+import 'package:royal_cinema/features/home/ui/screens/splash_screen.dart';
 import 'package:royal_cinema/features/user/bloc/bloc.dart';
 import 'package:royal_cinema/features/user/data_provider/user_remote_provider.dart';
 import 'package:royal_cinema/features/user/repository/user_repository.dart';
@@ -26,32 +28,30 @@ import 'features/home/bloc/bloc.dart';
 import 'features/user/screens/editProfile.dart';
 import 'features/user/screens/profile.dart';
 
-// class LoginInfo {
-//   var isLoggedIn = true;
-// }
-
 Future<void> main() async {
-  // final loginInfo = LoginInfo();
 
   final _router = GoRouter(
-    // redirect: (state) {
-    //   final loggedIn = loginInfo.isLoggedIn;
-    //   final isLogging = state.location == '/';
-    //
-    //   if(!loggedIn && !isLogging) return '/';
-    //
-    //   if(loggedIn && isLogging) return '/home';
-    //
-    //   return null;
-    // },
     urlPathStrategy: UrlPathStrategy.path,
     routes: [
       GoRoute(
         path: '/',
-        pageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: LoginScreen(),
-        ),
+        pageBuilder: (context, state) {
+
+          return MaterialPage(
+            key: state.pageKey,
+            child:SplashScreen(),
+          );
+        },
+      ),
+      GoRoute(
+        path: '/login',
+        pageBuilder: (context, state) {
+
+          return MaterialPage(
+            key: state.pageKey,
+            child:LoginScreen(),
+          );
+        },
       ),
       GoRoute(
         // name: 'profile',
@@ -161,13 +161,4 @@ Future<void> main() async {
       ),
     ),
   );
-}
-
-Movie _movieFrom(String s) {
-
-  final List<Movie> movies = [
-    Movie(id: "62968871cb506893d53ce76f", title: "title", description: "description", imageUrl: "imageUrl", casts: [], genera: []),
-  ];
-
-  return movies.where((coffee) => coffee.id.toString() == s).first;
 }

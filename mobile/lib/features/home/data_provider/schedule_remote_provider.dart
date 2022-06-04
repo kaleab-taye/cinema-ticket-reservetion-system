@@ -2,8 +2,10 @@
 import 'dart:convert';
 
 import 'package:royal_cinema/core/api_data.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/core/token_data.dart';
 import 'package:http/http.dart' as http;
+import 'package:royal_cinema/features/user/model/user.dart';
 
 import '../model/schedule_response.dart';
 import '../model/scheduledMovie.dart';
@@ -11,11 +13,17 @@ import 'schedule_provider.dart';
 
 class ScheduledRemoteProvider implements ScheduledProvider {
 
+  LocalDbProvider localDbProvider = LocalDbProvider();
+
+
   @override
   addScheduled(ScheduledMovie scheduled) async {
+
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/schedules');
@@ -46,9 +54,11 @@ class ScheduledRemoteProvider implements ScheduledProvider {
 
   @override
   editScheduled(String id, ScheduledMovie scheduled) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/schedules/${scheduled.id}');
@@ -79,9 +89,11 @@ class ScheduledRemoteProvider implements ScheduledProvider {
 
   @override
   Future<ScheduledMovie?> getScheduled(String id) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      "Authorization": "Bearer token",
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/schedules');
@@ -111,11 +123,15 @@ class ScheduledRemoteProvider implements ScheduledProvider {
 
   @override
   Future<List<ScheduleResponse>> getAllScheduleds() async {
-    final headersList = {
-      "Accept": "*/*",
-      "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-      "Authorization":
-      "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0eXBlIjoic3RhZmYiLCJpZCI6IjYyOThiOTZmZTk1OThmYWNmMGI2OTQwYyIsImlhdCI6MTY1NDIwMTg0NX0.BkxEosQ8y2jVSZkRDhfohOe9dB0K7wVOnv-VwHSu69k"
+
+    User userOut = await localDbProvider.getUser();
+
+    print(userOut.loginToken);
+
+    var headersList = {
+      'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
+      'Content-Type': 'application/json'
     };
 
     final response = await http.get(Uri.parse('${ApiData.baseUrl}/schedules'),

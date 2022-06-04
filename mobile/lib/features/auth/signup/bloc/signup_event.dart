@@ -7,3 +7,9 @@ class SignUpAuth extends SignUpEvent {
 
   SignUpAuth(this.signUp);
 }
+
+class SignUpVerify extends SignUpEvent {
+  final SignUp signUp;
+
+  SignUpVerify(this.signUp);
+}

@@ -44,6 +44,7 @@ class ScheduledListScreen extends StatelessWidget {
                     itemCount: state.scheduleds.length,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
                       return daysPresenter(context, i);
                     });
@@ -195,72 +196,75 @@ class ScheduledListScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            RaisedButton(
-                              onPressed: () {
-                                showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        backgroundColor: Col.background,
-                                        title: Text(
-                                          "ROYAL CINEMA",
-                                          style: TextStyle(
-                                            color: Col.primary,
-                                            fontSize: 28,
-                                            fontWeight: FontWeight.bold,
-                                            fontFamily: 'Nunito',
-                                            letterSpacing: 0.3,
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: RaisedButton(
+                                onPressed: () {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          backgroundColor: Col.background,
+                                          title: Text(
+                                            "ROYAL CINEMA",
+                                            style: TextStyle(
+                                              color: Col.primary,
+                                              fontSize: 28,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Nunito',
+                                              letterSpacing: 0.3,
+                                            ),
                                           ),
-                                        ),
-                                        content: Text(
-                                          "${state.scheduleds[i].schedules[index].price} birr is going to be deducted from your balance to book ${state.scheduleds[i].schedules[index].movie.title} from $formattedStartTime to $formattedEndTime",
-                                          style: TextStyle(
-                                            color: Col.textColor,
-                                            fontSize: 20,
-                                            fontFamily: 'Nunito',
-                                            letterSpacing: 0.3,
+                                          content: Text(
+                                            "${state.scheduleds[i].schedules[index].price} birr is going to be deducted from your balance to book ${state.scheduleds[i].schedules[index].movie.title} from $formattedStartTime to $formattedEndTime",
+                                            style: TextStyle(
+                                              color: Col.textColor,
+                                              fontSize: 20,
+                                              fontFamily: 'Nunito',
+                                              letterSpacing: 0.3,
+                                            ),
                                           ),
-                                        ),
-                                        actions: [
-                                          FlatButton(
-                                            onPressed: () {
+                                          actions: [
+                                            FlatButton(
+                                              onPressed: () {
 
-                                            },
-                                            child: Text(
-                                              "Cancel",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                letterSpacing: 0.3,
+                                              },
+                                              child: Text(
+                                                "Cancel",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  letterSpacing: 0.3,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                          FlatButton(
-                                            onPressed: () {
-                                              // PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
-                                            },
-                                            child: Text(
-                                              "Ok",
-                                              style: TextStyle(
-                                                fontSize: 18,
-                                                letterSpacing: 0.3,
+                                            FlatButton(
+                                              onPressed: () {
+                                                // PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                                              },
+                                              child: Text(
+                                                "Ok",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  letterSpacing: 0.3,
+                                                ),
                                               ),
                                             ),
-                                          ),
-                                        ],
-                                        elevation: 10.0,
-                                      );
-                                    });
-                              },
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 70, vertical: 1),
-                              child: Text(
-                                "Book",
-                                style: TextStyle(
-                                    color: Col.secondary,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                                          ],
+                                          elevation: 10.0,
+                                        );
+                                      });
+                                },
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 60, vertical: 1),
+                                child: Text(
+                                  "Book",
+                                  style: TextStyle(
+                                      color: Col.secondary,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                color: Col.textColor,
                               ),
-                              color: Col.textColor,
                             ),
                           ],
                         ),

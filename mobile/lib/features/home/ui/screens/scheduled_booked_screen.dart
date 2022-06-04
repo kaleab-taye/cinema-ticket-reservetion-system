@@ -51,7 +51,7 @@ class BookedListScreen extends StatelessWidget {
                     itemCount: state.scheduleds.length,
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    physics: AlwaysScrollableScrollPhysics(),
+                    physics: NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
                       return daysPresenter(context, i);
                     });
@@ -101,7 +101,7 @@ class BookedListScreen extends StatelessWidget {
                 height: 10,
               ),
               Container(
-                height: 250,
+                height: 270,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 decoration: BoxDecoration(color: Col.secondary),
@@ -202,19 +202,22 @@ class BookedListScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            RaisedButton(
-                              onPressed: () {
-                              },
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 70, vertical: 1),
-                              child: Text(
-                                "Book",
-                                style: TextStyle(
-                                    color: Col.secondary,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5),
+                              child: RaisedButton(
+                                onPressed: () {
+                                },
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 60, vertical: 1),
+                                child: Text(
+                                  "Book",
+                                  style: TextStyle(
+                                      color: Col.secondary,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                color: Col.textColor,
                               ),
-                              color: Col.textColor,
                             ),
                           ],
                         ),

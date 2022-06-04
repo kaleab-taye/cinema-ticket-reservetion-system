@@ -1,9 +1,13 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/features/auth/login/bloc/bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,7 +26,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final phoneController = TextEditingController();
   final passwordHashController = TextEditingController();
-
+@override
+void initState(){
+  super.initState();
+  phoneController.text = "0987654321";
+  passwordHashController.text = "client";
+}
   @override
   Widget build(BuildContext context) {
 
@@ -118,6 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
                   child: Container(
+
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: passwordHashController,
@@ -165,6 +175,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 Padding(
+                  padding: const EdgeInsets.only(top: 8.0, left: 25),
+                  child: Center(child: Text("*For demo purpose, we have set the values to the default client.")),
+                ),
+                Padding(
                   padding: EdgeInsets.fromLTRB(25, 65, 25, 0),
                   child: Container(
                     width: double.infinity,
@@ -186,42 +200,6 @@ class _LoginScreenState extends State<LoginScreen> {
                             letterSpacing: 0.3,
                           ),
                         );
-
-                        if (state is LogingIn) {
-                          buttonChild = SizedBox(
-                            height: 10,
-                            width: 10,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                            ),
-                          );
-                        }
-
-                        if (state is LoginSuccessful) {
-                          buttonChild = Text(
-                            "Login successful",
-                            style: TextStyle(
-                              color: Col.textColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Nunito',
-                              letterSpacing: 0.3,
-                            ),
-                          );
-                        }
-
-                        if (state is LoginFailed) {
-                          buttonChild = Text(
-                            "Login Failed",
-                            style: TextStyle(
-                              color: Col.textColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Nunito',
-                              letterSpacing: 0.3,
-                            ),
-                          );
-                        }
                         return RaisedButton(
                             color: Col.primary,
                             child: buttonChild,
@@ -232,9 +210,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   _formKey.currentState!.validate();
                               if (!formValid) return;
 
+                              var bytes = utf8.encode(passwordHashController.text);
+                              var sha512 = sha256.convert(bytes);
+                              var hashedPassword = sha512.toString();
+
                               final authBloc = BlocProvider.of<AuthBloc>(context);
                               authBloc.add(LoginAuth(
-                                  Login(phone: phoneController.text, passwordHash: passwordHashController.text)));
+                                  Login(phone: phoneController.text, passwordHash: hashedPassword)));
                             });
                       },
                     ),

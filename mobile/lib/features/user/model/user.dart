@@ -6,6 +6,7 @@ class User {
   final String phone;
   final String passwordHash;
   final double balance;
+  final String loginToken;
 
   String get id => _id;
 
@@ -14,6 +15,7 @@ class User {
       required this.phone,
       required this.passwordHash,
       required this.balance,
+      required this.loginToken,
       String? id}) {
     _id = (id ?? Random.secure().nextInt(1000)).toString();
   }
@@ -24,6 +26,7 @@ class User {
     phone: json['phone'],
     passwordHash: json['passwordHash'],
     balance: json['balance'],
+    loginToken: json['loginToken'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -32,6 +35,7 @@ class User {
     'phone': phone,
     'passwordHash': passwordHash,
     'balance': balance,
+    'loginToken': loginToken,
   };
 
 }

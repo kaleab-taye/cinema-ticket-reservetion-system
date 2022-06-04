@@ -2,7 +2,9 @@
 import 'dart:convert';
 
 import 'package:royal_cinema/core/api_data.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/core/token_data.dart';
+import 'package:royal_cinema/features/user/model/user.dart';
 
 import '../model/movie.dart';
 import 'movie_provider.dart';
@@ -10,11 +12,15 @@ import 'package:http/http.dart' as http;
 
 class MovieRemoteProvider implements MovieProvider {
 
+  LocalDbProvider localDbProvider = LocalDbProvider();
+
   @override
   addMovie(Movie movie) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/movies');
@@ -43,9 +49,11 @@ class MovieRemoteProvider implements MovieProvider {
 
   @override
   editMovie(String id, Movie movie) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/movies/${movie.id}');
@@ -74,9 +82,11 @@ class MovieRemoteProvider implements MovieProvider {
 
   @override
   Future<Movie?> getMovie(String id) async {
+    User userOut = await localDbProvider.getUser();
+
     var headersList = {
       'Accept': '*/*',
-      "Authorization": "Bearer token",
+      "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
     var url = Uri.parse('${ApiData.baseUrl}/movies');
@@ -106,6 +116,15 @@ class MovieRemoteProvider implements MovieProvider {
 
   @override
   Future<List<Movie>> getAllMovies() async {
+
+    User userOut = await localDbProvider.getUser();
+
+    var headersList = {
+      'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
+      'Content-Type': 'application/json'
+    };
+
     final response = await http.get(Uri.parse('${ApiData.baseUrl}/movies'));
 
     if (response.statusCode == 200) {

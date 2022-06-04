@@ -9,32 +9,22 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   // final String query;
 
   UserBloc(this.userRepository) : super(UsersLoading()) {
-    on<LoadUser>(_onLoadUsers);
+    on<LoadUsers>(_onLoadUsers);
+    // on<LoadCurrentUser>(_onLoadCurrentUsers);
     // on<UpdateUser>(_onUpdateUser);
   }
 
-  void _onLoadUsers(LoadUser event, Emitter emit) async {
+  void _onLoadUsers(LoadUsers event, Emitter emit) async {
 
     emit(UsersLoading());
     await Future.delayed(const Duration(seconds: 3));
-    final users = await userRepository.getUser(event.user.id);
-    if (users.hasError) {
-      emit(UsersLoadingFailed(users.error!));
-    } else {
-      emit(UsersLoaded(users.val!));
+    try{
+      await userRepository.getAllUsers();
+      emit(UsersLoaded());
+    } catch(e) {
+      emit(UsersLoadingFailed());
     }
   }
-
-  // void _onLoadUsers(LoadUsers event, Emitter emit) async {
-  //   emit(UsersLoading());
-  //   await Future.delayed(const Duration(seconds: 3));
-  //   final users = await userRepository.getAllUsers();
-  //   if (users.hasError) {
-  //     emit(UsersLoadingFailed(users.error!));
-  //   } else {
-  //     emit(UsersLoaded(users.val!));
-  //   }
-  // }
 
   // void _onUpdateUser(UpdateUser event, Emitter emit) async {
   //   await userRepository.editUser(event.user.id, event.user);

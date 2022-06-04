@@ -11,8 +11,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _onLoginAuth(LoginAuth event, Emitter emit) async {
-    await loginRepository.loginUser(event.login);
-    emit(LoginSuccessful());
+
+    try {
+      await loginRepository.loginUser(event.login);
+      emit(LoginSuccessful());
+    }
+    catch(e){
+      emit(LoginFailed());
+    }
   }
 }
 

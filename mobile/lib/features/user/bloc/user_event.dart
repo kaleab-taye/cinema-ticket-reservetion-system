@@ -9,6 +9,8 @@ class LoadUser extends UserEvent {
   LoadUser(this.user);
 }
 
+class LoadCurrentUser extends UserEvent{}
+
 class UpdateUser extends UserEvent {
   final User user;
   UpdateUser(this.user);
