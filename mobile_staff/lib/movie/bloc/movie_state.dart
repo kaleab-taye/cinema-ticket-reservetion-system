@@ -1,22 +1,17 @@
-import 'package:equatable/equatable.dart';
-import '../models/movie.dart';
+import 'package:sec_2/movie/index.dart';
 
-class MovieState extends Equatable {
-  const MovieState();
+abstract class MovieState {}
 
-  @override
-  List<Object> get props => [];
+class MoviesLoading extends MovieState {}
+
+class MoviesLoaded extends MovieState {
+  List<Movie> movies;
+  MoviesLoaded(this.movies);
 }
 
-class MovieLoading extends MovieState {}
-
-class MoviesLoadSuccess extends MovieState {
-  final List<Movie> movies;
-
-  MoviesLoadSuccess([this.movies = const []]);
-
-  @override
-  List<Object> get props => [movies];
+class MoviesLoadingFailed extends MovieState {
+  final String msg;
+  MoviesLoadingFailed(this.msg);
 }
 
-class MovieOperationFailure extends MovieState {}
+class UpdateSuccessful extends MovieState {}

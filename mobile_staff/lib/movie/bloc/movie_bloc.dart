@@ -1,62 +1,29 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_network/movie/bloc/bloc.dart';
-import 'package:flutter_network/movie/movie.dart';
+import 'package:sec_2/movie/bloc/movie_event.dart';
+import 'package:sec_2/movie/bloc/movie_state.dart';
+import 'package:sec_2/movie/repository/movie_repository.dart';
 
 class MovieBloc extends Bloc<MovieEvent, MovieState> {
   final MovieRepository movieRepository;
 
-  MovieBloc({@required this.movieRepository})
-      : assert(movieRepository != null),
-        super(MovieLoading());
+  MovieBloc(this.movieRepository) : super(MoviesLoading()) {
+    on<LoadMovies>(_onLoadMovies);
+    on<UpdateMovie>(_onUpdateMovie);
+  }
 
-  @override
-  Stream<MovieState> mapEventToState(MovieEvent event) async* {
-    if (event is MovieLoad) {
-      yield MovieLoading();
-      try {
-        print("final movies a/bout to set");
-        final movies = await movieRepository.getMovies();
-        print("final movies set");
-        yield MoviesLoadSuccess(movies);
-      } catch (_) {
-        print(1);
-        print(_);
-        yield MovieOperationFailure();
-      }
+  void _onLoadMovies(LoadMovies event, Emitter emit) async {
+    emit(MoviesLoading());
+    // await Future.delayed(const Duration(seconds: 3));
+    final movies = await movieRepository.getAllMovies();
+    if (movies.hasError) {
+      emit(MoviesLoadingFailed(movies.error!));
+    } else {
+      emit(MoviesLoaded(movies.val!));
     }
+  }
 
-    if (event is MovieCreate) {
-      try {
-        await movieRepository.createMovie(event.movie);
-        final movies = await movieRepository.getMovies();
-        yield MoviesLoadSuccess(movies);
-      } catch (_) {
-        print(2);
-        yield MovieOperationFailure();
-      }
-    }
-
-    if (event is MovieUpdate) {
-      try {
-        await movieRepository.updateMovie(event.movie);
-        final movies = await movieRepository.getMovies();
-        yield MoviesLoadSuccess(movies);
-      } catch (_) {
-        print(3);
-        yield MovieOperationFailure();
-      }
-    }
-
-    if (event is MovieDelete) {
-      try {
-        await movieRepository.deleteMovie(event.movie.id);
-        final movies = await movieRepository.getMovies();
-        yield MoviesLoadSuccess(movies);
-      } catch (_) {
-        print(4);
-        yield MovieOperationFailure();
-      }
-    }
+  void _onUpdateMovie(UpdateMovie event, Emitter emit) async {
+    // await movieRepository.editMovie(event.movie.id, event.movie);
+    emit(UpdateSuccessful());
   }
 }
