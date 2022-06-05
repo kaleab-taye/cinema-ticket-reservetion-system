@@ -51,24 +51,6 @@ void main() {
   setUpAll(() async {
     sqfliteFfiInit();
     databaseFactory = databaseFactoryFfi;
-    // Database db = await openDatabase(
-    //     "cinema.db",
-    //     version: 1,
-    //     onCreate: (Database db,int version) async{
-    //       await db.execute("""
-    //         CREATE TABLE User(
-    //         id TEXT PRIMARY KEY,
-    //         fullName TEXT,
-    //         phone TEXT,
-    //         passwordHash TEXT,
-    //         balance INTEGER,
-    //         loginToken TEXT
-    //         )"""
-    //       );
-    //     });
-//  await db.insert("User", {"id":"myId","fullName":"fn","phone":"098","passwordHash":"pass","balance":"1000","loginToken":"token"},
-//       conflictAlgorithm: ConflictAlgorithm.ignore,
-//     );
   });
   test('getAllScheduleds shall return a value with .hasError false: ',
       () async {

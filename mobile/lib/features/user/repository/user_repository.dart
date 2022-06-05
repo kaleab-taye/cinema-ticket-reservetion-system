@@ -15,7 +15,6 @@ class UserRepository {
   }
 
   Future<User> getAllUsers() async {
-
     LocalDbProvider localDbProvider = LocalDbProvider();
     try {
       final user = await localDbProvider.getUser();
