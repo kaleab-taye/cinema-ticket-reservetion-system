@@ -264,7 +264,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               verifyChecker = Column(
                                 children: [
                                   Text(
-                                    "Phone verification code has been sent to your phone : (for demo purpose the verification code is 1345)",
+                                    "Phone verification code has been sent to your phone : (for demo purpose the verification code is 12345)",
                                     style: TextStyle(
                                       color: Col.textColor,
                                       fontSize: 16,
@@ -278,7 +278,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return "This field can not be empty";
-                                      } else if (value != "1345") {
+                                      } else if (value != "12345") {
                                         return "Please enter the correct verification code";
                                       } else {
                                         return null;
@@ -396,7 +396,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   text: " Login",
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      GoRouter.of(context).go('/');
+                                      GoRouter.of(context).go('/login');
                                     }),
                             ],
                           ),

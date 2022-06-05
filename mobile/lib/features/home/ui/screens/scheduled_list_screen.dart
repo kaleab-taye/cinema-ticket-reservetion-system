@@ -7,9 +7,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:royal_cinema/core/api_data.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
+import 'package:royal_cinema/features/booking/bloc/bloc.dart';
+import 'package:royal_cinema/features/booking/bloc/booking_bloc.dart';
 import 'package:royal_cinema/features/home/bloc/bloc.dart';
+import 'package:royal_cinema/features/user/bloc/bloc.dart';
+import 'package:royal_cinema/features/user/model/user.dart';
 
 import '../../../../core/utils/colors.dart';
+import '../../../user/bloc/user_bloc.dart';
 import '../widget/search_widget.dart';
 
 class ScheduledListScreen extends StatelessWidget {
@@ -95,10 +101,10 @@ class ScheduledListScreen extends StatelessWidget {
               ),
               Container(
                 height: 270,
-                width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 decoration: BoxDecoration(color: Col.secondary),
                 child: ListView.builder(
+                  shrinkWrap: true,
                     itemCount: state.scheduleds[i].schedules.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (context, index) {
@@ -113,32 +119,13 @@ class ScheduledListScreen extends StatelessWidget {
 
                       return GestureDetector(
                         onTap: () async {
-                          // final result = await Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) => ScheduledDetailsScreen(
-                          //       scheduled: state.scheduleds[index],
-                          //     ),
-                          //   ),
-                          // );
-                          //
-                          // if (result == null) return;
-                          //
-                          // final scheduledBloc = BlocProvider.of<ScheduledBloc>(context);
-                          // scheduledBloc.add(Loadscheduleds());
-                          // String scheduled = jsonEncode(state.scheduleds[index].toJson());
-                          // context.goNamed(
-                          //   'scheduled_details',
-                          //   params: {'id': scheduled},
-                          // );
-                          String movie = jsonEncode(
+                          String schedule_detail = jsonEncode(
                               state.scheduleds[i].schedules[index].toJson());
                           context.goNamed(
                             'schedule_details',
-                            params: {'schedule_id': movie},
+                            params: {'schedule_id': schedule_detail},
                           );
                         },
-                        // context.go("/scheduled_details");
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -176,10 +163,6 @@ class ScheduledListScreen extends StatelessWidget {
                               width: 150,
                               height: 130,
                               margin: EdgeInsets.only(right: 10),
-                              child: Stack(
-                                children: [
-                                ],
-                              ),
                             ),
                             SizedBox(
                               height: 5,
@@ -227,7 +210,7 @@ class ScheduledListScreen extends StatelessWidget {
                                           actions: [
                                             FlatButton(
                                               onPressed: () {
-
+                                                Navigator.of(context).pop();
                                               },
                                               child: Text(
                                                 "Cancel",
@@ -238,8 +221,19 @@ class ScheduledListScreen extends StatelessWidget {
                                               ),
                                             ),
                                             FlatButton(
-                                              onPressed: () {
-                                                // PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                                              onPressed: () async {
+
+                                                LocalDbProvider localDbProvider = LocalDbProvider();
+                                                User userOut = await localDbProvider.getUser();
+
+                                                final bookBloc = BlocProvider.of<BookingBloc>(context);
+                                                bookBloc.add(BookingMovie(userOut.id, state.scheduleds[i].schedules[index].id));
+
+                                                final userBloc = BlocProvider.of<UserBloc>(context);
+                                                userBloc.add(UpdateBalance(state.scheduleds[i].schedules[index].price));
+
+                                                Navigator.of(context).pop();
+
                                               },
                                               child: Text(
                                                 "Ok",

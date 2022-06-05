@@ -1,24 +1,26 @@
 import 'dart:math';
 
 class User {
-  late String _id;
+  String? id;
   final String fullName;
   final String phone;
   final String passwordHash;
-  final double balance;
-  final String loginToken;
+  final int balance;
+  String? loginToken;
 
-  String get id => _id;
+  // String get id => _id;
 
   User(
-      {required this.fullName,
+      {
+        this.id,
+        required this.fullName,
       required this.phone,
       required this.passwordHash,
       required this.balance,
-      required this.loginToken,
-      String? id}) {
-    _id = (id ?? Random.secure().nextInt(1000)).toString();
-  }
+      this.loginToken,});
+  // {
+  //   _id = (id ?? Random.secure().nextInt(1000)).toString();
+  // }
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json['id'],

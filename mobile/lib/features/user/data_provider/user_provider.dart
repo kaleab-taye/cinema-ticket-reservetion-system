@@ -5,4 +5,5 @@ abstract class UserProvider {
   // Future<void> editUser(String id, User user);
   Future<User?> getUser(String id);
   Future<List<User>> getAllUsers();
+  Future<void> updateBalance(int price);
 }

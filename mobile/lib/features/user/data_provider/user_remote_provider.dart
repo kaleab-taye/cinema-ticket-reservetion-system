@@ -13,65 +13,41 @@ class UserRemoteProvider implements UserProvider {
 
   LocalDbProvider localDbProvider = LocalDbProvider();
 
-  // @override
-  // addUser(User user) async {
-  //   var headersList = {
-  //     'Accept': '*/*',
-  //     'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
-  //     'Content-Type': 'application/json'
-  //   };
-  //   var url = Uri.parse('${ApiData.baseUrl}/users');
-  //
-  //   var body = {
-  //     "fullName": user.fullName,
-  //     "phone": user.phone,
-  //     "passwordHash": user.passwordHash,
-  //     "balance": user.balance
-  //   };
-  //   var req = http.Request('POST', url);
-  //   req.headers.addAll(headersList);
-  //   req.body = json.encode(body);
-  //
-  //   var res = await req.send();
-  //   final resBody = await res.stream.bytesToString();
-  //
-  //   if (res.statusCode >= 200 && res.statusCode < 300) {
-  //     print(resBody);
-  //   }
-  //   else {
-  //     throw Exception('Failed to create user.');
-  //   }
-  // }
+  @override
+  updateBalance(int price) async {
 
-  // @override
-  // editUser(String id, User user) async {
-  //   var headersList = {
-  //     'Accept': '*/*',
-  //     'User-Agent': 'Thunder Client (https://www.thunderclient.com)',
-  //     'Content-Type': 'application/json'
-  //   };
-  //   var url = Uri.parse('${ApiData.baseUrl}/users/${user.id}');
-  //
-  //   var body = {
-  //     "fullName": user.fullName,
-  //     "phone": user.phone,
-  //     "passwordHash": user.passwordHash,
-  //     "balance": user.balance
-  //   };
-  //   var req = http.Request('PATCH', url);
-  //   req.headers.addAll(headersList);
-  //   req.body = json.encode(body);
-  //
-  //   var res = await req.send();
-  //   final resBody = await res.stream.bytesToString();
-  //
-  //   if (res.statusCode >= 200 && res.statusCode < 300) {
-  //     print(resBody);
-  //   }
-  //   else {
-  //     throw Exception('Failed to update user.');
-  //   }
-  // }
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+
+    User userOut = await localDbProvider.getUser();
+
+    var headersList = {
+      'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.parse('${ApiData.baseUrl}/users/${userOut.id}');
+
+    var body = {
+      "balance": userOut.balance - price
+    };
+
+    localDbProvider.updateUsers(userOut.id!, body);
+
+    var req = http.Request('PATCH', url);
+    req.headers.addAll(headersList);
+    req.body = json.encode(body);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(resBody);
+    }
+    else {
+      print(res.reasonPhrase);
+      throw Exception();
+    }
+  }
 
   @override
   Future<User?> getUser(String id) async {

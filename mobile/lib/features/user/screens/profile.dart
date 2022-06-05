@@ -13,14 +13,20 @@ import '../bloc/bloc.dart';
 import '../model/user.dart';
 
 class Profile extends StatefulWidget {
-
   Profile({Key? key}) : super(key: key);
 
   @override
   _Profile createState() => _Profile();
 }
 
-class _Profile extends State<Profile>{
+class _Profile extends State<Profile> {
+
+  @override
+  void initState() {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    userBloc.add(LoadUsers());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +80,7 @@ class _Profile extends State<Profile>{
                         actions: [
                           FlatButton(
                             onPressed: () {
-                              GoRouter.of(context).go('/');
+                              Navigator.of(context).pop();
                             },
                             child: Text(
                               "Cancel",
@@ -88,7 +94,8 @@ class _Profile extends State<Profile>{
                             onPressed: () async {
                               // final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
                               // sharedPreferences.remove("fullName");
-                              LocalDbProvider localDbProvider = LocalDbProvider();
+                              LocalDbProvider localDbProvider =
+                                  LocalDbProvider();
                               await localDbProvider.deleteUsers();
 
                               GoRouter.of(context).go('/login');
@@ -131,7 +138,17 @@ class _Profile extends State<Profile>{
         ),
       ),
       body: SingleChildScrollView(
-              child: Container(
+        child: BlocBuilder<UserBloc, UserState>(
+          buildWhen: (p, c) => c is! UserUpdateSuccessful,
+          builder: (_, UserState state) {
+            if (state is UsersLoadingFailed) {
+              return Center(
+                child: Text("Fetching User Failed"),
+              );
+            }
+
+            if (state is UsersLoaded) {
+              return Container(
                 color: Col.background,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -166,7 +183,7 @@ class _Profile extends State<Profile>{
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
                         // sharedPreferences.getString("fullName").toString(),
-                        "",
+                        state.user.fullName,
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,
@@ -182,7 +199,7 @@ class _Profile extends State<Profile>{
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
                       child: Text(
-                        "Email",
+                        "Phone",
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 18,
@@ -195,7 +212,7 @@ class _Profile extends State<Profile>{
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
-                        "bekadessalegn@gmail.com",
+                        state.user.phone,
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,
@@ -211,7 +228,7 @@ class _Profile extends State<Profile>{
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 5, 0, 0),
                       child: Text(
-                        "Phone Number",
+                        "Balance",
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 18,
@@ -224,7 +241,7 @@ class _Profile extends State<Profile>{
                     Padding(
                       padding: EdgeInsets.fromLTRB(30, 0, 0, 0),
                       child: Text(
-                        "+251978061901",
+                        state.user.balance.toString(),
                         style: TextStyle(
                           color: Col.textColor,
                           fontSize: 22,
@@ -239,8 +256,16 @@ class _Profile extends State<Profile>{
                     ),
                   ],
                 ),
-              ),
-            ),
+              );
+            }
+
+            final userBloc = BlocProvider.of<UserBloc>(context);
+            userBloc.add(LoadUsers());
+
+            return SizedBox();
+          },
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           GoRouter.of(context).go('/editProfile');
@@ -253,5 +278,4 @@ class _Profile extends State<Profile>{
       ),
     );
   }
-
 }

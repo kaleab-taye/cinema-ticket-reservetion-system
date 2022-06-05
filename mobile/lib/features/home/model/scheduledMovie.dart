@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:royal_cinema/features/home/model/movie.dart';
 
 class ScheduledMovie {
-  late String _id;
+  String? id;
   final String movieId;
   final Movie movie;
   final int startTime;
@@ -12,19 +12,21 @@ class ScheduledMovie {
   final int seatsLeft;
   final int price;
 
-  String get id => _id;
+  // String get id => _id;
 
   ScheduledMovie(
-      {required this.movieId,
+      {
+        this.id,
+        required this.movieId,
         required this.movie,
         required this.startTime,
         required this.endTime,
         required this.capacity,
         required this.seatsLeft,
-        required this.price,
-        String? id}) {
-    _id = (id ?? Random.secure().nextInt(1000)).toString();
-  }
+        required this.price,});
+  // {
+  //   _id = (id ?? Random.secure().nextInt(1000)).toString();
+  // }
 
   factory ScheduledMovie.fromJson(Map<String, dynamic> json) => ScheduledMovie(
     id: json['id'],

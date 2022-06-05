@@ -10,6 +10,7 @@ class SignUpRepository {
   Future signUpUser(SignUp signUp) async {
     try {
       await dataProvider.signUpUser(signUp);
+      return true;
     } catch (e){
       throw e;
     }
@@ -18,6 +19,7 @@ class SignUpRepository {
   Future signUpVerify(SignUp signUp) async {
     try{
       await dataProvider.signUpVerify(signUp);
+      return true;
     } catch(e){
       throw e;
     }

@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:royal_cinema/features/booking/screens/booking_screen.dart';
 import 'package:royal_cinema/features/home/index.dart';
-import 'package:royal_cinema/features/home/ui/screens/scheduled_booked_screen.dart';
 import 'package:royal_cinema/features/home/ui/screens/scheduled_list_screen.dart';
+import 'package:royal_cinema/features/user/bloc/bloc.dart';
 import 'package:royal_cinema/features/user/bloc/user_bloc.dart';
 
 import '../../../../core/utils/colors.dart';
-import 'movie_booked_screen.dart';
 
 class MovieHomePage extends StatefulWidget {
   const MovieHomePage({Key? key}) : super(key: key);
@@ -51,8 +51,8 @@ class _MovieHomePageState extends State<MovieHomePage> {
               padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
               iconSize: 40,
               onPressed: () {
-                // final userBloc = BlocProvider.of<UserBloc>(context);
-                // userBloc.add();
+                final userBloc = BlocProvider.of<UserBloc>(context);
+                userBloc.add(LoadUsers());
                 GoRouter.of(context).go('/profile');
               },
               icon: Icon(Icons.person)),
