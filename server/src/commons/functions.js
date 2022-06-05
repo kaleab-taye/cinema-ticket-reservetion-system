@@ -191,7 +191,6 @@ async function initDb() {
                     let Schedule = require("../entities/schedule");
                     // @ts-ignore
                     let schedule = new Schedule({ movieId, startTime, endTime: startTime + (2 * oneHour) });
-                    console.log(`${new Date(schedule.startTime).toUTCString()} - ${new Date(schedule.endTime).toUTCString()}`);
                     schedule = await schedule.save();
                     if (addSchedulesCount % 5 == 0) {
                         schedulesToBeBooked.push(schedule.id);
