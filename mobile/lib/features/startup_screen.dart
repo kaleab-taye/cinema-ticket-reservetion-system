@@ -73,7 +73,7 @@ class _StartUpScreenState extends State<StartUpScreen> {
                     ),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Col.primary)),
+                        ),
                     onPressed: () {
                       context.goNamed('login_customer');
                     },
@@ -95,7 +95,7 @@ class _StartUpScreenState extends State<StartUpScreen> {
                     ),
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
-                        side: BorderSide(color: Col.primary)),
+                        ),
                     onPressed: () {
                       context.goNamed('login_staff');
                     },
