@@ -143,9 +143,6 @@ class ScheduledRemoteProvider implements ScheduledProvider {
   Future<List<ScheduleResponse>> getAllScheduleds() async {
 
     User userOut = await localDbProvider.getUser();
-
-    print(userOut.loginToken);
-
     var headersList = {
       'Accept': '*/*',
       "Authorization": "Bearer ${userOut.loginToken}",

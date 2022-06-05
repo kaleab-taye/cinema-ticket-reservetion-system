@@ -19,7 +19,7 @@ Future<Response> mockAPI(req) async {
         "passwordHash": "ghytytgvghgfvggvtybjkj",
         "balance": 200
       },
-      "loginToken": "qwertyuiopasdfghjkl.qwertyuiopcvbnm.qwertyuiosdfghjkl"
+      "loginToken": "qqqqqqqqqqqqq"
     };
     return Response(json.encode(userLoginData), valid ? 200 : 400);
   } else {
