@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:royal_cinema/core/api_data.dart';
 import 'package:royal_cinema/core/local_data_provider.dart';
 import 'package:royal_cinema/core/token_data.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart' show Client;
 import 'package:royal_cinema/features/user/model/user.dart';
 
 import '../model/schedule_response.dart';
@@ -12,6 +12,7 @@ import '../model/scheduledMovie.dart';
 import 'schedule_provider.dart';
 
 class ScheduledRemoteProvider implements ScheduledProvider {
+  Client client = Client();
 
   LocalDbProvider localDbProvider = LocalDbProvider();
 
@@ -37,12 +38,18 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       "seatsLeft": scheduled.seatsLeft,
       "price": scheduled.price
     };
-    var req = http.Request('POST', url);
-    req.headers.addAll(headersList);
-    req.body = json.encode(body);
+    // var req = http.Request('POST', url);
+    // req.headers.addAll(headersList);
+    // req.body = json.encode(body);
+    //
+    // var res = await req.send();
+    // final resBody = await res.stream.bytesToString();
 
-    var res = await req.send();
-    final resBody = await res.stream.bytesToString();
+    //////////////////
+    var res =
+    await client.post(url, headers: headersList, body: json.encode(body));
+    final resBody = json.decode(res.body);
+    ///////////////////////////
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
@@ -72,12 +79,18 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       "seatsLeft": scheduled.seatsLeft,
       "price": scheduled.price
     };
-    var req = http.Request('PATCH', url);
-    req.headers.addAll(headersList);
-    req.body = json.encode(body);
+    // var req = http.Request('PATCH', url);
+    // req.headers.addAll(headersList);
+    // req.body = json.encode(body);
+    //
+    // var res = await req.send();
+    // final resBody = await res.stream.bytesToString();
 
-    var res = await req.send();
-    final resBody = await res.stream.bytesToString();
+    //////////////////
+    var res =
+    await client.patch(url, headers: headersList, body: json.encode(body));
+    final resBody = json.decode(res.body);
+    ///////////////////////////
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
@@ -101,13 +114,18 @@ class ScheduledRemoteProvider implements ScheduledProvider {
     var body = {
 
     };
-    var req = http.Request('GET', url);
-    req.headers.addAll(headersList);
-    req.body = json.encode(body);
+    // var req = http.Request('GET', url);
+    // req.headers.addAll(headersList);
+    // req.body = json.encode(body);
+    //
+    // var res = await req.send();
+    // final resBody = await res.stream.bytesToString();
 
-    var res = await req.send();
-    final resBody = await res.stream.bytesToString();
-
+    //////////////////
+    var res =
+    await client.get(url, headers: headersList);
+    final resBody = json.decode(res.body);
+    ///////////////////////////
     if (res.statusCode >= 200 && res.statusCode < 300) {
       final List scheduleds = json.decode(resBody);
 
@@ -133,10 +151,15 @@ class ScheduledRemoteProvider implements ScheduledProvider {
       "Authorization": "Bearer ${userOut.loginToken}",
       'Content-Type': 'application/json'
     };
+    //
+    // final response = await http.get(Uri.parse('${ApiData.baseUrl}/schedules'),
+    //     headers: headersList);
 
-    final response = await http.get(Uri.parse('${ApiData.baseUrl}/schedules'),
-        headers: headersList);
-
+    //////////////////
+    var response =
+    await client.get(Uri.parse('${ApiData.baseUrl}/schedules'), headers: headersList);
+    final resBody = json.decode(response.body);
+    ///////////////////////////
     if (response.statusCode == 200) {
 
       final scheduleList = jsonDecode(response.body);

@@ -10,6 +10,7 @@ class LoginRepository {
   Future loginUser(Login login) async {
     try{
       await dataProvider.loginUser(login);
+      return true;
     }
     catch(e){
       throw e;

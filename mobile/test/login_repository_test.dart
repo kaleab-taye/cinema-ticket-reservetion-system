@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
 import 'package:royal_cinema/features/auth/login/login.dart';
 import 'package:royal_cinema/features/auth/login/models/login.dart';
-import 'package:test/test.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite/sqflite.dart';
 
 Future<Response> mockAPI(req) async {
   Map<String, dynamic> reqBody = json.decode(req.body);
@@ -26,6 +28,11 @@ Future<Response> mockAPI(req) async {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setUpAll(() {
+    sqfliteFfiInit();
+    databaseFactory = databaseFactoryFfi;
+  });
   test('loginUser shall return true for valid LogIn object: ', () async {
     LoginDataProvider loginDataProvider = LoginDataProvider();
     loginDataProvider.client = MockClient(mockAPI);
