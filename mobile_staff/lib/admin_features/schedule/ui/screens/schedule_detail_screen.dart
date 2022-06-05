@@ -38,6 +38,7 @@ class ScheduleDetailState extends State<ScheduleDetail> {
   // widget.schedule
   // final data = scheduleData;
 
+
   DateTime startTime = DateTime.now();
   DateTime endTime = DateTime.now();
   List<String> movieTitleList = ['NoSelection'];

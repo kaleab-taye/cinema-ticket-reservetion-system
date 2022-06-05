@@ -7,6 +7,9 @@ import 'package:sec_2/admin_features/index/bloc/index_event.dart';
 import 'package:sec_2/admin_features/index/bloc/index_state.dart';
 import 'package:sec_2/admin_features/index/data_provider/local_user_data_provider.dart';
 import 'package:sec_2/admin_features/index/repository/index_repository.dart';
+import 'package:sec_2/admin_features/login/bloc/auth_bloc.dart';
+import 'package:sec_2/admin_features/login/data_provider/login_data_provider.dart';
+import 'package:sec_2/admin_features/login/repository/login_repository.dart';
 import 'package:sec_2/admin_features/login/ui/login_page.dart';
 import 'package:sec_2/core/colors.dart';
 import 'package:sec_2/staff_app.dart';
@@ -22,7 +25,7 @@ class _IndexScreenState extends State<IndexScreen> {
   @override
   Widget build(BuildContext context) {
     final IndexBloc indexBloc = IndexBloc(IndexRepository(IndexDataProvider()));
-
+    final AuthBloc authBloc = AuthBloc(LoginRepository(LoginDataProvider()));
     return BlocProvider(
       create: (_) => indexBloc..add(CheckLogin()),
       child: BlocBuilder<IndexBloc, IndexState>(
@@ -34,7 +37,8 @@ class _IndexScreenState extends State<IndexScreen> {
             );
           }
           if (state is NotLoggedIn) {
-            return LoginPage();
+            return LoginTest();
+            // LoginPage(authBloc: authBloc);
             // FlatButton(
             //   color: Col.background,
             //     onPressed: () {

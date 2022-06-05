@@ -78,7 +78,7 @@ class CinemaReservationApp extends StatelessWidget {
               name: 'login',
               builder: (BuildContext context, GoRouterState state) =>
                   //     // loginStorage.getItem('loginData')!=null ? loginStorage.getItem('loginData')==true ?StaffApp() : LoginPage() :LoginPage(),
-                  LoginPage(),
+                  LoginTest(),
             ),
             GoRoute(
               path: 'MovieDetail',
