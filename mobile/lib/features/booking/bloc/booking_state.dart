@@ -22,3 +22,9 @@ class BookingMovieFailed extends BookingState {}
 class BookingMovieLoading extends BookingState {}
 
 class BookingUpdateSuccessful extends BookingState {}
+
+class DeletingBookingFailed extends BookingState {}
+
+class DeletingBookingLoading extends BookingState {}
+
+class DeletingBookingSuccessful extends BookingState {}

@@ -176,7 +176,9 @@ void initState(){
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 25),
-                  child: Center(child: Text("*For demo purpose, we have set the values to the default client.")),
+                  child: Center(child: Text("*For demo purpose, we have set the values to the default client.", style: TextStyle(
+                    color: Colors.white,
+                  ),)),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 65, 25, 0),

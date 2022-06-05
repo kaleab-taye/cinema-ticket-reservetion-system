@@ -55,6 +55,15 @@ class BookingRepository {
     }
   }
 
+  deleteBooking(String bookId) async {
+    try{
+      await bookingProvider.deleteBooking(bookId);
+    }
+    catch(e){
+      throw e;
+    }
+  }
+
   Future<Either<String>> editBooking(String id, BookingMovie booking) async {
     try {
       final newBooking = BookingMovie(

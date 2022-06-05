@@ -36,6 +36,19 @@ class LocalDbProvider{
     );
   }
 
+  Future<int> updateUsers(String id, Map<String, dynamic> update) async{ // returns the number of rows updated
+
+    final db = await init();
+
+    int result = await db.update(
+        "User",
+        update,
+        where: "id = ?",
+        whereArgs: [id]
+    );
+    return result;
+  }
+
   Future deleteUsers() async {
     final db = await init();
     // return db.delete("delete from "+ TABLE_NAME);
@@ -57,13 +70,6 @@ class LocalDbProvider{
         balance: int.parse(maps[0]['balance'].toString()),
         loginToken: maps[0]['loginToken'].toString()
     );
-    // return List.generate(maps.length, (i) { //create a list of memos
-    //   return MemoModel(
-    //     id: maps[i]['id'],
-    //     title: maps[i]['title'],
-    //     content: maps[i]['content'],
-    //   );
-    // });
   }
   Future<bool> isUserLoggedIn() async{ //returns the memos as a list (array)
 
@@ -71,29 +77,6 @@ class LocalDbProvider{
     final maps = await db.query("User");
     return !maps.isEmpty;
 
-    // if(maps.isEmpty){
-    //   return null;
-    // }
-    // else{
-    //   return User(
-    //       fullName: maps[0]['fullName'].toString(),
-    //       phone: maps[0]['phone'].toString(),
-    //       passwordHash: maps[0]['passwordHash'].toString(),
-    //       balance: int.parse(maps[0]['balance'].toString()),
-    //       loginToken: maps[0]['loginToken'].toString()
-    //   );
-    // }
-
-  }
-  Future<bool> isEmpty() async {
-    final db = await init();
-    final maps = await db.query("User");
-    if(maps.isEmpty){
-      return true;
-    }
-    else{
-      return false;
-    }
   }
 
 }

@@ -34,6 +34,15 @@ class UserRepository {
     }
   }
 
+  updateBalance(int price) async {
+    try{
+      await userProvider.updateBalance(price);
+    }
+    catch(e){
+      throw e;
+    }
+  }
+
   // addUser(User user) async {
   //   // check for profanity
   //   // user.description.contains("sidib");

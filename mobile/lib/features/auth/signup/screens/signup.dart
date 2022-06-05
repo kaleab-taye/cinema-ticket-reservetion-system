@@ -396,7 +396,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   text: " Login",
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      GoRouter.of(context).go('/');
+                                      GoRouter.of(context).go('/login');
                                     }),
                             ],
                           ),

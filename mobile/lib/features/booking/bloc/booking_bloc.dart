@@ -11,11 +11,12 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
     on<LoadBookings>(_onLoadBookings);
     // on<UpdateBooking>(_onUpdateBooking);
     on<BookingMovie>(_onBookingMovie);
+    on<DeletingBooking>(_onDeletingBooking);
   }
 
   void _onLoadBookings(LoadBookings event, Emitter emit) async {
     emit(BookingsLoading());
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     final bookings = await bookingRepository.getAllBookings();
     if (bookings.hasError) {
       emit(BookingsLoadingFailed(bookings.error!));
@@ -31,12 +32,25 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   void _onBookingMovie(BookingMovie event, Emitter emit) async {
     emit(BookingMovieLoading());
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     try{
       await bookingRepository.book(event.userId, event.scheduleId);
+      // emit(BookingUpdateSuccessful());
       emit(BookingMovieSuccessful());
     } catch (e){
       emit(BookingMovieFailed());
+    }
+  }
+
+  void _onDeletingBooking(DeletingBooking event, Emitter emit) async {
+    emit(DeletingBookingLoading());
+    await Future.delayed(const Duration(seconds: 1));
+    try{
+      await bookingRepository.deleteBooking(event.bookId);
+      // emit(BookingUpdateSuccessful());
+      emit(DeletingBookingSuccessful());
+    } catch (e){
+      emit(DeletingBookingFailed());
     }
   }
 

@@ -10,6 +10,11 @@ class BookingMovie extends BookingEvent {
   BookingMovie(this.userId, this.scheduleId);
 }
 
+class DeletingBooking extends BookingEvent {
+  final bookId;
+  DeletingBooking(this.bookId);
+}
+
 class UpdateBooking extends BookingEvent {
   final BookingMovie booking;
   UpdateBooking(this.booking);

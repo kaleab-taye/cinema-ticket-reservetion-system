@@ -93,23 +93,7 @@ Future<void> main() async {
                 key: state.pageKey,
                 child: MovieHomePage(),
               ),
-          routes: [
-            // GoRoute(
-            //   name: 'movie_details',
-            //   path: ':id',
-            //   pageBuilder: (context, state) {
-            //     // final movie = _movieFrom(state.params['id']!);
-            //     String id = state.params['id']!;
-            //
-            //     //movie = bloc.getMovie(id);
-            //     return MaterialPage(
-            //       key: state.pageKey,
-            //       child: MovieDetailsScreen(
-            //         id: id,
-            //       ),
-            //     );
-            //   },
-            // ),
+          routes: <GoRoute>[
             GoRoute(
               name: 'schedule_details',
               path: ':schedule_id',
@@ -126,23 +110,23 @@ Future<void> main() async {
                 );
               },
             ),
+            // GoRoute(
+            //   name: 'booking_details',
+            //   path: ':booking_id',
+            //   pageBuilder: (context, state) {
+            //     // final movie = _movieFrom(state.params['id']!);
+            //     String booking_id = state.params['booking_id']!;
+            //
+            //     //movie = bloc.getMovie(id);
+            //     return MaterialPage(
+            //       key: state.pageKey,
+            //       child: BookingDetailsScreen(
+            //           booking_id: booking_id
+            //       ),
+            //     );
+            //   },
+            // ),
           ]),
-      GoRoute(
-        name: 'booking_details',
-        path: '/booking_id',
-        pageBuilder: (context, state) {
-          // final movie = _movieFrom(state.params['id']!);
-          String booking_id = state.params['booking_id']!;
-
-          //movie = bloc.getMovie(id);
-          return MaterialPage(
-            key: state.pageKey,
-            child: BookingDetailsScreen(
-                booking_id: booking_id
-            ),
-          );
-        },
-      ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,

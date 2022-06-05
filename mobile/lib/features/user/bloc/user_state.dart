@@ -12,3 +12,9 @@ class UsersLoaded extends UserState {
 class UsersLoadingFailed extends UserState {}
 
 class UserUpdateSuccessful extends UserState {}
+
+class UpdateBalanceSuccessful extends UserState {}
+
+class UpdateBalanceFailed extends UserState {}
+
+class UpdateBalanceLoading extends UserState {}

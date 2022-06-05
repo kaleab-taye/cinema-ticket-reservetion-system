@@ -20,6 +20,14 @@ class Profile extends StatefulWidget {
 }
 
 class _Profile extends State<Profile> {
+
+  @override
+  void initState() {
+    final userBloc = BlocProvider.of<UserBloc>(context);
+    userBloc.add(LoadUsers());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -251,7 +259,10 @@ class _Profile extends State<Profile> {
               );
             }
 
-            return const Text("should never happen");
+            final userBloc = BlocProvider.of<UserBloc>(context);
+            userBloc.add(LoadUsers());
+
+            return SizedBox();
           },
         ),
       ),

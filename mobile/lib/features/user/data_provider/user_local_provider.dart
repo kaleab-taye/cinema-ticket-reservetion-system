@@ -52,4 +52,10 @@ class UserLocalProvider implements UserProvider {
   Future<List<User>> getAllUsers() async {
     return users;
   }
+
+  @override
+  Future<void> updateBalance(int price) {
+    // TODO: implement updateBalance
+    throw UnimplementedError();
+  }
 }

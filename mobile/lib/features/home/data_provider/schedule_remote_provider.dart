@@ -124,11 +124,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
   @override
   Future<List<ScheduleResponse>> getAllScheduleds() async {
 
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
-
     User userOut = await localDbProvider.getUser();
-
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
 
     print(userOut.loginToken);
 

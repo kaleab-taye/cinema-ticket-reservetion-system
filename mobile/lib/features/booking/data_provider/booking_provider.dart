@@ -8,4 +8,5 @@ abstract class BookingProvider {
   Future<BookingMovie?> getBooking(String id);
   Future<List<BookingResponse>> getAllBookings();
   Future<void> book(String userId, String scheduleId);
+  Future<void> deleteBooking(String bookId);
 }

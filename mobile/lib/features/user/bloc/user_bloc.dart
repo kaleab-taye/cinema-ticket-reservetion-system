@@ -10,6 +10,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   UserBloc(this.userRepository) : super(UsersLoading()) {
     on<LoadUsers>(_onLoadUsers);
+    on<UpdateBalance>(_onUpdateBalance);
     // on<LoadCurrentUser>(_onLoadCurrentUsers);
     // on<UpdateUser>(_onUpdateUser);
   }
@@ -20,6 +21,17 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       emit(UsersLoaded(user));
     } catch(e) {
       emit(UsersLoadingFailed());
+    }
+  }
+
+  void _onUpdateBalance(UpdateBalance event, Emitter emit) async {
+    emit(UpdateBalanceLoading());
+    await Future.delayed(const Duration(seconds: 3));
+    try{
+      await userRepository.updateBalance(event.price);
+      emit(UpdateBalanceSuccessful());
+    } catch (e){
+      emit(UpdateBalanceFailed());
     }
   }
 

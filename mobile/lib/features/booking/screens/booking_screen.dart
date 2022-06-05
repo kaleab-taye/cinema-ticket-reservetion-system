@@ -12,10 +12,21 @@ import 'package:royal_cinema/features/booking/bloc/bloc.dart';
 import '../../../../core/utils/colors.dart';
 import '../../home/ui/widget/search_widget.dart';
 
-class BookedListScreen extends StatelessWidget {
-  BookedListScreen({
-    Key? key,
-  }) : super(key: key);
+class BookedListScreen extends StatefulWidget {
+  const BookedListScreen({Key? key,}) : super(key: key);
+
+  @override
+  _BookedListScreenState createState() => _BookedListScreenState();
+}
+
+class _BookedListScreenState extends State<BookedListScreen> {
+
+  @override
+  void initState() {
+    final bookBloc = BlocProvider.of<BookingBloc>(context);
+    bookBloc.add(LoadBookings());
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +68,10 @@ class BookedListScreen extends StatelessWidget {
                     });
               }
 
-              return const Text("should never happen");
+              final bookBloc = BlocProvider.of<BookingBloc>(context);
+              bookBloc.add(LoadBookings());
+
+              return SizedBox();
             },
           ),
         ],
@@ -101,7 +115,7 @@ class BookedListScreen extends StatelessWidget {
                 height: 10,
               ),
               Container(
-                height: 270,
+                height: 230,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
                 decoration: BoxDecoration(color: Col.secondary),
@@ -138,11 +152,17 @@ class BookedListScreen extends StatelessWidget {
                           //   'booking_details',
                           //   params: {'id': booking},
                           // );
-                          String movie = jsonEncode(
-                              state.bookings[i].bookings[index].toJson());
+                          // String movie = jsonEncode(
+                          //     state.bookings[i].bookings[index].toJson());
+                          // context.goNamed(
+                          //   'booking_details',
+                          //   params: {'booking_id': movie},
+                          // );
+                          String schedule_detail = jsonEncode(
+                              state.bookings[i].bookings[index].schedule.toJson());
                           context.goNamed(
-                            'booking_details',
-                            params: {'booking_id': movie},
+                            'schedule_details',
+                            params: {'schedule_id': schedule_detail},
                           );
                         },
                         // context.go("/booking_details");
@@ -202,23 +222,6 @@ class BookedListScreen extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            // Padding(
-                            //   padding: EdgeInsets.symmetric(horizontal: 5),
-                            //   child: RaisedButton(
-                            //     onPressed: () {
-                            //     },
-                            //     padding: EdgeInsets.symmetric(
-                            //         horizontal: 60, vertical: 1),
-                            //     child: Text(
-                            //       "Book",
-                            //       style: TextStyle(
-                            //           color: Col.secondary,
-                            //           fontSize: 12,
-                            //           fontWeight: FontWeight.bold),
-                            //     ),
-                            //     color: Col.textColor,
-                            //   ),
-                            // ),
                           ],
                         ),
                       );
@@ -227,6 +230,9 @@ class BookedListScreen extends StatelessWidget {
             ],
           );
         }
+
+        final bookBloc = BlocProvider.of<BookingBloc>(context);
+        bookBloc.add(LoadBookings());
 
         return const Text("should never happen");
       },

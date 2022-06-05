@@ -14,7 +14,7 @@ class ScheduledBloc extends Bloc<ScheduledEvent, ScheduledState> {
 
   void _onLoadScheduleds(LoadScheduleds event, Emitter emit) async {
     emit(ScheduledsLoading());
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     final scheduleds = await scheduledRepository.getAllScheduleds();
     if (scheduleds.hasError) {
       emit(ScheduledsLoadingFailed(scheduleds.error!));

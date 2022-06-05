@@ -9,6 +9,11 @@ class LoadUser extends UserEvent {
   LoadUser(this.user);
 }
 
+class UpdateBalance extends UserEvent {
+  final price;
+  UpdateBalance(this.price);
+}
+
 class LoadCurrentUser extends UserEvent{}
 
 class UpdateUser extends UserEvent {

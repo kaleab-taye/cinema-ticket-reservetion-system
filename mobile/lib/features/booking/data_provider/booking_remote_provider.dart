@@ -50,6 +50,32 @@ class BookingRemoteProvider implements BookingProvider {
   }
 
   @override
+  deleteBooking(String bookId) async{
+
+    User userOut = await localDbProvider.getUser();
+
+    var headersList = {
+      'Accept': '*/*',
+      'Authorization': 'Bearer ${userOut.loginToken}',
+    };
+    var url = Uri.parse('${ApiData.baseUrl}/bookings/$bookId');
+
+    var req = http.Request('DELETE', url);
+    req.headers.addAll(headersList);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(resBody);
+    }
+    else {
+      print(res.reasonPhrase);
+      throw Exception();
+    }
+  }
+
+  @override
   book(String userId, String scheduleId) async {
 
     User userOut = await localDbProvider.getUser();
@@ -147,8 +173,6 @@ class BookingRemoteProvider implements BookingProvider {
     }
   }
 
-
-
   @override
   Future<List<BookingResponse>> getAllBookings() async {
 
@@ -165,27 +189,15 @@ class BookingRemoteProvider implements BookingProvider {
 
     if (response.statusCode == 200) {
 
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
       final bookingList = jsonDecode(response.body);
-
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
       List<BookingResponse> fetchedList = [];
 
-      print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
       for (var key in bookingList.keys) {
-
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 
         List<BookingMovie> listBooking = [];
 
-        print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
         for (var booking in bookingList[key]) {
-
-          print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
           listBooking.add(BookingMovie.fromJson(booking));
         }
 
