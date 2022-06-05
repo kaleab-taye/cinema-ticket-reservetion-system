@@ -5,7 +5,6 @@ const color = require("cli-color");
 const jwt = require("jsonwebtoken");
 const { databaseName, collectionNames, oneHour, oneDay, todayString, tomorrowString } = require("./variables.js");
 const initData = require("../../assets/init_data.json");
-const { includes } = require("lodash");
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL, { connectTimeoutMS: 30000, keepAlive: true });
 
@@ -43,11 +42,15 @@ async function addDocument(collectionName, document) {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
         let result = await collection.insertOne(document);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         return result.insertedId + "";
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -56,11 +59,15 @@ async function checkExistence(collectionName, conditions) {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
         let result = await collection.findOne(conditions);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         return result != null;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -68,11 +75,16 @@ async function getDocument(collectionName, conditions) {
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.findOne(conditions);
+        let result = await collection.findOne(conditions);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -80,11 +92,16 @@ async function getDocuments(collectionName, conditions, sort = {}) {
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.find(conditions).sort(sort).toArray();
+        let result = await collection.find(conditions).sort(sort).toArray();
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -93,11 +110,16 @@ async function updateDocument(collectionName, filters, updates, operator = "$set
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.updateOne(filters, updates);
+        let result = await collection.updateOne(filters, updates);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -106,11 +128,16 @@ async function updateDocuments(collectionName, filters, updates, operator = "$se
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.updateMany(filters, updates);
+        let result = await collection.updateMany(filters, updates);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -118,11 +145,16 @@ async function deleteDocument(collectionName, conditions) {
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.deleteOne(conditions);
+        let result = await collection.deleteOne(conditions);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -130,11 +162,16 @@ async function deleteDocuments(collectionName, conditions) {
     try {
         mongoClient.connect();
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.deleteMany(conditions);
+        let result = await collection.deleteMany(conditions);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -142,11 +179,16 @@ async function getCount(collectionName, conditions) {
     try {
         mongoClient.connect()
         let collection = mongoClient.db(databaseName).collection(collectionName);
-        return await collection.countDocuments(conditions);
+        let result = await collection.countDocuments(conditions);
+        try {
+            await mongoClient.close();
+        } catch (error) { }
+        return result;
     } catch (error) {
+        try {
+            await mongoClient.close();
+        } catch (error) { }
         throw error;
-    } finally {
-        await mongoClient.close();
     }
 }
 
@@ -208,7 +250,7 @@ async function initDb() {
             for (let scheduleId of schedulesToBeBooked) {
                 let Booking = require("../entities/booking");
                 // @ts-ignore
-                let booking = new Booking({ scheduleId, userId:defaultUserId });
+                let booking = new Booking({ scheduleId, userId: defaultUserId });
                 await booking.save();
             }
 
