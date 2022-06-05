@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sec_2/booking/bloc/booking_bloc.dart';
-import 'package:sec_2/booking/bloc/booking_event.dart';
-import 'package:sec_2/booking/data_provider/booking_remote_provider.dart';
-import 'package:sec_2/booking/repository/booking_repository.dart';
-import 'package:sec_2/booking/ui/booking_list_screen.dart';
+import 'package:sec_2/admin_features/booking/bloc/booking_bloc.dart';
+import 'package:sec_2/admin_features/booking/bloc/booking_event.dart';
+import 'package:sec_2/admin_features/booking/data_provider/booking_remote_provider.dart';
+import 'package:sec_2/admin_features/booking/repository/booking_repository.dart';
+import 'package:sec_2/admin_features/booking/ui/booking_list_screen.dart';
+import 'package:sec_2/admin_features/index/data_provider/local_user_data_provider.dart';
+import 'package:sec_2/admin_features/index/repository/index_repository.dart';
+import 'package:sec_2/admin_features/movie/data_provider/movie_remote_provider.dart';
+import 'package:sec_2/admin_features/movie/index.dart';
+import 'package:sec_2/admin_features/movie/repository/movie_repository.dart';
+import 'package:sec_2/admin_features/schedule/bloc/todo_bloc.dart';
+import 'package:sec_2/admin_features/schedule/bloc/todo_event.dart';
+import 'package:sec_2/admin_features/schedule/data_provider/schedule_remote_provider.dart';
+import 'package:sec_2/admin_features/schedule/repository/schedule_repository.dart';
+import 'package:sec_2/admin_features/schedule/ui/screens/schedule_list_screen.dart';
 import 'package:sec_2/core/colors.dart';
-import 'package:sec_2/index/data_provider/local_user_data_provider.dart';
-import 'package:sec_2/index/repository/index_repository.dart';
-import 'package:sec_2/movie/bloc/movie_bloc.dart';
-import 'package:sec_2/movie/bloc/movie_event.dart';
-import 'package:sec_2/movie/data_provider/movie_remote_provider.dart';
-import 'package:sec_2/movie/repository/movie_repository.dart';
-import 'package:sec_2/schedule/bloc/todo_bloc.dart';
-import 'package:sec_2/schedule/bloc/todo_event.dart';
-import 'package:sec_2/schedule/data_provider/schedule_remote_provider.dart';
-import 'package:sec_2/schedule/repository/schedule_repository.dart';
-import 'package:sec_2/schedule/ui/screens/schedule_list_screen.dart';
-
-import 'login/repository/login_repository.dart';
 
 class StaffApp extends StatefulWidget {
   const StaffApp({Key? key}) : super(key: key);

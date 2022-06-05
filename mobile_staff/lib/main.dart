@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:sec_2/index/ui/index_screen.dart';
-import 'package:sec_2/login/ui/login_page.dart';
-import 'package:sec_2/schedule/model/schedule.dart';
-import 'package:sec_2/schedule/ui/screens/new_schedule_screen.dart';
-import 'package:sec_2/schedule/ui/screens/schedule_detail_screen.dart';
+import 'package:sec_2/admin_features/index/ui/index_screen.dart';
+import 'package:sec_2/admin_features/login/ui/login_page.dart';
+import 'package:sec_2/admin_features/movie/index.dart';
+import 'package:sec_2/admin_features/movie/repository/movie_repository.dart';
+import 'package:sec_2/admin_features/movie/ui/screens/movie_detail_screen.dart';
+import 'package:sec_2/admin_features/schedule/model/schedule.dart';
+import 'package:sec_2/admin_features/schedule/ui/screens/new_schedule_screen.dart';
+import 'package:sec_2/admin_features/schedule/ui/screens/schedule_detail_screen.dart';
 import 'package:sec_2/staff_app.dart';
-import 'package:sec_2/movie/index.dart';
-import 'package:sec_2/movie/repository/movie_repository.dart';
-import 'package:sec_2/movie/ui/screens/movie_detail_screen.dart';
-import 'package:sec_2/user/data_provider/local_user_data_provider.dart';
 
 void main() {
   runApp(CinemaReservationApp());
@@ -92,6 +91,7 @@ class CinemaReservationApp extends StatelessWidget {
               name: 'scheduleDetail',
               builder: (BuildContext context, GoRouterState state) =>
                   ScheduleDetail(schedule: state.extra! as Schedule),
+                  
               // ScheduleDetailScreen(scheduleId: state.extra! as String),
             ),
             GoRoute(
