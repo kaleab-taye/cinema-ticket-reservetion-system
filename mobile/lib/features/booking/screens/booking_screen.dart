@@ -11,16 +11,19 @@ import 'package:royal_cinema/features/booking/bloc/bloc.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../../home/ui/widget/search_widget.dart';
+import '../../user/bloc/user_bloc.dart';
+import '../../user/bloc/user_event.dart';
 
 class BookedListScreen extends StatefulWidget {
-  const BookedListScreen({Key? key,}) : super(key: key);
+  const BookedListScreen({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _BookedListScreenState createState() => _BookedListScreenState();
 }
 
 class _BookedListScreenState extends State<BookedListScreen> {
-
   @override
   void initState() {
     final bookBloc = BlocProvider.of<BookingBloc>(context);
@@ -35,12 +38,15 @@ class _BookedListScreenState extends State<BookedListScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           buildSearch(),
-          Center(child: Text("Booked", style: TextStyle(
-            color: Col.textColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 26,
-          ),
-          ),
+          Center(
+            child: Text(
+              "Booked",
+              style: TextStyle(
+                color: Col.textColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+              ),
+            ),
           ),
           BlocBuilder<BookingBloc, BookingState>(
             buildWhen: (p, c) => c is! BookingUpdateSuccessful,
@@ -53,7 +59,21 @@ class _BookedListScreenState extends State<BookedListScreen> {
 
               if (state is BookingsLoadingFailed) {
                 return Center(
-                  child: Text(state.msg),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 20,),
+                      Text(state.msg),
+                      SizedBox(height: 30,),
+                      RaisedButton(onPressed: () {
+                        final bookBloc = BlocProvider.of<BookingBloc>(context);
+                        bookBloc.add(LoadBookings());
+                      },
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        color: Col.primary,
+                        child: Text("Retry"),
+                      ),
+                    ],
+                  ),
                 );
               }
 
@@ -80,9 +100,9 @@ class _BookedListScreenState extends State<BookedListScreen> {
   }
 
   Widget buildSearch() => SearchWidget(
-    text: "Search ...",
-    hintText: 'Search ...',
-  );
+        text: "Search ...",
+        hintText: 'Search ...',
+      );
 
   Widget daysPresenter(BuildContext context, int i) {
     return BlocBuilder<BookingBloc, BookingState>(
@@ -115,10 +135,12 @@ class _BookedListScreenState extends State<BookedListScreen> {
                 height: 10,
               ),
               Container(
-                height: 230,
+                height: 260,
                 width: MediaQuery.of(context).size.width,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                decoration: BoxDecoration(color: Col.secondary),
+                decoration: BoxDecoration(
+                  color: Col.secondary.withOpacity(0.3),
+                ),
                 child: ListView.builder(
                     itemCount: state.bookings[i].bookings.length,
                     scrollDirection: Axis.horizontal,
@@ -128,102 +150,186 @@ class _BookedListScreenState extends State<BookedListScreen> {
                       DateTime endTime = DateTime.fromMillisecondsSinceEpoch(
                           state.bookings[i].bookings[index].schedule.endTime);
                       String formattedStartTime =
-                      DateFormat('h:mma').format(startTime);
+                          DateFormat('h:mma').format(startTime);
                       String formattedEndTime =
-                      DateFormat('h:mma').format(endTime);
+                          DateFormat('h:mma').format(endTime);
 
-                      return GestureDetector(
-                        onTap: () async {
-                          // final result = await Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //     builder: (_) => BookingDetailsScreen(
-                          //       booking: state.bookings[index],
-                          //     ),
-                          //   ),
-                          // );
-                          //
-                          // if (result == null) return;
-                          //
-                          // final bookingBloc = BlocProvider.of<BookingBloc>(context);
-                          // bookingBloc.add(Loadbookings());
-                          // String booking = jsonEncode(state.bookings[index].toJson());
-                          // context.goNamed(
-                          //   'booking_details',
-                          //   params: {'id': booking},
-                          // );
-                          // String movie = jsonEncode(
-                          //     state.bookings[i].bookings[index].toJson());
-                          // context.goNamed(
-                          //   'booking_details',
-                          //   params: {'booking_id': movie},
-                          // );
-                          String schedule_detail = jsonEncode(
-                              state.bookings[i].bookings[index].schedule.toJson());
-                          context.goNamed(
-                            'schedule_details',
-                            params: {'schedule_id': schedule_detail},
-                          );
-                        },
-                        // context.go("/booking_details");
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
+                      return Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () async {
+                              // final result = await Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (_) => BookingDetailsScreen(
+                              //       booking: state.bookings[index],
+                              //     ),
+                              //   ),
+                              // );
+                              //
+                              // if (result == null) return;
+                              //
+                              // final bookingBloc = BlocProvider.of<BookingBloc>(context);
+                              // bookingBloc.add(Loadbookings());
+                              // String booking = jsonEncode(state.bookings[index].toJson());
+                              // context.goNamed(
+                              //   'booking_details',
+                              //   params: {'id': booking},
+                              // );
+                              // String movie = jsonEncode(
+                              //     state.bookings[i].bookings[index].toJson());
+                              // context.goNamed(
+                              //   'booking_details',
+                              //   params: {'booking_id': movie},
+                              // );
+                              String schedule_detail = jsonEncode(state
+                                  .bookings[i].bookings[index].schedule
+                                  .toJson());
+                              context.goNamed(
+                                'schedule_details',
+                                params: {'schedule_id': schedule_detail},
+                              );
+                            },
+                            // context.go("/booking_details");
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                SizedBox(width: 10,),
-                                Text(
-                                  "${state.bookings[i].bookings[index].schedule.movie.title}",
-                                  style: TextStyle(
-                                      color: Col.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "$formattedStartTime - $formattedEndTime",
+                                      style: TextStyle(
+                                          color: Col.textColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    SizedBox(
+                                      width: 35,
+                                    ),
+                                    Text(
+                                      "\$${state.bookings[i].bookings[index].schedule.price}",
+                                      style: TextStyle(
+                                          color: Col.textColor,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(width: 40,),
-                                Text(
-                                  "${state.bookings[i].bookings[index].schedule.price} birr",
-                                  style: TextStyle(
-                                      color: Col.textColor,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                        fit: BoxFit.fill,
+                                        image: NetworkImage(
+                                            "${ApiData.imageBaseUrl}/${state.bookings[i].bookings[index].schedule.movie.imageUrl}"),
+                                      ),
+                                      color: Col.textColor),
+                                  width: 150,
+                                  height: 130,
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: Stack(
+                                    children: [],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Container(
+                                  width: 150,
+                                  child: Center(
+                                    child: Text(
+                                      "${state.bookings[i].bookings[index].schedule.movie.title}",
+                                      style: TextStyle(
+                                          color: Col.textColor,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
                                 ),
                               ],
                             ),
-                            Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  image: DecorationImage(
-                                    fit: BoxFit.fill,
-                                    image: NetworkImage(
-                                        "${ApiData.imageBaseUrl}/${state.bookings[i].bookings[index].schedule.movie.imageUrl}"),
-                                  ),
-                                  color: Col.textColor),
-                              width: 150,
-                              height: 130,
-                              margin: EdgeInsets.only(right: 10),
-                              child: Stack(
-                                children: [
-                                ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5),
+                            child: TextButton(
+                              onPressed: () {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        backgroundColor: Col.background,
+                                        title: Text(
+                                          "ROYAL CINEMA",
+                                          style: TextStyle(
+                                            color: Col.primary,
+                                            fontSize: 28,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: 'Nunito',
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
+                                        content: Text(
+                                          "Half of the price of your booking which is ${state.bookings[i].bookings[index].schedule.price~/2} birr is going to be returned to your balance",
+                                          style: TextStyle(
+                                            color: Col.textColor,
+                                            fontSize: 20,
+                                            fontFamily: 'Nunito',
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
+                                        actions: [
+                                          FlatButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "Cancel",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () async {
+                                              // LocalDbProvider localDbProvider = LocalDbProvider();
+                                              // User userOut = await localDbProvider.getUser();
+
+                                              final deleteBloc = BlocProvider.of<BookingBloc>(context);
+                                              deleteBloc.add(DeletingBooking(state.bookings[i].bookings[index].id));
+
+                                              final userBloc =
+                                              BlocProvider.of<UserBloc>(context);
+                                              userBloc.add(UpdateBalance(-state.bookings[i].bookings[index].schedule.price~/2));
+
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text(
+                                              "Ok",
+                                              style: TextStyle(
+                                                fontSize: 18,
+                                                letterSpacing: 0.3,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                        elevation: 10.0,
+                                      );
+                                    });
+                              },
+                              child: Text(
+                                "Delete",
+                                style: TextStyle(
+                                    color: Colors.red,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Container(
-                              width: 150,
-                              child:
-                              Center(
-                                child: Text(
-                                  "$formattedStartTime - $formattedEndTime",
-                                  style: TextStyle(
-                                      color: Col.textColor,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       );
                     }),
               ),

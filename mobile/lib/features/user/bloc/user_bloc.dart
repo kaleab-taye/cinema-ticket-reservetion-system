@@ -11,6 +11,7 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   UserBloc(this.userRepository) : super(UsersLoading()) {
     on<LoadUsers>(_onLoadUsers);
     on<UpdateBalance>(_onUpdateBalance);
+    on<EditUser>(_onEditUser);
     // on<LoadCurrentUser>(_onLoadCurrentUsers);
     // on<UpdateUser>(_onUpdateUser);
   }
@@ -26,12 +27,25 @@ class UserBloc extends Bloc<UserEvent, UserState> {
 
   void _onUpdateBalance(UpdateBalance event, Emitter emit) async {
     emit(UpdateBalanceLoading());
-    await Future.delayed(const Duration(seconds: 3));
+    await Future.delayed(const Duration(seconds: 1));
     try{
       await userRepository.updateBalance(event.price);
       emit(UpdateBalanceSuccessful());
     } catch (e){
       emit(UpdateBalanceFailed());
+    }
+  }
+
+  void _onEditUser(EditUser event, Emitter emit) async {
+    emit(EditUserLoading());
+    await Future.delayed(const Duration(seconds: 1));
+    try{
+      await userRepository.editUser(event.fullName, event.phone, event.passwordHash);
+      emit(EditUserSuccessful());
+    } catch (e){
+      print("Error");
+      print(e);
+      emit(EditUserFailed());
     }
   }
 

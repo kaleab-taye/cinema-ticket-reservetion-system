@@ -43,6 +43,16 @@ class UserRepository {
     }
   }
 
+  editUser(String fullName, String phone, String passwordHash) async {
+    try{
+      await userProvider.editUser(fullName, phone, passwordHash);
+    }
+    catch(e){
+      print("Error 2");
+      throw e;
+    }
+  }
+
   // addUser(User user) async {
   //   // check for profanity
   //   // user.description.contains("sidib");

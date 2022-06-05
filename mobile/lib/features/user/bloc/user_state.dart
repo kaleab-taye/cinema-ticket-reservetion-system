@@ -18,3 +18,9 @@ class UpdateBalanceSuccessful extends UserState {}
 class UpdateBalanceFailed extends UserState {}
 
 class UpdateBalanceLoading extends UserState {}
+
+class EditUserSuccessful extends UserState {}
+
+class EditUserFailed extends UserState {}
+
+class EditUserLoading extends UserState {}

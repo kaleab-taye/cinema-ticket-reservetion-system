@@ -40,7 +40,7 @@ let pageNotFound = "PAGE_NOT_FOUND";
 let defaultImageUrl = `images/movie.jpg`;
 let defaultPrice = 50;
 let defaultCapacity = 200;
-let userInitBalance = 200;
+let userInitBalance = 2000;
 
 module.exports = {
     oneHour,

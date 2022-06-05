@@ -16,7 +16,7 @@ class BookingBloc extends Bloc<BookingEvent, BookingState> {
 
   void _onLoadBookings(LoadBookings event, Emitter emit) async {
     emit(BookingsLoading());
-    await Future.delayed(const Duration(seconds: 1));
+    // await Future.delayed(const Duration(seconds: 1));
     final bookings = await bookingRepository.getAllBookings();
     if (bookings.hasError) {
       emit(BookingsLoadingFailed(bookings.error!));

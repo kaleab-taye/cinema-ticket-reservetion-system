@@ -16,6 +16,13 @@ class UpdateBalance extends UserEvent {
 
 class LoadCurrentUser extends UserEvent{}
 
+class EditUser extends UserEvent {
+  final fullName;
+  final phone;
+  final passwordHash;
+  EditUser(this.fullName, this.phone, this.passwordHash);
+}
+
 class UpdateUser extends UserEvent {
   final User user;
   UpdateUser(this.user);

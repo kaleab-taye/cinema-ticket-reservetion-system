@@ -26,15 +26,16 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final phoneController = TextEditingController();
   final passwordHashController = TextEditingController();
-@override
-void initState(){
-  super.initState();
-  phoneController.text = "0987654321";
-  passwordHashController.text = "client";
-}
+
+  @override
+  void initState() {
+    super.initState();
+    phoneController.text = "0987654321";
+    passwordHashController.text = "client";
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Col.background,
@@ -127,7 +128,6 @@ void initState(){
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 20, 25, 0),
                   child: Container(
-
                     alignment: Alignment.center,
                     child: TextFormField(
                       controller: passwordHashController,
@@ -157,6 +157,7 @@ void initState(){
                             letterSpacing: 0,
                           ),
                           border: OutlineInputBorder(),
+                          fillColor: Colors.white,
                           suffixIcon: IconButton(
                             onPressed: () {
                               setState(() {
@@ -176,52 +177,95 @@ void initState(){
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8.0, left: 25),
-                  child: Center(child: Text("*For demo purpose, we have set the values to the default client.", style: TextStyle(
-                    color: Colors.white,
-                  ),)),
+                  child: Center(
+                      child: Text(
+                    "*For demo purpose, we have set the values to the default client.",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  )),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 65, 25, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: BlocConsumer<AuthBloc, AuthState>(
-                      listenWhen: (previous, current) {
-                        return current is LoginSuccessful;
-                      },
-                      listener: (_, AuthState state) {
-                        GoRouter.of(context).go('/home');
-                      },
-                      builder: (_, AuthState state) {
-                        Widget buttonChild = Text(
-                          "Login",
-                          style: TextStyle(
-                            color: Col.textColor,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Nunito',
-                            letterSpacing: 0.3,
-                          ),
-                        );
-                        return RaisedButton(
-                            color: Col.primary,
-                            child: buttonChild,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8)),
-                            onPressed: () {
-                              final formValid =
-                                  _formKey.currentState!.validate();
-                              if (!formValid) return;
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        child: BlocConsumer<AuthBloc, AuthState>(
+                          listenWhen: (previous, current) {
+                            return current is LoginSuccessful;
+                          },
+                          listener: (_, AuthState state) {
+                            GoRouter.of(context).go('/home');
+                          },
+                          builder: (_, AuthState state) {
+                            // Widget buttonChild = Text(
+                            //   "Login",
+                            //   style: TextStyle(
+                            //     color: Col.textColor,
+                            //     fontSize: 18,
+                            //     fontWeight: FontWeight.bold,
+                            //     fontFamily: 'Nunito',
+                            //     letterSpacing: 0.3,
+                            //   ),
+                            // );
+                            // if (state is ScheduledsLoading) {
+                            //   return const Center(
+                            //     child: CircularProgressIndicator(),
+                            //   );
+                            // }
 
-                              var bytes = utf8.encode(passwordHashController.text);
-                              var sha512 = sha256.convert(bytes);
-                              var hashedPassword = sha512.toString();
+                            if (state is LoginFailed) {
+                              return Center(
+                                child: Text("User Not Found",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14
+                                ),),
+                              );
+                            }
 
-                              final authBloc = BlocProvider.of<AuthBloc>(context);
-                              authBloc.add(LoginAuth(
-                                  Login(phone: phoneController.text, passwordHash: hashedPassword)));
-                            });
-                      },
-                    ),
+                            if (state is LoginSuccessful) {
+                              return Text("");
+                            }
+
+                            return const Text("");
+
+                          },
+                        ),
+                      ),
+                  RaisedButton(
+                    padding: EdgeInsets.symmetric(horizontal: 120),
+                      color: Col.primary,
+                      child: Text(
+                        "Login",
+                        style: TextStyle(
+                          color: Col.textColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                          letterSpacing: 0.3,
+                        ),
+                      ),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8)),
+                      onPressed: () {
+                        final formValid =
+                        _formKey.currentState!.validate();
+                        if (!formValid) return;
+
+                        var bytes =
+                        utf8.encode(passwordHashController.text);
+                        var sha512 = sha256.convert(bytes);
+                        var hashedPassword = sha512.toString();
+
+                        final authBloc =
+                        BlocProvider.of<AuthBloc>(context);
+                        authBloc.add(LoginAuth(Login(
+                            phone: phoneController.text,
+                            passwordHash: hashedPassword)));
+                      }),
+                    ],
                   ),
                 ),
                 // Padding(

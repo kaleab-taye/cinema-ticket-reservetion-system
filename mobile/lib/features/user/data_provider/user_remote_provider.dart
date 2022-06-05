@@ -14,9 +14,42 @@ class UserRemoteProvider implements UserProvider {
   LocalDbProvider localDbProvider = LocalDbProvider();
 
   @override
-  updateBalance(int price) async {
+  editUser(String fullName, String phone, String passwordHash) async {
 
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa");
+    User userOut = await localDbProvider.getUser();
+
+    var headersList = {
+      'Accept': '*/*',
+      "Authorization": "Bearer ${userOut.loginToken}",
+      'Content-Type': 'application/json'
+    };
+    var url = Uri.parse('${ApiData.baseUrl}/users/${userOut.id}');
+
+    var body = {
+      "fullName": fullName,
+      "phone": phone,
+      "passwordHash": passwordHash,
+    };
+
+    localDbProvider.updateUsers(userOut.id!, body);
+
+    var req = http.Request('PATCH', url);
+    req.headers.addAll(headersList);
+    req.body = json.encode(body);
+
+    var res = await req.send();
+    final resBody = await res.stream.bytesToString();
+
+    if (res.statusCode >= 200 && res.statusCode < 300) {
+      print(resBody);
+    }
+    else {
+      print(res.reasonPhrase);
+      throw Exception();
+    }
+  }
+  @override
+  updateBalance(int price) async {
 
     User userOut = await localDbProvider.getUser();
 

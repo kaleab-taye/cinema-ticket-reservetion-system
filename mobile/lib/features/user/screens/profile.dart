@@ -143,8 +143,23 @@ class _Profile extends State<Profile> {
           builder: (_, UserState state) {
             if (state is UsersLoadingFailed) {
               return Center(
-                child: Text("Fetching User Failed"),
+                child: Column(
+                  children: [
+                    SizedBox(height: 20,),
+                    Text("Fetching User Failed"),
+                    SizedBox(height: 30,),
+                    RaisedButton(onPressed: () {
+                      final userBloc = BlocProvider.of<UserBloc>(context);
+                      userBloc.add(LoadUsers());
+                    },
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      color: Col.primary,
+                      child: Text("Retry"),
+                    ),
+                  ],
+                ),
               );
+
             }
 
             if (state is UsersLoaded) {

@@ -102,7 +102,9 @@ class ScheduledListScreen extends StatelessWidget {
               Container(
                 height: 270,
                 padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-                decoration: BoxDecoration(color: Col.secondary),
+                decoration: BoxDecoration(
+                  color: Col.secondary.withOpacity(0.3),
+                ),
                 child: ListView.builder(
                   shrinkWrap: true,
                     itemCount: state.scheduleds[i].schedules.length,
@@ -131,21 +133,22 @@ class ScheduledListScreen extends StatelessWidget {
                           children: [
                             Container(
                               width: 150,
+                              padding: EdgeInsets.only(bottom: 5),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                                 children: [
                                   Text(
-                                    "${state.scheduleds[i].schedules[index].movie.title}",
+                                    "$formattedStartTime - $formattedEndTime",
                                     style: TextStyle(
                                         color: Col.textColor,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                   Text(
-                                    "${state.scheduleds[i].schedules[index].price} birr",
+                                    "\$${state.scheduleds[i].schedules[index].price}",
                                     style: TextStyle(
                                         color: Col.textColor,
-                                        fontSize: 16,
+                                        fontSize: 12,
                                         fontWeight: FontWeight.bold),
                                   ),
                                 ],
@@ -171,10 +174,10 @@ class ScheduledListScreen extends StatelessWidget {
                               width: 150,
                               child: Center(
                                 child: Text(
-                                  "$formattedStartTime - $formattedEndTime",
+                                  "${state.scheduleds[i].schedules[index].movie.title}",
                                   style: TextStyle(
                                       color: Col.textColor,
-                                      fontSize: 12,
+                                      fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                 ),
                               ),

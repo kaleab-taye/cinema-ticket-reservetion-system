@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const { databaseName, collectionNames, oneHour, oneDay, todayString, tomorrowString } = require("./variables.js");
 const initData = require("../../assets/init_data.json");
 
-const mongoClient = new MongoClient(process.env.MONGODB_URL, { connectTimeoutMS: 30000, keepAlive: true });
+const mongoClient = new MongoClient(process.env.MONGODB_URL);
 
 // utility functions
 function errorLog(errorMessage, error) {

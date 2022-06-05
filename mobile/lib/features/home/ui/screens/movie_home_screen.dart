@@ -89,7 +89,7 @@ class _MovieHomePageState extends State<MovieHomePage> {
         onTap: (index) => setState(() => currentIndex = index),
         items: [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home_filled),
             label: "Home",
           ),
           BottomNavigationBarItem(
