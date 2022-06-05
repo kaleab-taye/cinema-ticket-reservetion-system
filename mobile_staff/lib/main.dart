@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sec_2/index/ui/index_screen.dart';
+import 'package:sec_2/login/ui/login_page.dart';
 import 'package:sec_2/schedule/model/schedule.dart';
 import 'package:sec_2/schedule/ui/screens/new_schedule_screen.dart';
 import 'package:sec_2/schedule/ui/screens/schedule_detail_screen.dart';
@@ -8,6 +10,7 @@ import 'package:sec_2/staff_app.dart';
 import 'package:sec_2/movie/index.dart';
 import 'package:sec_2/movie/repository/movie_repository.dart';
 import 'package:sec_2/movie/ui/screens/movie_detail_screen.dart';
+import 'package:sec_2/user/data_provider/local_user_data_provider.dart';
 
 void main() {
   runApp(CinemaReservationApp());
@@ -38,6 +41,13 @@ class CinemaReservationApp extends StatelessWidget {
   CinemaReservationApp({Key? key}) : super(key: key);
 
   // static LocalStorage loginStorage = LocalStorage('loginData');
+  
+  // static LocalDbProvider localDbProvider = LocalDbProvider();
+
+  // bool checker= localDbProvider.isUserLoggedIn as bool;
+  // bool checker = await localDbProvider.isUserLoggedIn();
+  
+
 
   @override
   Widget build(BuildContext context) => MaterialApp.router(
@@ -53,9 +63,9 @@ class CinemaReservationApp extends StatelessWidget {
           path: '/',
           // name: "home",
           builder: (BuildContext context, GoRouterState state) =>
-
+              // checker ? StaffApp() : LoginPage() 
               // loginStorage.getItem('loginData')!=null ? loginStorage.getItem('loginData')==true ?StaffApp() : LoginPage() :LoginPage(),
-              StaffApp(),
+              IndexScreen() ,
           routes: <GoRoute>[
             GoRoute(
               path: 'Home',
@@ -63,6 +73,13 @@ class CinemaReservationApp extends StatelessWidget {
               builder: (BuildContext context, GoRouterState state) =>
                   //     // loginStorage.getItem('loginData')!=null ? loginStorage.getItem('loginData')==true ?StaffApp() : LoginPage() :LoginPage(),
                   StaffApp(),
+            ),
+            GoRoute(
+              path: 'Login',
+              name: 'login',
+              builder: (BuildContext context, GoRouterState state) =>
+                  //     // loginStorage.getItem('loginData')!=null ? loginStorage.getItem('loginData')==true ?StaffApp() : LoginPage() :LoginPage(),
+                  LoginPage(),
             ),
             GoRoute(
               path: 'MovieDetail',
@@ -90,17 +107,8 @@ class CinemaReservationApp extends StatelessWidget {
                   const StaffApp(),
             ),
 
-            // GoRoute(
-            //   path: 'Profile',
-            //   builder: (BuildContext context, GoRouterState state) =>
-            //       ProfilePage(movie: state.extra! as Movie),
-            // )
           ]),
-      // GoRoute(
-      //   path: '/staff',
-      //   builder: (BuildContext context, GoRouterState state) =>
-      //       const StaffApp(),
-      // ),
+   
     ],
   );
 }

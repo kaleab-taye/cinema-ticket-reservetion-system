@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:crypto/crypto.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
@@ -23,6 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   bool _secureText = true;
   final _formKey = GlobalKey<FormState>();
   final phoneController = TextEditingController();
+  // phoneController.text = ;
   final passwordHashController = TextEditingController();
 
   final AuthBloc authBloc = AuthBloc(LoginRepository(LoginDataProvider()));
@@ -86,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Container(
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: phoneController,
+                          controller: phoneController..text = '0987654321',
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "This field can not be empty";
@@ -122,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Container(
                         alignment: Alignment.center,
                         child: TextFormField(
-                          controller: passwordHashController,
+                          controller: passwordHashController..text = 'staff',
                           validator: (value) {
                             if (value!.isEmpty) {
                               return "This field can not be empty";
@@ -203,12 +207,12 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               );
 
-                              context.go('/staff');
+                              // context.go('/staff');
                             }
 
                             if (state is LoginFailed) {
                               buttonChild = Text(
-                                "Login Failed",
+                                "Invalid Credentials",
                                 style: TextStyle(
                                   color: Col.textColor,
                                   fontSize: 18,
@@ -223,15 +227,26 @@ class _LoginPageState extends State<LoginPage> {
                                 child: buttonChild,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(8)),
-                                onPressed: () {
+                                onPressed: () async {
                                   final formValid =
                                       _formKey.currentState!.validate();
                                   if (!formValid) return;
-                                  authBloc
+
+                                  var bytes =
+                                      utf8.encode(passwordHashController.text);
+                                  var sha512 = sha256.convert(bytes);
+                                  var hashedPassword = sha512.toString();
+
+                                  var resp = await authBloc
                                     ..add(LoginAuth(Login(
                                         phone: phoneController.text,
-                                        passwordHash:
-                                            passwordHashController.text)));
+                                        passwordHash: hashedPassword)));
+                                  print('res');
+                                  print(resp.state);
+                                  print('res');
+                                  if (state is LoginSuccessful) {
+                                    context.goNamed('staff');
+                                  }
                                 });
                           },
                         ),

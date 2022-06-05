@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'package:sec_2/core/api_data.dart';
+import 'package:sec_2/index/data_provider/local_user_data_provider.dart';
+import 'package:sec_2/index/repository/index_repository.dart';
 import 'package:sec_2/login/models/login_response.dart';
 import 'package:sec_2/user/models/staff.dart';
 
@@ -11,6 +13,8 @@ class LoginDataProvider {
   final _baseUrl = apiData.baseUrl; //new
 
   late http.Client httpClient;
+
+  final IndexRepository indexRepo = IndexRepository(IndexDataProvider());
 
   @override
   Future<LoginResponse> getLoggedIn(loginData) async {
@@ -32,6 +36,16 @@ class LoginDataProvider {
     if (resp.statusCode >= 200 && resp.statusCode < 300) {
       final respBody = await resp.stream.bytesToString();
       final finalResponse = await jsonDecode(respBody);
+
+      print("0000000000000000000000000000000000000000000000000000");
+      print(finalResponse);
+      print(finalResponse['loginToken']);
+      indexRepo.loginStaff(Staff(
+          fullName: finalResponse['staff']['fullName'],
+          phone: finalResponse['staff']['phone'],
+          passwordHash: finalResponse['staff']['passwordHash'],
+          loginToken: finalResponse['loginToken'],
+          ));
 
       return LoginResponse.fromJson(finalResponse);
     } else {

@@ -1,30 +1,24 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:sec_2/login/bloc/auth_event.dart';
-import 'package:sec_2/login/bloc/auth_state.dart';
-import 'package:sec_2/login/repository/login_repository.dart';
+import 'package:sec_2/index/bloc/index_event.dart';
+import 'package:sec_2/index/bloc/index_state.dart';
+import 'package:sec_2/index/repository/index_repository.dart';
 
-class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final LoginRepository loginRepository;
+class IndexBloc extends Bloc<IndexEvent, IndexState> {
+  final IndexRepository indexRepository;
 
-  AuthBloc(this.loginRepository) : super(Idle()) {
-    on<LoginAuth>(_onLoginAuth);
+  IndexBloc(this.indexRepository) : super(Checking()) {
+    on<CheckLogin>(_onCheckLogin);
   }
 
-  void _onLoginAuth(LoginAuth event, Emitter emit) async {
-    final loginResult = await loginRepository.getLoggedIn(event.login);
+  void _onCheckLogin(CheckLogin event, Emitter emit) async {
+    final loginCheck = await indexRepository.isStaffLoggedIn();
 
-    if (loginResult.hasError) {
-      // print("fail");
-      print(state);
-
-      emit(LoginFailed(loginResult.error!));
-      // event.go('/MovieDetail',extra: state.movies[index])
-      print(state);
+    if (loginCheck.hasError) {
+      emit(CheckFailed(loginCheck.error!));
+    } else if (loginCheck.val!) {
+      emit(LoggedIn());
     } else {
-      // print("success");
-      print(state);
-      emit(LoginSuccessful());
-      print(state);
+      emit(NotLoggedIn());
     }
   }
 }

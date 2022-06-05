@@ -7,6 +7,8 @@ import 'package:sec_2/booking/data_provider/booking_remote_provider.dart';
 import 'package:sec_2/booking/repository/booking_repository.dart';
 import 'package:sec_2/booking/ui/booking_list_screen.dart';
 import 'package:sec_2/core/colors.dart';
+import 'package:sec_2/index/data_provider/local_user_data_provider.dart';
+import 'package:sec_2/index/repository/index_repository.dart';
 import 'package:sec_2/movie/bloc/movie_bloc.dart';
 import 'package:sec_2/movie/bloc/movie_event.dart';
 import 'package:sec_2/movie/data_provider/movie_remote_provider.dart';
@@ -52,7 +54,39 @@ class _StaffAppState extends State<StaffApp> {
       ScheduleBloc(ScheduleRepository(ScheduleRemoteProvider()));
   final BookingBloc bookingBloc =
       BookingBloc(BookingRepository(BookingRemoteProvider()));
-  
+
+  showAlertDialog(BuildContext context) {
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel"),
+      onPressed: null,
+    );
+    Widget continueButton = FlatButton(
+      child: Text("Logout"),
+      onPressed: () {
+        IndexRepository indexRep = IndexRepository(IndexDataProvider());
+        indexRep.logoutStaff();
+        context.goNamed('login');
+      },
+    );
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Logout"),
+      content: Text("you are about to logout you sure you want to continue"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -69,10 +103,13 @@ class _StaffAppState extends State<StaffApp> {
               actions: [
                 Padding(
                     padding: EdgeInsets.only(right: 15),
-                    child: Icon(
-                      Icons.account_circle,
-                      size: 50,
-                      color: Col.textColor,
+                    child: GestureDetector(
+                      onTap: (() => {showAlertDialog(context)}),
+                      child: Icon(
+                        Icons.account_circle,
+                        size: 50,
+                        color: Col.textColor,
+                      ),
                     ))
               ],
               title: _currentIndex == 0
@@ -94,7 +131,12 @@ class _StaffAppState extends State<StaffApp> {
             body: IndexedStack(
               index: _currentIndex,
               // children: [MovieListScreen(), ReservationScreen()],
-              children: [ScheduleListScreen(), BookingListScreen( bookingBloc: bookingBloc,)],
+              children: [
+                ScheduleListScreen(),
+                BookingListScreen(
+                  bookingBloc: bookingBloc,
+                )
+              ],
             ),
             floatingActionButton: Visibility(
               visible: _currentIndex == 0 ? true : false,
