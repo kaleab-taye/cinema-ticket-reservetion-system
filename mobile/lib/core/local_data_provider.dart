@@ -17,11 +17,11 @@ class LocalDbProvider{
         onCreate: (Database db,int version) async{
           await db.execute("""
           CREATE TABLE User(
-          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          id TEXT PRIMARY KEY,
           fullName TEXT,
           phone TEXT,
           passwordHash TEXT,
-          balance DOUBLE,
+          balance INTEGER,
           loginToken TEXT
           )"""
           );
@@ -50,10 +50,11 @@ class LocalDbProvider{
     final maps = await db.query("User"); //query all the rows in a table as an array of maps
 
     return User(
+        id: maps[0]['id'].toString(),
         fullName: maps[0]['fullName'].toString(),
         phone: maps[0]['phone'].toString(),
         passwordHash: maps[0]['passwordHash'].toString(),
-        balance: double.parse(maps[0]['balance'].toString()),
+        balance: int.parse(maps[0]['balance'].toString()),
         loginToken: maps[0]['loginToken'].toString()
     );
     // return List.generate(maps.length, (i) { //create a list of memos
@@ -78,7 +79,7 @@ class LocalDbProvider{
     //       fullName: maps[0]['fullName'].toString(),
     //       phone: maps[0]['phone'].toString(),
     //       passwordHash: maps[0]['passwordHash'].toString(),
-    //       balance: double.parse(maps[0]['balance'].toString()),
+    //       balance: int.parse(maps[0]['balance'].toString()),
     //       loginToken: maps[0]['loginToken'].toString()
     //   );
     // }

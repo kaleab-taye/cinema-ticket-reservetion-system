@@ -9,7 +9,7 @@ class ScheduledBloc extends Bloc<ScheduledEvent, ScheduledState> {
 
   ScheduledBloc(this.scheduledRepository) : super(ScheduledsLoading()) {
     on<LoadScheduleds>(_onLoadScheduleds);
-    on<UpdateScheduled>(_onUpdateScheduled);
+    // on<UpdateScheduled>(_onUpdateScheduled);
   }
 
   void _onLoadScheduleds(LoadScheduleds event, Emitter emit) async {
@@ -23,8 +23,8 @@ class ScheduledBloc extends Bloc<ScheduledEvent, ScheduledState> {
     }
   }
 
-  void _onUpdateScheduled(UpdateScheduled event, Emitter emit) async {
-    await scheduledRepository.editScheduled(event.scheduled.id, event.scheduled);
-    emit(ScheduleUpdateSuccessful());
-  }
+  // void _onUpdateScheduled(UpdateScheduled event, Emitter emit) async {
+  //   await scheduledRepository.editScheduled(event.scheduled.id, event.scheduled);
+  //   emit(ScheduleUpdateSuccessful());
+  // }
 }

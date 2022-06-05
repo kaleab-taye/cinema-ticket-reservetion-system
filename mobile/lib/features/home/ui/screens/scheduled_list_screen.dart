@@ -7,7 +7,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:royal_cinema/core/api_data.dart';
+import 'package:royal_cinema/core/local_data_provider.dart';
+import 'package:royal_cinema/features/booking/bloc/bloc.dart';
+import 'package:royal_cinema/features/booking/bloc/booking_bloc.dart';
 import 'package:royal_cinema/features/home/bloc/bloc.dart';
+import 'package:royal_cinema/features/user/model/user.dart';
 
 import '../../../../core/utils/colors.dart';
 import '../widget/search_widget.dart';
@@ -227,7 +231,7 @@ class ScheduledListScreen extends StatelessWidget {
                                           actions: [
                                             FlatButton(
                                               onPressed: () {
-
+                                                Navigator.of(context).pop();
                                               },
                                               child: Text(
                                                 "Cancel",
@@ -238,8 +242,16 @@ class ScheduledListScreen extends StatelessWidget {
                                               ),
                                             ),
                                             FlatButton(
-                                              onPressed: () {
-                                                // PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP
+                                              onPressed: () async {
+
+                                                LocalDbProvider localDbProvider = LocalDbProvider();
+                                                User userOut = await localDbProvider.getUser();
+
+                                                final bookBloc = BlocProvider.of<BookingBloc>(context);
+                                                bookBloc.add(BookingMovie(userOut.id, state.scheduleds[i].schedules[index].id));
+
+                                                GoRouter.of(context).go('/home');
+
                                               },
                                               child: Text(
                                                 "Ok",

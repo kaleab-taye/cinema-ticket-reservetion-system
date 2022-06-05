@@ -10,6 +10,8 @@ import 'package:royal_cinema/features/auth/signup/bloc/bloc.dart';
 import 'package:royal_cinema/features/auth/signup/data_provider/data_provider.dart';
 import 'package:royal_cinema/features/auth/signup/repository/repository.dart';
 import 'package:royal_cinema/features/auth/signup/screens/screens.dart';
+import 'package:royal_cinema/features/booking/bloc/bloc.dart';
+import 'package:royal_cinema/features/booking/screens/booking_details_screen.dart';
 import 'package:royal_cinema/features/home/data_provider/schedule_remote_provider.dart';
 import 'package:royal_cinema/features/home/index.dart';
 import 'package:royal_cinema/features/home/repository/movie_repository.dart';
@@ -24,6 +26,9 @@ import 'package:royal_cinema/features/user/repository/user_repository.dart';
 
 import 'features/auth/login/bloc/auth_bloc.dart';
 import 'features/auth/login/screens/login.dart';
+import 'features/booking/bloc/booking_bloc.dart';
+import 'features/booking/data_provider/booking_remote_provider.dart';
+import 'features/booking/repository/booking_repository.dart';
 import 'features/home/bloc/bloc.dart';
 import 'features/user/screens/editProfile.dart';
 import 'features/user/screens/profile.dart';
@@ -122,6 +127,22 @@ Future<void> main() async {
               },
             ),
           ]),
+      GoRoute(
+        name: 'booking_details',
+        path: '/booking_id',
+        pageBuilder: (context, state) {
+          // final movie = _movieFrom(state.params['id']!);
+          String booking_id = state.params['booking_id']!;
+
+          //movie = bloc.getMovie(id);
+          return MaterialPage(
+            key: state.pageKey,
+            child: BookingDetailsScreen(
+                booking_id: booking_id
+            ),
+          );
+        },
+      ),
     ],
     errorPageBuilder: (context, state) => MaterialPage(
       key: state.pageKey,
@@ -144,6 +165,7 @@ Future<void> main() async {
 
   final MovieBloc movieBloc = MovieBloc(MovieRepository(MovieRemoteProvider()));
   final ScheduledBloc scheduledBloc = ScheduledBloc(ScheduledRepository(ScheduledRemoteProvider()));
+  final BookingBloc bookingBloc = BookingBloc(BookingRepository(BookingRemoteProvider()));
 
   runApp(
     MultiBlocProvider(
@@ -152,6 +174,7 @@ Future<void> main() async {
         BlocProvider(create: (_) => SignUpBloc(SignUpRepository(SignUpDataProvider()))),
         BlocProvider(create: (_) => movieBloc..add(LoadMovies())),
         BlocProvider(create: (_) => scheduledBloc..add(LoadScheduleds())),
+        BlocProvider(create: (_) => bookingBloc..add(LoadBookings())),
         BlocProvider(create: (_) => UserBloc(UserRepository(UserRemoteProvider()))),
       ],
       child: MaterialApp.router(

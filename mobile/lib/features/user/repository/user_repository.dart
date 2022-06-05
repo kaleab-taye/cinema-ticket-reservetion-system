@@ -1,4 +1,6 @@
 
+import 'package:royal_cinema/core/local_data_provider.dart';
+
 import '../../../core/utils/either.dart';
 import '../data_provider/user_provider.dart';
 import '../model/user.dart';
@@ -12,13 +14,14 @@ class UserRepository {
     return users.where((user) => user.fullName == fullName).toList();
   }
 
-  Future<Either<List<User>>> getAllUsers() async {
+  Future<User> getAllUsers() async {
+
+    LocalDbProvider localDbProvider = LocalDbProvider();
     try {
-      final users = await userProvider.getAllUsers();
-      return Either(val: users);
-    } catch (err) {
-      print(err);
-      return Either(error: "Couldn't load users");
+      final user = await localDbProvider.getUser();
+      return user;
+    } catch (e) {
+      throw e;
     }
   }
 

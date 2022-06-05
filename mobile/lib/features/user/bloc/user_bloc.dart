@@ -15,12 +15,9 @@ class UserBloc extends Bloc<UserEvent, UserState> {
   }
 
   void _onLoadUsers(LoadUsers event, Emitter emit) async {
-
-    emit(UsersLoading());
-    await Future.delayed(const Duration(seconds: 3));
     try{
-      await userRepository.getAllUsers();
-      emit(UsersLoaded());
+      final user = await userRepository.getAllUsers();
+      emit(UsersLoaded(user));
     } catch(e) {
       emit(UsersLoadingFailed());
     }

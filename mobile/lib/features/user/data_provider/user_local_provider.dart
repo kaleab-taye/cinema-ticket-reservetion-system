@@ -6,7 +6,7 @@ import '../model/user.dart';
 class UserLocalProvider implements UserProvider {
   final List<User> users = [
     for (int i in List.generate(15, (i) => i))
-      User(fullName: "Bad Boys", phone: "What r u", passwordHash: "imageUrl", balance: 0.0, loginToken: "loginToken")
+      User(fullName: "Bad Boys", phone: "What r u", passwordHash: "imageUrl", balance: 0, loginToken: "loginToken")
   ];
 
   @override
