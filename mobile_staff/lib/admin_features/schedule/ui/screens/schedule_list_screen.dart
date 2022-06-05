@@ -22,57 +22,60 @@ class ScheduleListScreen extends StatelessWidget {
               extra: schedule,
             )
           },
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(4), color: Col.secondary),
+          child: Container(
+            margin: EdgeInsets.only(left: 10,right: 10),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
               child: Container(
-                padding: EdgeInsets.all(10),
-                child: Column(children: [
-                  Row(
-                    children: [
-                      Text(
-                        DateFormat.Hms().format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                schedule.startTime)),
-                        style: TextStyle(
-                            color: Col.textColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        " - ",
-                        style: TextStyle(
-                            color: Col.textColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        DateFormat.Hms().format(
-                            DateTime.fromMillisecondsSinceEpoch(
-                                schedule.endTime)),
-                        style: TextStyle(
-                            color: Col.textColor,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                  // Image(
-                  //   height: 200,
-                  //   width: 200,
-                  //   image: NetworkImage(
-                  //   '${apiData.baseUrl}//${schedule.movie!.imageUrl}'
-                  // )),
-                  Text(
-                    schedule.movie!.title,
-                    style: TextStyle(
-                        color: Col.textColor,
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold),
-                  )
-                ]),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4), color: Col.secondary),
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Column(children: [
+                    Row(
+                      children: [
+                        Text(
+                          DateFormat.Hms().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  schedule.startTime)),
+                          style: TextStyle(
+                              color: Col.textColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          " - ",
+                          style: TextStyle(
+                              color: Col.textColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        Text(
+                          DateFormat.Hms().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  schedule.endTime)),
+                          style: TextStyle(
+                              color: Col.textColor,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    // Image(
+                    //   height: 200,
+                    //   width: 200,
+                    //   image: NetworkImage(
+                    //   '${apiData.baseUrl}//${schedule.movie!.imageUrl}'
+                    // )),
+                    Text(
+                      schedule.movie!.title,
+                      style: TextStyle(
+                          color: Col.textColor,
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold),
+                    )
+                  ]),
+                ),
               ),
             ),
           ),

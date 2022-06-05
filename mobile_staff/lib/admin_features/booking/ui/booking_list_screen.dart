@@ -28,15 +28,13 @@ class BookingListScreen extends StatelessWidget {
         child:
             // Text("chacha");
             Container(
-              
-              child: Column(children: [
-          for (var booking in bookingList)
+          child: Column(children: [
+            for (var booking in bookingList)
               Container(
-                
+                margin: EdgeInsets.only(left: 10, right: 10),
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 10.0),
                   child: Container(
-                    
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
                         color: Col.secondary),
@@ -99,11 +97,10 @@ class BookingListScreen extends StatelessWidget {
                                     style: TextButton.styleFrom(
                                         primary: Col.textColor,
                                         backgroundColor: Col.secondary),
-                                    onPressed: () async{
-                                      
+                                    onPressed: () async {
                                       await bookingRemoveBloc
-                                          ..add(DeleteBooking(booking.id!));
-                                          bookingBloc..add(LoadBooking());
+                                        ..add(DeleteBooking(booking.id!));
+                                      bookingBloc..add(LoadBooking());
 
                                       // context.go('/Home');
                                     },
@@ -121,6 +118,7 @@ class BookingListScreen extends StatelessWidget {
                                       // bookingBloc..add(CreateSchedule(temp));
                                       bookingRemoveBloc
                                           .add(DeleteBooking(booking.id!));
+                                      bookingRemoveBloc..add(LoadBooking());
                                       // context.go('/Home');
                                     },
                                     child: Icon(Icons.delete),
@@ -156,8 +154,8 @@ class BookingListScreen extends StatelessWidget {
                   ),
                 ),
               )
-        ]),
-            ));
+          ]),
+        ));
   }
 
   @override

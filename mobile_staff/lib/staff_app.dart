@@ -148,27 +148,37 @@ class _StaffAppState extends State<StaffApp> {
                 ),
               ),
             ),
-            bottomNavigationBar: BottomNavigationBar(
-                backgroundColor: Col.secondary,
-                fixedColor: Col.primary,
-                unselectedItemColor: Col.background,
-                unselectedLabelStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                selectedLabelStyle:
-                    TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                type: BottomNavigationBarType.fixed,
-                onTap: onTabTapped,
-                currentIndex: _currentIndex,
-                items: [
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.movie),
-                    label: "Schedules",
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.black,
+                    blurRadius: 10,
                   ),
-                  BottomNavigationBarItem(
-                    icon: Icon(Icons.chair),
-                    label: "Bookings",
-                  ),
-                ])),
+                ],
+              ),
+              child: BottomNavigationBar(
+                  backgroundColor: Col.secondary,
+                  fixedColor: Col.primary,
+                  unselectedItemColor: Col.background,
+                  unselectedLabelStyle:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                  selectedLabelStyle:
+                      TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  type: BottomNavigationBarType.fixed,
+                  onTap: onTabTapped,
+                  currentIndex: _currentIndex,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.movie),
+                      label: "Schedules",
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.chair),
+                      label: "Bookings",
+                    ),
+                  ]),
+            )),
       ),
     );
   }

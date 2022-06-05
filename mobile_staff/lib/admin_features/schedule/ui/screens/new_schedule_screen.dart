@@ -362,9 +362,11 @@ class _NewScheduleScreenState extends State<NewScheduleScreen> {
                                   startTime: startTime.millisecondsSinceEpoch,
                                   endTime: endTime.millisecondsSinceEpoch);
                               scheduleBloc..add(CreateSchedule(temp));
+
                 
                               // context.go('/Home');
                               context.pop();
+                              scheduleBloc..add(LoadSchedule());
                             },
                             child: stateChecker(state, context),
                           )

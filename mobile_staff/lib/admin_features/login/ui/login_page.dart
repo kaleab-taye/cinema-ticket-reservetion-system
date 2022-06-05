@@ -13,7 +13,6 @@ import 'package:sec_2/admin_features/login/bloc/auth_state.dart';
 import 'package:sec_2/admin_features/login/data_provider/login_data_provider.dart';
 import 'package:sec_2/admin_features/login/models/login.dart';
 import 'package:sec_2/admin_features/login/repository/login_repository.dart';
-import 'package:sec_2/admin_features/login/ui/login_status.dart';
 import 'package:sec_2/core/colors.dart';
 import 'package:sec_2/staff_app.dart';
 
@@ -35,22 +34,25 @@ class _LoginTestState extends State<LoginTest> {
           if (state is LoginSuccessful) {
             return StaffApp();
           }
-          // if (state is LoginFailed) {
-          //   //  StaffApp();
-          //   context.pop();
-          //   // return null!;
-          // } 
+          // if (state is LoginFailed){
+
+          // }
           else {
-            return LoginPage(authBloc: authBloc);
+            return LoginPage(
+              authBloc: authBloc,
+              authState: state,
+            );
           }
         }));
   }
 }
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key, required this.authBloc}) : super(key: key);
+  const LoginPage({Key? key, required this.authBloc, this.authState})
+      : super(key: key);
 
   final AuthBloc authBloc;
+  final AuthState? authState;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -62,6 +64,20 @@ class _LoginPageState extends State<LoginPage> {
   final phoneController = TextEditingController();
   // phoneController.text = ;
   final passwordHashController = TextEditingController();
+
+  Widget showStatusOnButton(state) {
+    if (state is LoginSuccessful) {
+      return Text("success");
+    }
+    if (state is LoginFailed) {
+      return Text("invalid credentials");
+    }
+    if (state is LogingIn) {
+      return CircularProgressIndicator();
+    }
+
+    return Text("Login");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -201,101 +217,27 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.fromLTRB(25, 65, 25, 0),
                   child: Container(
                       width: double.infinity,
-                      child:
-                          // Widget buttonChild = Text(
-                          //   "Login",
-                          //   style: TextStyle(
-                          //     color: Col.textColor,
-                          //     fontSize: 18,
-                          //     fontWeight: FontWeight.bold,
-                          //     fontFamily: 'Nunito',
-                          //     letterSpacing: 0.3,
-                          //   ),
-                          // );
+                      child: RaisedButton(
+                          color: Col.primary,
+                          child: showStatusOnButton(widget.authState),
+                          // Text("Login"),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
+                          onPressed: () async {
+                            final formValid = _formKey.currentState!.validate();
+                            if (!formValid) return;
 
-                          // print(state);
+                            var bytes =
+                                utf8.encode(passwordHashController.text);
+                            var sha512 = sha256.convert(bytes);
+                            var hashedPassword = sha512.toString();
 
-                          // if (state is LogingIn) {
-                          //   buttonChild = SizedBox(
-                          //     height: 10,
-                          //     width: 10,
-                          //     child: CircularProgressIndicator(
-                          //       color: Colors.white,
-                          //     ),
-                          //   );
-                          // }
-
-                          // if (state is LoginSuccessful) {
-                          //   // Router.neglect(context, () {
-                          //   //   context.goNamed('home');
-                          //   // });
-                          //   // LoginPage();
-
-                          //   // LoginStatusPage(context: context, state: state );
-                          //   // print("login success heard");
-                          //   // buttonChild = Text(
-                          //   //   "Login successful",
-                          //   //   style: TextStyle(
-                          //   //     color: Col.textColor,
-                          //   //     fontSize: 18,
-                          //   //     fontWeight: FontWeight.bold,
-                          //   //     fontFamily: 'Nunito',
-                          //   //     letterSpacing: 0.3,
-                          //   //   ),
-                          //   // );
-
-                          //   // // StaffApp();
-                          //   // // context.goNamed('home');
-                          //   context.go('/home');
-                          // }
-
-                          // if (state is LoginFailed) {
-                          //   buttonChild = Text(
-                          //     "Invalid Credentials",
-                          //     style: TextStyle(
-                          //       color: Col.textColor,
-                          //       fontSize: 18,
-                          //       fontWeight: FontWeight.bold,
-                          //       fontFamily: 'Nunito',
-                          //       letterSpacing: 0.3,
-                          //     ),
-                          //   );
-                          // }
-                          // return
-                          RaisedButton(
-                              color: Col.primary,
-                              child: Text("Login"),
-                              // buttonChild,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                              onPressed: () async {
-                                final formValid =
-                                    _formKey.currentState!.validate();
-                                if (!formValid) return;
-
-                                var bytes =
-                                    utf8.encode(passwordHashController.text);
-                                var sha512 = sha256.convert(bytes);
-                                var hashedPassword = sha512.toString();
-
-                                var resp = await widget.authBloc
-                                  ..add(LoginAuth(Login(
-                                      phone: phoneController.text,
-                                      passwordHash: hashedPassword)));
-                                print('res');
-                                print(resp.state);
-                                print('res');
-
-                                // while (state is Idle || state is LogingIn || state is LoginSuccessful) {
-                                // if (state is LoginSuccessful){
-
-                                //   return context.goNamed('staff');
-                                // }
-
-                                // }
-
-                                // while (resp.state is not )
-                              })),
+                            var resp = await widget.authBloc
+                              ..add(LoginAuth(Login(
+                                  phone: phoneController.text,
+                                  passwordHash: hashedPassword)));
+                            print(resp.state);
+                          })),
                 ),
                 Padding(
                   padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
