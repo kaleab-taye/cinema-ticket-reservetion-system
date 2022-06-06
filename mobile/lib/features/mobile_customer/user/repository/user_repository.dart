@@ -1,5 +1,5 @@
 
-import 'package:royal_cinema/core/customer_core/local_data_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/user/data_provider/local_data_provider.dart';
 
 import '../../../../core/customer_core/utils/either.dart';
 import '../data_provider/user_provider.dart';
