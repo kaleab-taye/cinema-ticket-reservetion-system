@@ -2,10 +2,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
-import 'package:royal_cinema/features/auth/signup/models/signup.dart';
+import 'package:royal_cinema/features/mobile_customer/auth/signup/models/signup.dart';
 import 'package:test/test.dart';
-import 'package:royal_cinema/features/auth/signup/repository/signup_repository.dart';
-import 'package:royal_cinema/features/auth/signup/data_provider/signup_data.dart';
+import 'package:royal_cinema/features/mobile_customer/auth/signup/repository/signup_repository.dart';
+import 'package:royal_cinema/features/mobile_customer/auth/signup/data_provider/signup_data.dart';
 
 Future<Response> mockAPI(req) async {
   Map<String, dynamic> reqBody = json.decode(req.body);

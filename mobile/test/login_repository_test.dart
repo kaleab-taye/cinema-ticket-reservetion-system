@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
 import 'package:http/testing.dart';
-import 'package:royal_cinema/features/auth/login/login.dart';
-import 'package:royal_cinema/features/auth/login/models/login.dart';
+import 'package:royal_cinema/features/mobile_customer/auth/login/login.dart';
+import 'package:royal_cinema/features/mobile_customer/auth/login/models/login.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -19,7 +19,7 @@ Future<Response> mockAPI(req) async {
         "passwordHash": "ghytytgvghgfvggvtybjkj",
         "balance": 200
       },
-      "loginToken": "qqqqqqqqqqqqq"
+      "loginToken": "qwertyuiopasdfghjkl.qwertyuiopcvbnm.qwertyuiosdfghjkl"
     };
     return Response(json.encode(userLoginData), valid ? 200 : 400);
   } else {
