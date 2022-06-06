@@ -172,7 +172,17 @@ class BookingListScreen extends StatelessWidget {
 
         if (state is BookingsLoadingFailed) {
           return Center(
-            child: Text(state.msg),
+            child: Column(
+              children: [
+                Text(state.msg),
+                RaisedButton(
+                  onPressed: () {
+                    bookingBloc..add(LoadBooking());
+                  },
+                  child: Icon(Icons.refresh),
+                )
+              ],
+            ),
           );
         }
 

@@ -103,7 +103,7 @@ class _StaffAppState extends State<StaffApp> {
                     child: GestureDetector(
                       onTap: (() => {showAlertDialog(context)}),
                       child: Icon(
-                        Icons.account_circle,
+                        Icons.logout,
                         size: 50,
                         color: Col.textColor,
                       ),
@@ -140,7 +140,7 @@ class _StaffAppState extends State<StaffApp> {
               child: FloatingActionButton(
                 backgroundColor: Col.background,
                 onPressed: () {
-                  context.go('/NewSchedule');
+                  context.goNamed('newSchedule');
                 },
                 child: Icon(
                   Icons.add,
