@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:royal_cinema/core/customer_core/api_data.dart';
-import 'package:royal_cinema/core/customer_core/local_data_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/user/data_provider/local_data_provider.dart';
 import 'package:royal_cinema/core/customer_core/token_data.dart';
 import 'package:http/http.dart' as http;
 import 'package:royal_cinema/features/mobile_customer/user/model/user.dart';

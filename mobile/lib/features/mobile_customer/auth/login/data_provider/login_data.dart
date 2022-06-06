@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/login.dart';
 
-import 'package:royal_cinema/core/customer_core/local_data_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/user/data_provider/local_data_provider.dart';
 
 class LoginDataProvider {
   Client client = Client();

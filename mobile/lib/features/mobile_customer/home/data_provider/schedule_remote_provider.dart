@@ -2,7 +2,8 @@
 import 'dart:convert';
 
 import 'package:royal_cinema/core/customer_core/api_data.dart';
-import 'package:royal_cinema/core/customer_core/local_data_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/home/data_provider/schedule_local_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/user/data_provider/local_data_provider.dart';
 import 'package:royal_cinema/core/customer_core/token_data.dart';
 import 'package:http/http.dart' show Client;
 import 'package:royal_cinema/features/mobile_customer/user/model/user.dart';
@@ -15,6 +16,7 @@ class ScheduledRemoteProvider implements ScheduledProvider {
   Client client = Client();
 
   LocalDbProvider localDbProvider = LocalDbProvider();
+  ScheduleLocalDbProvider scheduleLocalDbProvider = ScheduleLocalDbProvider();
 
 
   @override

@@ -1,72 +1,72 @@
+import 'dart:io';
 
-import 'package:royal_cinema/features/mobile_customer/home/index.dart';
-import 'package:royal_cinema/features/mobile_customer/home/model/schedule_response.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/home/model/movie.dart';
+import 'package:royal_cinema/features/mobile_customer/home/model/scheduledMovie.dart';
+import 'package:sqflite/sqflite.dart';
 
-import '../model/scheduledMovie.dart';
-import 'schedule_provider.dart';
+class ScheduleLocalDbProvider{
 
-class ScheduledLocalProvider implements ScheduledProvider {
+  Future<Database> init() async {
+    Directory directory = await getApplicationDocumentsDirectory();
+    final path = join(directory.path,"cinema.db");
 
-  final List<ScheduleResponse> schedules = [
-    for (int i in List.generate(15, (i) => i))
-      ScheduleResponse(date: "Today", schedules: [])
-  ];
-
-  final List<ScheduledMovie> scheduleds = [
-    for (int i in List.generate(15, (i) => i))
-      ScheduledMovie(
-          movieId: "movieId",
-          movie: Movie(title: "title", description: "description", imageUrl: "imageUrl", casts:[], genera: []),
-          startTime: 123,
-          endTime: 520,
-          capacity: 20,
-          seatsLeft: 12,
-          price: 200
-      )
-  ];
-
-  @override
-  addScheduled(ScheduledMovie scheduled) async {
-    return scheduleds.add(scheduled);
+    return await openDatabase(
+        path,
+        version: 1,
+        onCreate: (Database db,int version) async{
+          await db.execute("""
+          CREATE TABLE Schedule(
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          Schedule TEXT,
+          )"""
+          );
+        });
   }
 
-  @override
-  editScheduled(String id, ScheduledMovie scheduled) async {
-    int index = -1;
-    for (int i = 0; i < scheduleds.length; i++) {
-      if (scheduleds[i].id == id) {
-        index = i;
-        break;
-      }
-    }
+  Future<int> addUser(ScheduledMovie schedule) async{ //returns number of items inserted as an integer
+    final db = await init(); //open database
 
-    if (index == -1) {
-      throw Exception("Scheduled Movie not found");
-    }
-
-    scheduleds[index] = ScheduledMovie(
-        movieId: scheduled.movieId,
-        movie: scheduled.movie,
-        startTime: scheduled.startTime,
-        endTime: scheduled.endTime,
-        capacity: scheduled.capacity,
-        seatsLeft: scheduled.seatsLeft,
-        price: scheduled.price);
+    return db.insert("Schedule", schedule.toJson(), //toMap() function from MemoModel
+      conflictAlgorithm: ConflictAlgorithm.ignore, //ignores conflicts due to duplicate entries
+    );
   }
 
-  @override
-  Future<ScheduledMovie> getScheduled(String id) async {
-    for (int i = 0; i < scheduleds.length; i++) {
-      if (scheduleds[i].id == id) {
-        return scheduleds[i];
-      }
-    }
+  Future<int> updateUsers(String id, Map<String, dynamic> update) async{ // returns the number of rows updated
 
-    throw Exception('Scheduled Movie not found');
+    final db = await init();
+
+    int result = await db.update(
+        "Schedule",
+        update,
+        where: "id = ?",
+        whereArgs: [id]
+    );
+    return result;
   }
 
-  @override
-  Future<List<ScheduleResponse>> getAllScheduleds() async {
-    return schedules;
+  Future deleteUsers() async {
+    final db = await init();
+    // return db.delete("delete from "+ TABLE_NAME);
+    int deleted = await db.rawDelete("Delete from User");
+    print(deleted);
+    return deleted;
   }
+
+  Future<ScheduledMovie> getUser() async{ //returns the memos as a list (array)
+
+    final db = await init();
+    final maps = await db.query("Schedule"); //query all the rows in a table as an array of maps
+
+    return ScheduledMovie.fromJson(maps[0]);
+  }
+  Future<bool> isUserLoggedIn() async{ //returns the memos as a list (array)
+
+    final db = await init();
+    final maps = await db.query("User");
+    return !maps.isEmpty;
+
+  }
+
 }

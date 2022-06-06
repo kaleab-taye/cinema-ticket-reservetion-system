@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-import '../../features/mobile_customer/user/model/user.dart';
+import '../model/user.dart';
 
 class LocalDbProvider{
 

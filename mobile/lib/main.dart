@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:royal_cinema/core/customer_core/local_data_provider.dart';
+import 'package:royal_cinema/features/mobile_customer/user/data_provider/local_data_provider.dart';
 import 'package:royal_cinema/features/mobile_customer/auth/login/bloc/auth_bloc.dart';
 import 'package:royal_cinema/features/mobile_customer/auth/signup/bloc/signup_bloc.dart';
 import 'package:royal_cinema/features/mobile_customer/booking/bloc/booking_event.dart';
