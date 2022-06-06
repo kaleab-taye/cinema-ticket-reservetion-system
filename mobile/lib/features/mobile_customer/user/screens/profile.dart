@@ -98,7 +98,7 @@ class _Profile extends State<Profile> {
                                   LocalDbProvider();
                               await localDbProvider.deleteUsers();
 
-                              GoRouter.of(context).go('/login');
+                              context.goNamed('login_customer');
                             },
                             child: Text(
                               "Log out",

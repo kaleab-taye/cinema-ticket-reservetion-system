@@ -229,7 +229,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           builder: (_, SignUpState state) {
                             Widget buttonChild = RaisedButton(
                               color: Col.primary,
-                              child: Text("Signup"),
+                              padding: EdgeInsets.symmetric(horizontal: 120),
+                              child: Text("Signup",
+                                style: TextStyle(
+                                  color: Col.textColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  fontFamily: 'Nunito',
+                                  letterSpacing: 0.3,
+                                ),),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8)),
                               onPressed: () {
@@ -264,7 +272,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               verifyChecker = Column(
                                 children: [
                                   Text(
-                                    "Phone verification code has been sent to your phone : (for demo purpose the verification code is 12345)",
+                                    "Phone verification code has been sent to your phone : ",
                                     style: TextStyle(
                                       color: Col.textColor,
                                       fontSize: 16,
@@ -307,7 +315,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                     ),
                                     keyboardType: TextInputType.emailAddress,
                                   ),
-                                  SizedBox(height: 20,),
+                                  Text(
+                                    "*for demo purpose the verification code is 12345",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: 'Nunito',
+                                      letterSpacing: 0.3,
+                                    ),
+                                  ),
+                                  SizedBox(height: 20,)
                                 ],
                               );
 
@@ -320,8 +337,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 },
                                 builder: (_, AuthState state) {
                                   return RaisedButton(
+                                    padding: EdgeInsets.symmetric(horizontal: 120),
                                     color: Col.primary,
-                                    child: Text("Verify"),
+                                    child: Text("Verify",
+                                      style: TextStyle(
+                                        color: Col.textColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        fontFamily: 'Nunito',
+                                        letterSpacing: 0.3,
+                                      ),),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8)),
                                     onPressed: () {
@@ -396,7 +421,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                   text: " Login",
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      GoRouter.of(context).go('/login');
+                                      context.goNamed('login_customer');
                                     }),
                             ],
                           ),
