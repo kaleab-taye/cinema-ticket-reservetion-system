@@ -36,14 +36,14 @@ class LoginDataProvider {
       final respBody = await resp.stream.bytesToString();
       final finalResponse = await jsonDecode(respBody);
 
-      print(finalResponse);
+      // print(finalResponse);
       print(finalResponse['loginToken']);
       indexRepo.loginStaff(Staff(
-          fullName: finalResponse['staff']['fullName'],
-          phone: finalResponse['staff']['phone'],
-          passwordHash: finalResponse['staff']['passwordHash'],
-          loginToken: finalResponse['loginToken'],
-          ));
+        fullName: finalResponse['staff']['fullName'],
+        phone: finalResponse['staff']['phone'],
+        passwordHash: finalResponse['staff']['passwordHash'],
+        loginToken: finalResponse['loginToken'],
+      ));
 
       return LoginResponse.fromJson(finalResponse);
     } else {

@@ -11,7 +11,7 @@ import '../../user/models/staff.dart';
 class IndexDataProvider {
   Future<Database> init() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    final path = join(directory.path, "test2.db");
+    final path = join(directory.path, "test4.db");
     
     return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {

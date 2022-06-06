@@ -17,7 +17,7 @@ class ImageProvider {
       // return movies.map((movie) => Movie.fromJson(movie)).toList();
       return image;
     } else {
-      throw Exception('Failed to load movies');
+      throw Exception('Failed to load images');
     }
   }
 }

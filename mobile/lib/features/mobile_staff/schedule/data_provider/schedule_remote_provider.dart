@@ -15,17 +15,17 @@ class ScheduleRemoteProvider implements ScheduleProvider {
 
   late http.Client httpClient;
 
-  final headersList = {
-    "Accept": "*/*",
-    "User-Agent": "Thunder Client (https://www.thunderclient.com)",
-    "Authorization": authTok,
-    'Content-Type': 'application/json'
-  };
+  // final headersList = {
+  //   "Accept": "*/*",
+  //   "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+  //   "Authorization": authTok,
+  //   'Content-Type': 'application/json'
+  // };
 
   @override
   Future<List<ScheduleResponse>> getAllSchedules() async {
     final response = await http.get(Uri.parse('${_baseUrl}/schedules'),
-        headers: headersList);
+        headers: await apiData.getHeader());
 
     if (response.statusCode == 200) {
       final scheduleList = jsonDecode(response.body);
@@ -51,7 +51,7 @@ class ScheduleRemoteProvider implements ScheduleProvider {
   Future<Schedule> addSchedule(Schedule schedule) async {
     var url = Uri.parse('$_baseUrl/schedules');
     var req = http.Request('POST', url);
-    req.headers.addAll(headersList);
+    req.headers.addAll(await apiData.getHeader());
     req.body = jsonEncode(schedule.toJson());
 
     var res = await req.send();
@@ -72,7 +72,7 @@ class ScheduleRemoteProvider implements ScheduleProvider {
     var url = Uri.parse('$_baseUrl/schedules/${schedule.id}');
 
     var req = http.Request('PATCH', url);
-    req.headers.addAll(headersList);
+    req.headers.addAll(await apiData.getHeader());
     req.body = jsonEncode(schedule.toJson());
 
     var res = await req.send();
@@ -95,7 +95,7 @@ class ScheduleRemoteProvider implements ScheduleProvider {
     var url = Uri.parse('$_baseUrl/schedules/$id');
 
     var req = http.Request('DELETE', url);
-    req.headers.addAll(headersList);
+    req.headers.addAll(await apiData.getHeader());
     // req.body = jsonEncode(schedule.toJson());
 
     var res = await req.send();
