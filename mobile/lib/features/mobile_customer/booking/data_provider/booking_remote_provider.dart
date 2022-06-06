@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:royal_cinema/core/customer_core/api_data.dart';
@@ -12,13 +11,10 @@ import '../model/booking_response.dart';
 import 'booking_provider.dart';
 
 class BookingRemoteProvider implements BookingProvider {
-
   LocalDbProvider localDbProvider = LocalDbProvider();
-
 
   @override
   addBooking(BookingMovie booking) async {
-
     User userOut = await localDbProvider.getUser();
 
     var headersList = {
@@ -43,15 +39,13 @@ class BookingRemoteProvider implements BookingProvider {
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
-    }
-    else {
+    } else {
       throw Exception('Failed to create bookings.');
     }
   }
 
   @override
-  deleteBooking(String bookId) async{
-
+  deleteBooking(String bookId) async {
     User userOut = await localDbProvider.getUser();
 
     var headersList = {
@@ -68,8 +62,7 @@ class BookingRemoteProvider implements BookingProvider {
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
-    }
-    else {
+    } else {
       print(res.reasonPhrase);
       throw Exception();
     }
@@ -77,7 +70,6 @@ class BookingRemoteProvider implements BookingProvider {
 
   @override
   book(String userId, String scheduleId) async {
-
     User userOut = await localDbProvider.getUser();
 
     var headersList = {
@@ -87,10 +79,7 @@ class BookingRemoteProvider implements BookingProvider {
     };
     var url = Uri.parse('${ApiData.baseUrl}/bookings');
 
-    var body = {
-      "userId":userId,
-      "scheduleId":scheduleId
-    };
+    var body = {"userId": userId, "scheduleId": scheduleId};
     var req = http.Request('POST', url);
     req.headers.addAll(headersList);
     req.body = json.encode(body);
@@ -100,8 +89,7 @@ class BookingRemoteProvider implements BookingProvider {
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
-    }
-    else {
+    } else {
       print(res.reasonPhrase);
       throw Exception();
     }
@@ -133,8 +121,7 @@ class BookingRemoteProvider implements BookingProvider {
 
     if (res.statusCode >= 200 && res.statusCode < 300) {
       print(resBody);
-    }
-    else {
+    } else {
       throw Exception('Failed to update bookings.');
     }
   }
@@ -150,9 +137,7 @@ class BookingRemoteProvider implements BookingProvider {
     };
     var url = Uri.parse('${ApiData.baseUrl}/bookings');
 
-    var body = {
-
-    };
+    var body = {};
     var req = http.Request('GET', url);
     req.headers.addAll(headersList);
     req.body = json.encode(body);
@@ -175,7 +160,6 @@ class BookingRemoteProvider implements BookingProvider {
 
   @override
   Future<List<BookingResponse>> getAllBookings() async {
-
     User userOut = await localDbProvider.getUser();
 
     var headersList = {
@@ -184,17 +168,16 @@ class BookingRemoteProvider implements BookingProvider {
       'Content-Type': 'application/json'
     };
 
-    final response = await http.get(Uri.parse('${ApiData.baseUrl}/users/${userOut.id}/bookings'),
+    final response = await http.get(
+        Uri.parse('${ApiData.baseUrl}/users/${userOut.id}/bookings'),
         headers: headersList);
 
     if (response.statusCode == 200) {
-
       final bookingList = jsonDecode(response.body);
 
       List<BookingResponse> fetchedList = [];
 
       for (var key in bookingList.keys) {
-
         List<BookingMovie> listBooking = [];
 
         for (var booking in bookingList[key]) {

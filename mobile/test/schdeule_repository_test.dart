@@ -7,7 +7,6 @@ import 'package:royal_cinema/core/customer_core/utils/either.dart';
 import 'package:royal_cinema/features/mobile_customer/home/data_provider/schedule_remote_provider.dart';
 import 'package:royal_cinema/features/mobile_customer/home/model/schedule_response.dart';
 import 'package:royal_cinema/features/mobile_customer/home/repository/schedule_repository.dart';
-// import 'package:test/test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:sqflite/sqflite.dart';
 
